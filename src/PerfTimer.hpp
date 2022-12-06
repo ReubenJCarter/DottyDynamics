@@ -13,7 +13,7 @@ class PerfTimer {
         std::vector< double > times; 
 
 
-        void Lap(){
+        void lap(){
             auto t = Clock::now();
             int64_t tus = std::chrono::duration_cast<std::chrono::microseconds>(t - startTime).count(); 
             double tms = (double)tus / 1000.0; 
@@ -24,11 +24,11 @@ class PerfTimer {
             startTime = Clock::now();
         }
 
-        void Reset(){
+        void reset(){
             startTime = Clock::now();
         }
 
-        void Clear(){
+        void clear(){
             times.clear(); 
             startTime = Clock::now();
         }

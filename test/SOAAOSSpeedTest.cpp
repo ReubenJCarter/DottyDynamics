@@ -837,22 +837,22 @@ int main(){
     std::cout << "AOS TEST: \n"; 
     ParticlesAOS pAOS; 
 
-    perfTimer.Reset(); 
+    perfTimer.reset(); 
     for(int i = 0; i < 100; i++){
         pAOS.update(); 
     }
-    perfTimer.Lap();
+    perfTimer.lap();
 
 
     //AOS multithreadded V2 TEST 
     std::cout << "AOS multi TEST 2: \n"; 
     ParticlesAOSMultiThreaddedV2 pAOSMultiv2; 
 
-    perfTimer.Reset(); 
+    perfTimer.reset(); 
     for(int i = 0; i < 100; i++){
         pAOSMultiv2.update(); 
     }
-    perfTimer.Lap();
+    perfTimer.lap();
 
 
 
@@ -860,22 +860,22 @@ int main(){
     std::cout << "AOS multi TEST: \n"; 
     ParticlesAOSMultiThreadded pAOSMulti; 
 
-    perfTimer.Reset(); 
+    perfTimer.reset(); 
     for(int i = 0; i < 100; i++){
         pAOSMulti.update(); 
     }
-    perfTimer.Lap();
+    perfTimer.lap();
 
 
     //SOA TEST 
     std::cout << "SOA TEST: \n"; 
     ParticlesSOA pSOA; 
 
-    perfTimer.Reset(); 
+    perfTimer.reset(); 
     for(int i = 0; i < 100; i++){
         pSOA.update(); 
     }
-    perfTimer.Lap(); 
+    perfTimer.lap(); 
 
     
 

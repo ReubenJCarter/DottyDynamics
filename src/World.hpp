@@ -18,6 +18,7 @@ class World {
         DynamicPool<Vec3> rodDeltas; 
         DynamicPool<int> rodDeltaCount; 
         DynamicPool<Attractor> attractors;
+        DynamicPool<Vortex> vortices;
         DynamicPool<Vec3> globalForces;
 
         World(){
@@ -36,7 +37,7 @@ class World {
                 
                 for(int i = a; i < b; i++){
 
-                    if(globalForces.isInUse(i))
+                    if(!globalForces.isInUse(i))
                         continue; 
 
                     float xDiff = globalForces[i].x; 
@@ -61,15 +62,48 @@ class World {
                 
                 unsigned int pcount = particles.getBound();
                 
+                
                 for(int i = a; i < b; i++){
 
-                    if(attractors.isInUse(i))
+                    if(!attractors.isInUse(i))
                         continue; 
 
                     for(int p = 0; p < pcount; p++){
                         float xDiff = attractors[i].position.x - particles[p].position.x; 
                         float yDiff = attractors[i].position.y - particles[p].position.y;
                         float zDiff = attractors[i].position.z - particles[p].position.z;
+
+                        float dist2 = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff; 
+                        float dist = sqrt(dist2); 
+                        float dist2Factor = 1 / (dist2 * dist) ; 
+
+                        particles[p].velocity.x += timestep * particles[p].invMass * xDiff * dist2Factor;
+                        particles[p].velocity.y += timestep * particles[p].invMass * yDiff * dist2Factor;
+                        particles[p].velocity.z += timestep * particles[p].invMass * zDiff * dist2Factor;
+                    }
+                }
+
+            }).wait();
+
+        }
+
+        void updateVortices(){
+
+            unsigned int maxVorticesCount = vortices.getBound(); 
+
+            threadPool.parallelize_loop(maxVorticesCount, [this](const int a, const int b){
+                
+                unsigned int pcount = particles.getBound();
+                
+                for(int i = a; i < b; i++){
+
+                    if(!vortices.isInUse(i))
+                        continue; 
+
+                    for(int p = 0; p < pcount; p++){
+                        float xDiff = vortices[i].position.x - particles[p].position.x; 
+                        float yDiff = vortices[i].position.y - particles[p].position.y;
+                        float zDiff = vortices[i].position.z - particles[p].position.z;
 
                         float dist2 = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff; 
                         float dist = sqrt(dist2); 
@@ -155,6 +189,7 @@ class World {
             //Update forces 
             updateGlobalForces(); 
             updateAttractors(); 
+            updateVortices(); 
 
             //Apply velocities and gravity 
             for(int i = 0; i < maxParticleCount; i++){
