@@ -87,7 +87,7 @@ class DynamicPool {
         }
 
         T& get(unsigned int inx){
-            
+            return data[inx];
         }
 
         T& operator[](unsigned int inx){
@@ -100,5 +100,13 @@ class DynamicPool {
 
         unsigned int getBound(){
             return bound; 
+        }
+
+        T* getDataPtr(){
+            return data;  
+        }
+
+        bool* getInUsePtr(){
+            return inUse;  
         }
 }; 

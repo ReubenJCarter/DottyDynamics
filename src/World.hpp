@@ -9,9 +9,8 @@ class World {
     private:
         BS::thread_pool threadPool;
 
-    public:  
         float timestep; 
-        float gloablDamping; 
+        float globalDamping; 
         float gravity;
         DynamicPool<Particle> particles;
         DynamicPool<Rod> rods;
@@ -21,12 +20,6 @@ class World {
         DynamicPool<Vortex> vortices;
         DynamicPool<Vec3> globalForces;
 
-        World(){
-            timestep = 0.016666; 
-            gloablDamping = 1;
-            gravity = 9.81; 
-        }
-        
         void updateGlobalForces(){
 
             unsigned int maxGlobalForceCount = globalForces.getBound(); 
@@ -62,11 +55,11 @@ class World {
                 
                 unsigned int pcount = particles.getBound();
                 
-                
+            
                 for(int i = a; i < b; i++){
 
                     if(!attractors.isInUse(i))
-                        continue; 
+                      continue; 
 
                     for(int p = 0; p < pcount; p++){
                         float xDiff = attractors[i].position.x - particles[p].position.x; 
@@ -77,9 +70,9 @@ class World {
                         float dist = sqrt(dist2); 
                         float dist2Factor = 1 / (dist2 * dist) ; 
 
-                        particles[p].velocity.x += timestep * particles[p].invMass * xDiff * dist2Factor;
-                        particles[p].velocity.y += timestep * particles[p].invMass * yDiff * dist2Factor;
-                        particles[p].velocity.z += timestep * particles[p].invMass * zDiff * dist2Factor;
+                        particles[p].velocity.x += timestep * particles[p].invMass * xDiff * dist2Factor * attractors[i].strength;
+                        particles[p].velocity.y += timestep * particles[p].invMass * yDiff * dist2Factor * attractors[i].strength;
+                        particles[p].velocity.z += timestep * particles[p].invMass * zDiff * dist2Factor * attractors[i].strength;
                     }
                 }
 
@@ -182,6 +175,28 @@ class World {
             }
         }
 
+    public:  
+        
+
+        World(){
+            timestep = 0.016666; 
+            globalDamping = 1;
+            gravity = 9.81; 
+            
+            particles.setPoolSize(100000); 
+            rodDeltas.setPoolSize(100000); 
+            rodDeltaCount.setPoolSize(100000); 
+
+            rods.setPoolSize(200000);
+
+            attractors.setPoolSize(1000);  
+            vortices.setPoolSize(1000); 
+            globalForces.setPoolSize(1000); 
+
+        }
+        
+        
+
         void update(){
 
             unsigned int maxParticleCount = particles.getBound();
@@ -195,9 +210,9 @@ class World {
             for(int i = 0; i < maxParticleCount; i++){
                 particles[i].velocity.y -= gravity; 
                 
-                particles[i].velocity.x *= gloablDamping; 
-                particles[i].velocity.y *= gloablDamping; 
-                particles[i].velocity.z *= gloablDamping;
+                particles[i].velocity.x *= globalDamping; 
+                particles[i].velocity.y *= globalDamping; 
+                particles[i].velocity.z *= globalDamping;
 
                 particles[i].positionNext.x = particles[i].position.x + timestep * particles[i].velocity.x; 
                 particles[i].positionNext.y = particles[i].position.y + timestep * particles[i].velocity.y;
@@ -220,6 +235,86 @@ class World {
             }   
         }
 
-        
+        void setGravity(float grav){
+            gravity = grav; 
+        }
 
+        void setTimestep(float t){
+            timestep = t; 
+        }
+
+        void setGlobalDamping(float d){
+            globalDamping = d;
+        }
+
+
+        int addParticle(Vec3 initialPosition, Vec3 initialVelocity, float invMass){
+            Particle p; 
+            p.position = initialPosition; 
+            p.positionNext = initialPosition; 
+            p.velocity = initialVelocity; 
+            p.invMass = invMass; 
+            p.rodCount = 0; 
+            p.rodDelta = Vec3(0, 0, 0); 
+
+            return particles.add(p); 
+        }
+
+        void destroyParticle(int inx){
+            particles.remove(inx); 
+        }
+
+        Particle* getParticlesPtr(){
+            return particles.getDataPtr();
+        }
+
+        bool* getParticlesInUsePtr(){
+            return particles.getInUsePtr(); 
+        }
+        
+        int getParticlesPoolBounds(){
+            return particles.getBound(); 
+        }
+
+
+        int addAttrator(Vec3 position, float strength){
+            Attractor a; 
+            a.position = position; 
+            a.strength = strength;
+            return attractors.add(a);  
+        }
+
+        void destroyAttractor(int inx){
+            attractors.remove(inx); 
+        }
+
+        void setAttractorPosition(int inx, Vec3 position){
+            attractors[inx].position = position; 
+        }
+
+        void setAttractorStrength(int inx, float strength){
+            attractors[inx].strength = strength; 
+        }
+
+
+        int addRod(int a, int b, float length, float strength){
+            Rod r;
+            r.a = a; 
+            r.b = b; 
+            r.length = length; 
+            r.strength = strength; 
+            return rods.add(r); 
+        }
+
+        void destroyRod(int inx){
+            rods.remove(inx); 
+        }
+
+        void setRodStrength(int inx, float strength){
+            rods[inx].strength = strength;
+        }
+
+        void setRodLength(int inx, float length){
+            rods[inx].length = length;
+        }
 }; 
