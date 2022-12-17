@@ -214,7 +214,11 @@ namespace Dotty{
             World_destroyParticle(ntv, inx);
         }
 
-        unsafe public NativeArray<Particle> getParticlesData(){
+        public int GetParticlesPoolBound(){
+            return World_getParticlesPoolBound(ntv); 
+        } 
+
+        unsafe public NativeArray<Particle> GetParticlesData(){
             IntPtr ptr = World_getParticlesPtr(ntv); 
             int count = World_getParticlesPoolBound(ntv); 
             NativeArray<Particle> narr = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<Particle>(ptr.ToPointer(), count, Allocator.None);
@@ -225,7 +229,12 @@ namespace Dotty{
             return narr; 
         }
 
-        unsafe public NativeArray<bool> getParticlesInUseData(){
+        unsafe public Particle* GetParticlesPtr(){
+            IntPtr ptr = World_getParticlesPtr(ntv); 
+            return (Particle*)ptr.ToPointer(); 
+        }
+
+        unsafe public NativeArray<bool> GetParticlesInUseData(){
             IntPtr ptr = World_getParticlesInUsePtr(ntv); 
             int count = World_getParticlesPoolBound(ntv); 
             NativeArray<bool> arr = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<bool>(ptr.ToPointer(), count, Allocator.None);
