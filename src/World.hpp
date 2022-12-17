@@ -10,6 +10,7 @@ class World {
         BS::thread_pool threadPool;
 
         float timestep; 
+        float invTimestep; 
         float globalDamping; 
         float gravity;
         DynamicPool<Particle> particles;
@@ -180,6 +181,7 @@ class World {
 
         World(){
             timestep = 0.016666; 
+            invTimestep = 1.0f/timestep;
             globalDamping = 1;
             gravity = 9.81; 
             
@@ -208,7 +210,7 @@ class World {
 
             //Apply velocities and gravity 
             for(int i = 0; i < maxParticleCount; i++){
-                particles[i].velocity.y -= gravity; 
+                particles[i].velocity.y -= timestep * gravity; 
                 
                 particles[i].velocity.x *= globalDamping; 
                 particles[i].velocity.y *= globalDamping; 
@@ -225,9 +227,9 @@ class World {
             //Apply New Position
             for(int i = 0; i < maxParticleCount; i++){
 
-                particles[i].velocity.x = (particles[i].positionNext.x - particles[i].position.x) * timestep;
-                particles[i].velocity.y = (particles[i].positionNext.y - particles[i].position.y) * timestep;
-                particles[i].velocity.z = (particles[i].positionNext.z - particles[i].position.z) * timestep;
+                particles[i].velocity.x = (particles[i].positionNext.x - particles[i].position.x) * invTimestep;
+                particles[i].velocity.y = (particles[i].positionNext.y - particles[i].position.y) * invTimestep;
+                particles[i].velocity.z = (particles[i].positionNext.z - particles[i].position.z) * invTimestep;
 
                 particles[i].position.x = particles[i].positionNext.x;
                 particles[i].position.y = particles[i].positionNext.y;
@@ -241,6 +243,7 @@ class World {
 
         void setTimestep(float t){
             timestep = t; 
+            invTimestep = 1.0f/timestep;
         }
 
         void setGlobalDamping(float d){

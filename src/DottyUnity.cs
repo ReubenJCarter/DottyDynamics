@@ -219,9 +219,9 @@ namespace Dotty{
             int count = World_getParticlesPoolBound(ntv); 
             NativeArray<Particle> narr = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<Particle>(ptr.ToPointer(), count, Allocator.None);
             #if ENABLE_UNITY_COLLECTIONS_CHECKS
-            NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref narr, AtomicSafetyHandle.GetTempMemoryHandle());
+            //NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref narr, AtomicSafetyHandle.GetTempMemoryHandle());
+            NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref narr, AtomicSafetyHandle.Create());
             #endif
-            //Debug.Log("count:" + count + " ptr " + ptr + " sizeof " + sizeof(Particle) + " IsCreated " + narr.IsCreated);
             return narr; 
         }
 
