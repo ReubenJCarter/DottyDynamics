@@ -10,6 +10,8 @@ namespace Dotty{
 
     class World{
 
+        public enum Falloff{Constant, Linear, Squared, LinearWell, SquaredWell}
+
         [StructLayout(LayoutKind.Sequential)]
         public struct Vec3{
             public float x, y, z;
@@ -66,6 +68,13 @@ namespace Dotty{
         #else
         [DllImport ("Dotty")]   
         #endif
+        private static extern void World_setSubsteps(IntPtr instance, float substeps); 
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
         private static extern void World_setGlobalDamping(IntPtr world, float globalDamping);
 
 
@@ -112,7 +121,7 @@ namespace Dotty{
         #else
         [DllImport ("Dotty")]   
         #endif
-        private static extern int World_addAttrator(IntPtr instance, Vec3 position, float strength);
+        private static extern int World_addAttrator(IntPtr instance, Vec3 position, float strength, float minDist, float maxDist, Falloff falloff);
 
         #if UNITY_IPHONE
         [DllImport ("__Internal")]
@@ -142,7 +151,7 @@ namespace Dotty{
         #else
         [DllImport ("Dotty")]   
         #endif
-        private static extern int World_addRod(IntPtr instance, int a, int b, float length, float strength);
+        private static extern int World_addRod(IntPtr instance, int a, int b, float length, float stiffness);
 
         #if UNITY_IPHONE
         [DllImport ("__Internal")]
@@ -156,7 +165,7 @@ namespace Dotty{
         #else
         [DllImport ("Dotty")]   
         #endif
-        private static extern int World_setRodStrength(IntPtr instance, int inx, float strength);
+        private static extern int World_setRodStiffness(IntPtr instance, int inx, float stiffness);
 
         #if UNITY_IPHONE
         [DllImport ("__Internal")]
@@ -164,6 +173,43 @@ namespace Dotty{
         [DllImport ("Dotty")]   
         #endif
         private static extern int World_setRodLength(IntPtr instance, int inx, float length);
+
+
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern int World_addAnchorRod(IntPtr instance, int a, Vec3 position, float length, float stiffness);
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern int World_destroyAnchorRod(IntPtr instance, int inx);
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern int World_setAnchorRodStiffness(IntPtr instance, int inx, float stiffness);
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern int World_setAnchorRodLength(IntPtr instance, int inx, float length);
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern int World_setAnchorRodPosition(IntPtr instance, int inx, Vec3 position);
 
 
         private IntPtr ntv; 
@@ -188,6 +234,10 @@ namespace Dotty{
         
         public void SetTimestep(float timestep){
             World_setTimestep(ntv, timestep); 
+        }
+
+        public void SetSubsteps(float substeps){
+            World_setSubsteps(ntv, substeps); 
         }
 
         public void SetGlobalDamping(float globalDamping){
@@ -242,13 +292,13 @@ namespace Dotty{
         }
 
 
-        public int AddAttractor(Vector3 position, float strength){
+        public int AddAttractor(Vector3 position, float strength, float minDist, float maxDist, Falloff falloff){
             Vec3 pos = new Vec3();
             pos.x = position.x; 
             pos.y = position.y; 
             pos.z = position.z;
             
-            return World_addAttrator(ntv, pos, strength); 
+            return World_addAttrator(ntv, pos, strength, minDist, maxDist, falloff); 
         }
 
         public void DestroyAttractor(int inx){
@@ -270,8 +320,8 @@ namespace Dotty{
 
 
 
-        public int AddRod(int a, int b, float length, float strength){
-            return World_addRod(ntv, a, b, length, strength); 
+        public int AddRod(int a, int b, float length, float stiffness){
+            return World_addRod(ntv, a, b, length, stiffness); 
         }
 
         public void DestroyRod(int inx){
@@ -282,8 +332,40 @@ namespace Dotty{
             World_setRodLength(ntv, inx, length); 
         }
 
-        public void SetRodStrength(int inx, float strength){
-            World_setRodStrength(ntv, inx, strength); 
+        public void SetRodStiffness(int inx, float stiffness){
+            World_setRodStiffness(ntv, inx, stiffness); 
+        }
+
+
+
+        public int AddAnchorRod(int a, Vector3 position, float length, float stiffness){
+            Vec3 pos = new Vec3();
+            pos.x = position.x; 
+            pos.y = position.y; 
+            pos.z = position.z;
+
+            return World_addAnchorRod(ntv, a, pos, length, stiffness); 
+        }
+
+        public void DestroyAnchorRod(int inx){
+            World_destroyAnchorRod(ntv, inx); 
+        }
+
+        public void SetAnchorRodLength(int inx, float length){
+            World_setAnchorRodLength(ntv, inx, length); 
+        }
+
+        public void SetAnchorRodStiffness(int inx, float stiffness){
+            World_setAnchorRodStiffness(ntv, inx, stiffness); 
+        }
+
+        public void SetAnchorRodPosition(int inx, Vector3 position){
+            Vec3 pos = new Vec3();
+            pos.x = position.x; 
+            pos.y = position.y; 
+            pos.z = position.z;
+
+            World_setAnchorRodPosition(ntv, inx, pos); 
         }
     }
 }

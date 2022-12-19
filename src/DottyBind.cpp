@@ -27,6 +27,10 @@ EXPORT void World_setTimestep(World* instance, float timestep){
     instance->setTimestep(timestep); 
 }
 
+EXPORT void World_setSubsteps(World* instance, float substeps){
+    instance->setSubsteps(substeps);
+}
+
 EXPORT void World_setGlobalDamping(World* instance, float globalDamping){
     instance->setGlobalDamping(globalDamping); 
 }
@@ -55,8 +59,8 @@ EXPORT int World_getParticlesPoolBound(World* instance){
 
 
 
-EXPORT int World_addAttrator(World* instance, Vec3 position, float strength){
-    return instance->addAttrator(position, strength); 
+EXPORT int World_addAttrator(World* instance, Vec3 position, float strength, float minDist, float maxDist, Falloff falloff){
+    return instance->addAttrator(position, strength, minDist, maxDist, falloff); 
 }
 
 EXPORT void World_destroyAttractor(World* instance, int inx){
@@ -73,18 +77,40 @@ EXPORT void World_setAttractorStrength(World* instance, int inx, float strength)
 
 
 
-EXPORT int World_addRod(World* instance, int a, int b, float length, float strength){
-    return instance->addRod(a, b, length, strength); 
+EXPORT int World_addRod(World* instance, int a, int b, float length, float stiffness){
+    return instance->addRod(a, b, length, stiffness); 
 }
 
 EXPORT void World_destroyRod(World* instance, int inx){
     instance->destroyRod(inx);
 }
 
-EXPORT void World_setRodStrength(World* instance, int inx, float strength){
-    instance->setRodStrength(inx, strength); 
+EXPORT void World_setRodStiffness(World* instance, int inx, float stiffness){
+    instance->setRodStiffness(inx, stiffness); 
 }
 
 EXPORT void World_setRodLength(World* instance, int inx, float length){
     instance->setRodLength(inx, length); 
+}
+
+
+
+EXPORT int World_addAnchorRod(World* instance, int a, Vec3 position, float length, float stiffness){
+    return instance->addAnchorRod(a, position, length, stiffness); 
+}
+
+EXPORT void World_destroyAnchorRod(World* instance, int inx){
+    instance->destroyAnchorRod(inx);
+}
+
+EXPORT void World_setAnchorRodStiffness(World* instance, int inx, float stiffness){
+    instance->setAnchorRodStiffness(inx, stiffness); 
+}
+
+EXPORT void World_setAnchorRodLength(World* instance, int inx, float length){
+    instance->setAnchorRodLength(inx, length); 
+}
+
+EXPORT void World_setAnchorRodPosition(World* instance, int inx, Vec3 position){
+    instance->setAnchorRodPosition(inx, position);
 }
