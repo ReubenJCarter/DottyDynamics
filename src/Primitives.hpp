@@ -3,6 +3,7 @@
 #include "thirdparty/VecMath/VecMath.hpp"
 
 enum Falloff{Constant, Linear, Squared, LinearWell, SquaredWell}; 
+enum NoiseType{Curl, }; 
 
 struct Particle {
     Vec3 position;
@@ -44,7 +45,7 @@ struct Vortex {
     Falloff falloff; 
 }; 
 
-struct CurlNoise {
+struct NoiseField {
     Vec3 position; 
     Vec3 boundSize; 
     float strength;

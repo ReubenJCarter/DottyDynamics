@@ -5,6 +5,7 @@
 #include "thirdparty/VecMath/VecMath.hpp"
 #include "Primitives.hpp"
 #include "DynamicPool.hpp"
+#include "Noise.hpp"
 
 class World {
     private:
@@ -22,6 +23,9 @@ class World {
         DynamicPool<Attractor> attractors;
         DynamicPool<Vortex> vortices;
         DynamicPool<Vec3> globalForces;
+        DynamicPool<NoiseField> noiseFields; 
+
+        Noise simplexNoise; 
 
         void updateGlobalForces(){
 
@@ -167,6 +171,31 @@ class World {
             }).wait();
 
         }
+
+        void updateNoiseFields(){
+            unsigned int noiseFieldsCount = noiseFields.getBound(); 
+
+            threadPool.parallelize_loop(noiseFieldsCount, [this](const int a, const int b){
+                
+                unsigned int pcount = particles.getBound();
+                
+                for(int i = a; i < b; i++){
+
+                    if(!noiseFields.isInUse(i))
+                        continue; 
+
+                    for(int p = 0; p < pcount; p++){
+                        
+                        Vec3 curl = simplexNoise.getCurl(particles[p].position); 
+                        
+                        particles[p].velocity.x += timestep * particles[p].invMass * curl.x * noiseFields[i].strength;
+                        particles[p].velocity.y += timestep * particles[p].invMass * curl.y * noiseFields[i].strength;
+                        particles[p].velocity.z += timestep * particles[p].invMass * curl.z * noiseFields[i].strength;
+                    }
+                }
+
+            }).wait();
+        }
         
         void updateRods(){
             
@@ -285,6 +314,8 @@ class World {
             vortices.setPoolSize(1000); 
             globalForces.setPoolSize(1000); 
 
+            noiseFields.setPoolSize(100); 
+
         }
         
         
@@ -302,6 +333,7 @@ class World {
                 updateGlobalForces(); 
                 updateAttractors(); 
                 updateVortices(); 
+                updateNoiseFields(); 
 
                 //Apply velocities and gravity 
                 for(int i = 0; i < maxParticleCount; i++){
