@@ -24,7 +24,7 @@ class Noise {
             return internalnoise.GetNoise(x, y, z);
         }
 
-        Vec3& getCurl(Vec3& s){
+        Vec3 getCurl(Vec3& s){
             const float eps = 0.0001;
 
             float x = s.x; 

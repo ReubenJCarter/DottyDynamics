@@ -488,4 +488,24 @@ class World {
         void setAnchorRodPosition(int inx, Vec3 position){
             anchorRods[inx].position = position;
         }
+
+
+        int addNoiseField(NoiseType noiseType, float strength, float noiseScale){
+            NoiseField n; 
+            
+            n.position = Vec3(0, 0, 0); 
+            n.boundShape = BoundShape::Sphere; 
+            n.boundSize = Vec3(std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max()); 
+            n.falloff = Falloff::Linear; 
+            n.falloffRatio = 0; 
+
+            n.noiseType = noiseType; 
+            n.strength = strength; 
+            n.noiseScale = noiseScale;
+            return noiseFields.add(n);  
+        }
+
+        void destroyNoiseField(int inx){
+            noiseFields.remove(inx); 
+        }
 }; 

@@ -13,5 +13,4 @@ if not exist "build\Unity" mkdir "build\Unity"
 if not exist "build\Unity\Dotty" mkdir "build\Unity\Dotty"
 
 copy "build\Dotty.dll" "build\Unity\Dotty"
-copy "src\DottyUnity.cs" "build\Unity\Dotty"
 
