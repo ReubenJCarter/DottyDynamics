@@ -45,6 +45,7 @@ extern "C" {
     EXPORT void World_setAnchorRodLength(World* instance, int inx, float length);
     EXPORT void World_setAnchorRodPosition(World* instance, int inx, Vec3 position);
 
-    EXPORT int World_addNoiseField(World* instance, NoiseType noiseType, float strength, float noiseScale);
+    EXPORT int World_addNoiseField(World* instance, NoiseType noiseType, float strength, float noiseScale, bool isVelocity);
+    EXPORT void World_setNoiseFieldViscosity(World* instance, int inx, float viscosity); 
     EXPORT void World_destroyNoiseField(World* instance, int inx); 
 }

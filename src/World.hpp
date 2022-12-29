@@ -5,7 +5,8 @@
 #include "thirdparty/VecMath/VecMath.hpp"
 #include "Primitives.hpp"
 #include "DynamicPool.hpp"
-#include "Noise.hpp"
+#include "NoiseGenerator.hpp"
+
 
 class World {
     private:
@@ -23,9 +24,8 @@ class World {
         DynamicPool<Attractor> attractors;
         DynamicPool<Vortex> vortices;
         DynamicPool<Vec3> globalForces;
-        DynamicPool<NoiseField> noiseFields; 
-
-        Noise simplexNoise; 
+        DynamicPool<NoiseField> noiseFields;   
+        DynamicPool<NoiseGenerator> noiseGenerators;      
 
         void updateGlobalForces(){
 
@@ -120,7 +120,7 @@ class World {
                             float dist2 = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff; 
                             float dist = sqrt(dist2); 
 
-                            float distFactor = dist > attractors[i].maxDist || dist < attractors[i].minDist ? 0 : dist;
+                            float distFactor = dist > attractors[i].maxDist || dist < attractors[i].minDist ? 0 : dist - attractors[i].minDist;
 
                             particles[p].velocity.x += timestep * particles[p].invMass * xDiff * distFactor * attractors[i].strength;
                             particles[p].velocity.y += timestep * particles[p].invMass * yDiff * distFactor * attractors[i].strength;
@@ -137,7 +137,7 @@ class World {
                             float maxDist2 = attractors[i].maxDist * attractors[i].maxDist; 
                             float minDist2 = attractors[i].minDist * attractors[i].minDist; 
 
-                            float distFactor = dist2 > maxDist2 || dist2 < minDist2 ? 0 : dist2;
+                            float distFactor = dist2 > maxDist2 || dist2 < minDist2 ? 0 : dist2 - minDist2;
 
                             particles[p].velocity.x += timestep * particles[p].invMass * xDiff * distFactor * attractors[i].strength;
                             particles[p].velocity.y += timestep * particles[p].invMass * yDiff * distFactor * attractors[i].strength;
@@ -172,7 +172,7 @@ class World {
 
         }
 
-        void updateNoiseFields(){
+        void updateNoiseFieldsForces(){
             unsigned int noiseFieldsCount = noiseFields.getBound(); 
 
             threadPool.parallelize_loop(noiseFieldsCount, [this](const int a, const int b){
@@ -184,23 +184,121 @@ class World {
                     if(!noiseFields.isInUse(i))
                         continue; 
 
-                    for(int p = 0; p < pcount; p++){
-                        
-                        Vec3 curl = simplexNoise.getCurl(particles[p].position); 
-                        
-                        particles[p].velocity.x += timestep * particles[p].invMass * curl.x * noiseFields[i].strength;
-                        particles[p].velocity.y += timestep * particles[p].invMass * curl.y * noiseFields[i].strength;
-                        particles[p].velocity.z += timestep * particles[p].invMass * curl.z * noiseFields[i].strength;
+                    if(!noiseFields[i].isVelocity){
+                        if(noiseFields[i].noiseType == NoiseType::Simplex || noiseFields[i].noiseType == NoiseType::Perlin || noiseFields[i].noiseType == NoiseType::Value){
+                            for(int p = 0; p < pcount; p++){
+
+                                Vec3 coord = particles[p].position; 
+                                coord.mults(noiseFields[i].noiseScale); 
+                                
+                                Vec3 n = noiseGenerators[i].get3(coord);
+
+                                float fX = n.x * noiseFields[i].strength; 
+                                float fY = n.y * noiseFields[i].strength; 
+                                float fZ = n.z * noiseFields[i].strength; 
+                                
+                                particles[p].velocity.x += timestep * particles[p].invMass * fX;
+                                particles[p].velocity.y += timestep * particles[p].invMass * fY;
+                                particles[p].velocity.z += timestep * particles[p].invMass * fZ;
+                            }
+                        }
+                        else if(noiseFields[i].noiseType == NoiseType::SimplexCurl || noiseFields[i].noiseType == NoiseType::PerlinCurl || noiseFields[i].noiseType == NoiseType::ValueCurl){
+                            for(int p = 0; p < pcount; p++){
+
+                                Vec3 coord = particles[p].position; 
+                                coord.mults(noiseFields[i].noiseScale); 
+                                
+                                Vec3 n = noiseGenerators[i].curl(coord); 
+
+                                float fX = n.x * noiseFields[i].strength; 
+                                float fY = n.y * noiseFields[i].strength; 
+                                float fZ = n.z * noiseFields[i].strength; 
+                                
+                                particles[p].velocity.x += timestep * particles[p].invMass * fX;
+                                particles[p].velocity.y += timestep * particles[p].invMass * fY;
+                                particles[p].velocity.z += timestep * particles[p].invMass * fZ;
+                            }
+                        }
                     }
+                  
                 }
 
             }).wait();
         }
-        
+
+        void updateNoiseFieldsVelocities(){
+            unsigned int noiseFieldsCount = noiseFields.getBound(); 
+
+            float deltaT = timestep / substeps;
+
+            threadPool.parallelize_loop(noiseFieldsCount, [this, deltaT](const int a, const int b){
+                
+                unsigned int pcount = particles.getBound();
+                
+                for(int i = a; i < b; i++){
+
+                    if(!noiseFields.isInUse(i))
+                        continue; 
+
+                    if(noiseFields[i].isVelocity){
+                        if(noiseFields[i].noiseType == NoiseType::Simplex || noiseFields[i].noiseType == NoiseType::Perlin || noiseFields[i].noiseType == NoiseType::Value){
+                            for(int p = 0; p < pcount; p++){
+
+                                Vec3 coord = particles[p].position; 
+                                coord.mults(noiseFields[i].noiseScale); 
+                                
+                                Vec3 n = noiseGenerators[i].get3(coord);
+                                
+                                float targetVelocityX = n.x * noiseFields[i].strength; 
+                                float targetVelocityY = n.y * noiseFields[i].strength; 
+                                float targetVelocityZ = n.z * noiseFields[i].strength; 
+                                float verrX = targetVelocityX - particles[p].velocity.x; 
+                                float verrY = targetVelocityY - particles[p].velocity.y; 
+                                float verrZ = targetVelocityZ - particles[p].velocity.z;
+                                float kp =  noiseFields[i].viscosity;
+                                float correctingForceX = verrX * kp; 
+                                float correctingForceY = verrY * kp;
+                                float correctingForceZ = verrZ * kp;
+
+                                particles[p].positionNext.x += deltaT * correctingForceX; 
+                                particles[p].positionNext.y += deltaT * correctingForceY;
+                                particles[p].positionNext.z += deltaT * correctingForceZ;
+                            }
+                        }
+                        else if(noiseFields[i].noiseType == NoiseType::SimplexCurl || noiseFields[i].noiseType == NoiseType::PerlinCurl || noiseFields[i].noiseType == NoiseType::ValueCurl){
+                            for(int p = 0; p < pcount; p++){
+
+                                Vec3 coord = particles[p].position; 
+                                coord.mults(noiseFields[i].noiseScale); 
+                                
+                                Vec3 n = noiseGenerators[i].curl(coord); 
+                                
+                                float targetVelocityX = n.x * noiseFields[i].strength; 
+                                float targetVelocityY = n.y * noiseFields[i].strength; 
+                                float targetVelocityZ = n.z * noiseFields[i].strength; 
+                                float verrX = targetVelocityX - particles[p].velocity.x; 
+                                float verrY = targetVelocityY - particles[p].velocity.y; 
+                                float verrZ = targetVelocityZ - particles[p].velocity.z;
+                                float kp = noiseFields[i].viscosity;
+                                float correctingForceX = verrX * kp; 
+                                float correctingForceY = verrY * kp;
+                                float correctingForceZ = verrZ * kp;
+                                
+                                particles[p].positionNext.x += deltaT * correctingForceX; 
+                                particles[p].positionNext.y += deltaT * correctingForceY;
+                                particles[p].positionNext.z += deltaT * correctingForceZ;
+                            }
+                        }
+                    }
+                    
+                  
+                }
+
+            }).wait();
+        }
+
         void updateRods(){
             
-
-
             unsigned int maxRodCount = rods.getBound(); 
 
             for(int i = 0; i < maxRodCount; i++){
@@ -293,6 +391,8 @@ class World {
             }
         }
 
+        
+
 
     public:  
         
@@ -315,7 +415,7 @@ class World {
             globalForces.setPoolSize(1000); 
 
             noiseFields.setPoolSize(100); 
-
+            noiseGenerators.setPoolSize(100); 
         }
         
         
@@ -333,7 +433,7 @@ class World {
                 updateGlobalForces(); 
                 updateAttractors(); 
                 updateVortices(); 
-                updateNoiseFields(); 
+                updateNoiseFieldsForces(); 
 
                 //Apply velocities and gravity 
                 for(int i = 0; i < maxParticleCount; i++){
@@ -346,7 +446,10 @@ class World {
                     particles[i].positionNext.x = particles[i].position.x + deltaT * particles[i].velocity.x; 
                     particles[i].positionNext.y = particles[i].position.y + deltaT * particles[i].velocity.y;
                     particles[i].positionNext.z = particles[i].position.z + deltaT * particles[i].velocity.z;
-                }     
+                } 
+
+                //update noise field
+                updateNoiseFieldsVelocities(); 
 
                 //update rods 
                 updateRods(); 
@@ -388,8 +491,6 @@ class World {
             p.positionNext = initialPosition; 
             p.velocity = initialVelocity; 
             p.invMass = invMass; 
-            p.rodCount = 0; 
-            p.rodDelta = Vec3(0, 0, 0); 
 
             Vec3 zero = Vec3(0, 0, 0); 
             rodDeltas.add(zero);
@@ -490,22 +591,34 @@ class World {
         }
 
 
-        int addNoiseField(NoiseType noiseType, float strength, float noiseScale){
+        int addNoiseField(NoiseType noiseType, float strength, float noiseScale, bool isVelocity){
             NoiseField n; 
-            
+
             n.position = Vec3(0, 0, 0); 
             n.boundShape = BoundShape::Sphere; 
             n.boundSize = Vec3(std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max()); 
             n.falloff = Falloff::Linear; 
             n.falloffRatio = 0; 
+            n.viscosity = 1.0f;
 
             n.noiseType = noiseType; 
             n.strength = strength; 
             n.noiseScale = noiseScale;
-            return noiseFields.add(n);  
+            n.isVelocity = isVelocity; 
+            noiseFields.add(n);
+
+            NoiseGenerator gen; 
+            gen.setType(noiseType); 
+
+            return noiseGenerators.add(gen);   
+        }
+
+        void setNoiseFieldViscosity(int inx, float viscosity){
+            noiseFields[inx].viscosity = viscosity; 
         }
 
         void destroyNoiseField(int inx){
             noiseFields.remove(inx); 
+            noiseGenerators.remove(inx);
         }
 }; 

@@ -117,8 +117,12 @@ EXPORT void World_setAnchorRodPosition(World* instance, int inx, Vec3 position){
 
 
 
-EXPORT int World_addNoiseField(World* instance, NoiseType noiseType, float strength, float noiseScale){
-    return instance->addNoiseField(noiseType, strength, noiseScale); 
+EXPORT int World_addNoiseField(World* instance, NoiseType noiseType, float strength, float noiseScale, bool isVelocity){
+    return instance->addNoiseField(noiseType, strength, noiseScale, isVelocity); 
+}
+
+EXPORT void World_setNoiseFieldViscosity(World* instance, int inx, float viscosity){
+    instance->setNoiseFieldViscosity(inx, viscosity); 
 }
 
 EXPORT void World_destroyNoiseField(World* instance, int inx){

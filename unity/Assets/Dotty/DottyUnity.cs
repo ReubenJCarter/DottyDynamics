@@ -11,6 +11,10 @@ namespace Dotty{
     class World{
 
         public enum Falloff{Constant, Linear, Squared, LinearWell, SquaredWell}
+        public enum NoiseType{Simplex, SimplexCurl, Perlin, PerlinCurl, Value, ValueCurl}
+
+        public enum BoundShape{Cuboid, Sphere, Ellipsoid}
+
 
         [StructLayout(LayoutKind.Sequential)]
         public struct Vec3{
@@ -22,8 +26,6 @@ namespace Dotty{
             public Vec3 position;
             public Vec3 positionNext; 
             public Vec3 velocity; 
-            public Vec3 rodDelta; 
-            public int rodCount; 
             public float invMass;
         }
 
@@ -212,6 +214,30 @@ namespace Dotty{
         private static extern int World_setAnchorRodPosition(IntPtr instance, int inx, Vec3 position);
 
 
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern int World_addNoiseField(IntPtr instance, NoiseType noiseType, float strength, float noiseScale, bool isVelocity);
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern int World_setNoiseFieldViscosity(IntPtr instance, int inx, float viscosity);
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern int World_destroyNoiseField(IntPtr instance, int inx);
+
+        
+
         private IntPtr ntv; 
 
 
@@ -366,6 +392,20 @@ namespace Dotty{
             pos.z = position.z;
 
             World_setAnchorRodPosition(ntv, inx, pos); 
+        }
+
+
+
+        public int AddNoiseField(NoiseType noiseType, float strength, float noiseScale, bool isVelocity){
+            return World_addNoiseField(ntv, noiseType, strength, noiseScale, isVelocity); 
+        }
+
+        public void SetNoiseFieldViscosity(int inx, float viscosity){
+            World_setNoiseFieldViscosity(ntv, inx, viscosity); 
+        }
+
+        public void DestroyNoiseField(int inx){
+            World_destroyNoiseField(ntv, inx); 
         }
     }
 }

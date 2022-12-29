@@ -3,15 +3,13 @@
 #include "thirdparty/VecMath/VecMath.hpp"
 
 enum Falloff{Constant, Linear, Squared, LinearWell, SquaredWell}; 
-enum NoiseType{SimplexCurl, PerlinCurl, ValueCurl}; 
+enum NoiseType{Simplex, SimplexCurl, Perlin, PerlinCurl, Value, ValueCurl}; 
 enum BoundShape{Cuboid, Sphere, Ellipsoid};
 
 struct Particle {
     Vec3 position;
     Vec3 positionNext; 
     Vec3 velocity; 
-    Vec3 rodDelta; 
-    int rodCount; 
     float invMass; 
 }; 
 
@@ -56,4 +54,6 @@ struct NoiseField {
     float strength;
     int resolution; 
     NoiseType noiseType; 
+    float viscosity; 
+    bool isVelocity; 
 }; 
