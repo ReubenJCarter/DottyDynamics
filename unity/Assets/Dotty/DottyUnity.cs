@@ -8,26 +8,24 @@ using System;
 
 namespace Dotty{
 
+    enum Falloff{Constant, Linear, Squared, LinearWell, SquaredWell}
+    enum NoiseType{Simplex, SimplexCurl, Perlin, PerlinCurl, Value, ValueCurl}
+    enum BoundShape{Cuboid, Sphere, Ellipsoid}
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct Vec3{
+        public float x, y, z;
+    }
+    
+    [StructLayout(LayoutKind.Sequential)]
+    struct Particle{
+        public Vec3 position;
+        public Vec3 positionNext; 
+        public Vec3 velocity; 
+        public float invMass;
+    }
+
     class World{
-
-        public enum Falloff{Constant, Linear, Squared, LinearWell, SquaredWell}
-        public enum NoiseType{Simplex, SimplexCurl, Perlin, PerlinCurl, Value, ValueCurl}
-
-        public enum BoundShape{Cuboid, Sphere, Ellipsoid}
-
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct Vec3{
-            public float x, y, z;
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct Particle{
-            public Vec3 position;
-            public Vec3 positionNext; 
-            public Vec3 velocity; 
-            public float invMass;
-        }
 
 
         #if UNITY_IPHONE
@@ -78,6 +76,20 @@ namespace Dotty{
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setGlobalDamping(IntPtr world, float globalDamping);
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setHasCollisionFloor(IntPtr instance, bool hasCollisionBound);
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setCollisionFloor(IntPtr instance, float height, float staticFriction, float kineticFriction);
 
 
 
@@ -145,6 +157,43 @@ namespace Dotty{
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setAttractorStrength(IntPtr instance, int inx, float strength);
+
+
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]
+        #endif
+        private static extern int World_addVortex(IntPtr instance, Vec3 position, Vec3 normal, float strength, float minDist, float maxDist, Falloff falloff);
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_destroyVortex(IntPtr instance, int inx);
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setVortexPosition(IntPtr instance, int inx, Vec3 position);
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setVortexNormal(IntPtr instance, int inx, Vec3 normal);
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setVortexStrength(IntPtr instance, int inx, float strength);
 
 
 
@@ -270,6 +319,14 @@ namespace Dotty{
             World_setGlobalDamping(ntv, globalDamping); 
         }
 
+        public void SetHasCollisionFloor(bool h){
+            World_setHasCollisionFloor(ntv, h); 
+        }
+
+        public void SetCollisionFloor(float height, float staticFriction, float kineticFriction){
+            World_setCollisionFloor(ntv, height, staticFriction, kineticFriction);
+        }
+
 
         public int AddParticle(Vector3 initialPosition, Vector3 initialVelocity, float invMass){
 
@@ -344,6 +401,45 @@ namespace Dotty{
             World_setAttractorStrength(ntv, inx, strength); 
         }
 
+
+        public int AddVortex(Vector3 position, Vector3 normal, float strength, float minDist, float maxDist, Falloff falloff){
+            Vec3 pos = new Vec3();
+            pos.x = position.x; 
+            pos.y = position.y; 
+            pos.z = position.z;
+            Vec3 norm = new Vec3(); 
+            norm.x = normal.x; 
+            norm.y = normal.y; 
+            norm.z = normal.z; 
+            
+            return World_addVortex(ntv, pos, norm, strength, minDist, maxDist, falloff); 
+        }
+
+        public void DestroyVortex(int inx){
+            World_destroyVortex(ntv, inx); 
+        }
+
+        public void SetVortexPosition(int inx, Vector3 position){
+            Vec3 pos = new Vec3();
+            pos.x = position.x; 
+            pos.y = position.y; 
+            pos.z = position.z;
+            
+            World_setVortexPosition(ntv, inx, pos); 
+        }
+
+        public void SetVortexNormal(int inx, Vector3 normal){
+            Vec3 norm = new Vec3();
+            norm.x = normal.x; 
+            norm.y = normal.y; 
+            norm.z = normal.z;
+            
+            World_setVortexNormal(ntv, inx, norm); 
+        }
+
+        public void SetVortexStrength(int inx, float strength){
+            World_setVortexStrength(ntv, inx, strength); 
+        }
 
 
         public int AddRod(int a, int b, float length, float stiffness){

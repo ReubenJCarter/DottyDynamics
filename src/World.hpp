@@ -26,6 +26,11 @@ class World {
         DynamicPool<Vec3> globalForces;
         DynamicPool<NoiseField> noiseFields;   
         DynamicPool<NoiseGenerator> noiseGenerators;      
+        
+        float collisionFloorStaticFriction; 
+        float collisionFloorKineticFriction; 
+        float collisionFloorHeight; 
+        bool hasCollisionFloor; 
 
         void updateGlobalForces(){
 
@@ -163,8 +168,35 @@ class World {
                     if(!vortices.isInUse(i))
                         continue; 
 
-                    for(int p = 0; p < pcount; p++){
-                        
+                    if(vortices[i].falloff == Falloff::Squared){
+                        for(int p = 0; p < pcount; p++){
+                            float xDiff = vortices[i].position.x - particles[p].position.x; 
+                            float yDiff = vortices[i].position.y - particles[p].position.y;
+                            float zDiff = vortices[i].position.z - particles[p].position.z;
+
+                            float dist2 = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff; 
+                            float dist = sqrt(dist2); 
+
+                            float distFactor; 
+                            if(dist > vortices[i].maxDist)
+                                distFactor = 0;
+                            else if(dist < vortices[i].minDist)
+                                distFactor = dist == 0 ? 0 : 1 / (vortices[i].minDist * vortices[i].minDist);
+                            else
+                                distFactor = 1 / (dist2); 
+
+                            float vx = vortices[i].normal.x * vortices[i].strength;  
+                            float vy = vortices[i].normal.y * vortices[i].strength;
+                            float vz = vortices[i].normal.z * vortices[i].strength;
+
+                            float cx = vy * zDiff - vz * yDiff; 
+	                        float cy = vz * xDiff - vx * zDiff; 
+	                        float cz = vx * yDiff - vy * xDiff; 
+
+                            particles[p].velocity.x += timestep * particles[p].invMass * cx * distFactor;
+                            particles[p].velocity.y += timestep * particles[p].invMass * cy * distFactor;
+                            particles[p].velocity.z += timestep * particles[p].invMass * cz * distFactor;
+                        }
                     }
                 }
 
@@ -220,27 +252,7 @@ class World {
                             }
                         }
                     }
-                  
-                }
-
-            }).wait();
-        }
-
-        void updateNoiseFieldsVelocities(){
-            unsigned int noiseFieldsCount = noiseFields.getBound(); 
-
-            float deltaT = timestep / substeps;
-
-            threadPool.parallelize_loop(noiseFieldsCount, [this, deltaT](const int a, const int b){
-                
-                unsigned int pcount = particles.getBound();
-                
-                for(int i = a; i < b; i++){
-
-                    if(!noiseFields.isInUse(i))
-                        continue; 
-
-                    if(noiseFields[i].isVelocity){
+                    else{
                         if(noiseFields[i].noiseType == NoiseType::Simplex || noiseFields[i].noiseType == NoiseType::Perlin || noiseFields[i].noiseType == NoiseType::Value){
                             for(int p = 0; p < pcount; p++){
 
@@ -260,9 +272,9 @@ class World {
                                 float correctingForceY = verrY * kp;
                                 float correctingForceZ = verrZ * kp;
 
-                                particles[p].positionNext.x += deltaT * correctingForceX; 
-                                particles[p].positionNext.y += deltaT * correctingForceY;
-                                particles[p].positionNext.z += deltaT * correctingForceZ;
+                                particles[p].velocity.x += timestep * particles[p].invMass * correctingForceX;
+                                particles[p].velocity.y += timestep * particles[p].invMass * correctingForceY;
+                                particles[p].velocity.z += timestep * particles[p].invMass * correctingForceZ;
                             }
                         }
                         else if(noiseFields[i].noiseType == NoiseType::SimplexCurl || noiseFields[i].noiseType == NoiseType::PerlinCurl || noiseFields[i].noiseType == NoiseType::ValueCurl){
@@ -279,18 +291,17 @@ class World {
                                 float verrX = targetVelocityX - particles[p].velocity.x; 
                                 float verrY = targetVelocityY - particles[p].velocity.y; 
                                 float verrZ = targetVelocityZ - particles[p].velocity.z;
-                                float kp = noiseFields[i].viscosity;
+                                float kp =  noiseFields[i].viscosity;
                                 float correctingForceX = verrX * kp; 
                                 float correctingForceY = verrY * kp;
                                 float correctingForceZ = verrZ * kp;
-                                
-                                particles[p].positionNext.x += deltaT * correctingForceX; 
-                                particles[p].positionNext.y += deltaT * correctingForceY;
-                                particles[p].positionNext.z += deltaT * correctingForceZ;
+
+                                particles[p].velocity.x += timestep * particles[p].invMass * correctingForceX;
+                                particles[p].velocity.y += timestep * particles[p].invMass * correctingForceY;
+                                particles[p].velocity.z += timestep * particles[p].invMass * correctingForceZ;
                             }
                         }
                     }
-                    
                   
                 }
 
@@ -391,7 +402,15 @@ class World {
             }
         }
 
-        
+        void updateCollisionBounds(){
+            if(hasCollisionFloor){
+
+            }
+        }
+
+        void updateBoxColliders(){
+
+        }
 
 
     public:  
@@ -447,9 +466,12 @@ class World {
                     particles[i].positionNext.y = particles[i].position.y + deltaT * particles[i].velocity.y;
                     particles[i].positionNext.z = particles[i].position.z + deltaT * particles[i].velocity.z;
                 } 
+ 
+                //update boundry Collisions
 
-                //update noise field
-                updateNoiseFieldsVelocities(); 
+                //update colliders
+                updateCollisionBounds(); 
+                updateBoxColliders(); 
 
                 //update rods 
                 updateRods(); 
@@ -482,6 +504,16 @@ class World {
 
         void setGlobalDamping(float d){
             globalDamping = d;
+        }
+
+        void setHasCollisionFloor(bool h){
+            hasCollisionFloor = h; 
+        }
+
+        void setCollisionFloor(float height, float staticFriction, float kineticFriction){
+            collisionFloorStaticFriction = staticFriction; 
+            collisionFloorKineticFriction = kineticFriction; 
+            collisionFloorHeight = height; 
         }
 
 
@@ -543,6 +575,34 @@ class World {
         }
 
 
+        int addVortex(Vec3 position, Vec3 normal, float strength, float minDist, float maxDist, Falloff falloff){
+            Vortex v; 
+            v.position = position; 
+            v.normal = normal;
+            v.strength = strength;
+            v.minDist = minDist;
+            v.maxDist = maxDist; 
+            v.falloff = falloff;
+            return vortices.add(v);  
+        }
+
+        void destroyVortex(int inx){
+            vortices.remove(inx); 
+        }
+
+        void setVortexPosition(int inx, Vec3 position){
+            vortices[inx].position = position; 
+        }
+
+        void setVortexNormal(int inx, Vec3 normal){
+            vortices[inx].normal = normal; 
+        }
+
+        void setVortexStrength(int inx, float strength){
+            vortices[inx].strength = strength; 
+        }
+
+
         int addRod(int a, int b, float length, float stiffness){
             Rod r;
             r.a = a; 
@@ -595,7 +655,7 @@ class World {
             NoiseField n; 
 
             n.position = Vec3(0, 0, 0); 
-            n.boundShape = BoundShape::Sphere; 
+            n.boundShape = ShapeType::Sphere; 
             n.boundSize = Vec3(std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max()); 
             n.falloff = Falloff::Linear; 
             n.falloffRatio = 0; 

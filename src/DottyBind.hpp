@@ -22,6 +22,8 @@ extern "C" {
     EXPORT void World_setTimestep(World* instance, float timestep); 
     EXPORT void World_setSubsteps(World* instance, float substeps); 
     EXPORT void World_setGlobalDamping(World* instance, float globalDamping); 
+    EXPORT void World_setHasCollisionFloor(World* instance, bool hasCollisionBound); 
+    EXPORT void World_setCollisionFloor(World* instance, float height, float staticFriction, float kineticFriction); 
 
     EXPORT int World_addParticle(World* instance, Vec3 initialPosition, Vec3 initialVelocity, float invMass); 
     EXPORT void World_destroyParticle(World* instance, int inx); 
@@ -33,6 +35,12 @@ extern "C" {
     EXPORT void World_destroyAttractor(World* instance, int inx); 
     EXPORT void World_setAttractorPosition(World* instance, int inx, Vec3 position);
     EXPORT void World_setAttractorStrength(World* instance, int inx, float strength);
+
+    EXPORT int World_addVortex(World* instance, Vec3 position, Vec3 normal, float strength, float minDist, float maxDist, Falloff falloff); 
+    EXPORT void World_destroyVortex(World* instance, int inx); 
+    EXPORT void World_setVortexPosition(World* instance, int inx, Vec3 position);
+    EXPORT void World_setVortexNormal(World* instance, int inx, Vec3 normal);
+    EXPORT void World_setVortexStrength(World* instance, int inx, float strength);
 
     EXPORT int World_addRod(World* instance, int a, int b, float length, float stiffness);
     EXPORT void World_destroyRod(World* instance, int inx);

@@ -35,6 +35,14 @@ EXPORT void World_setGlobalDamping(World* instance, float globalDamping){
     instance->setGlobalDamping(globalDamping); 
 }
 
+EXPORT void World_setHasCollisionFloor(World* instance, bool hasCollisionFloor){
+    instance->setHasCollisionFloor(hasCollisionFloor); 
+}
+
+EXPORT void World_setCollisionFloor(World* instance, float height, float staticFriction, float kineticFriction){
+    instance->setCollisionFloor(height, staticFriction, kineticFriction); 
+}
+
 
 
 EXPORT int World_addParticle(World* instance, Vec3 initialPosition, Vec3 initialVelocity, float invMass){
@@ -73,6 +81,28 @@ EXPORT void World_setAttractorPosition(World* instance, int inx, Vec3 position){
 
 EXPORT void World_setAttractorStrength(World* instance, int inx, float strength){
     instance->setAttractorStrength(inx, strength);
+}
+
+
+
+EXPORT int World_addVortex(World* instance, Vec3 position, Vec3 normal, float strength, float minDist, float maxDist, Falloff falloff){
+    return instance->addVortex(position, normal, strength, minDist, maxDist, falloff);
+}
+
+EXPORT void World_destroyVortex(World* instance, int inx){
+    instance->destroyVortex(inx); 
+}
+
+EXPORT void World_setVortexPosition(World* instance, int inx, Vec3 position){
+    instance->setVortexPosition(inx, position); 
+}
+
+EXPORT void World_setVortexNormal(World* instance, int inx, Vec3 normal){
+    instance->setVortexNormal(inx, normal); 
+}
+
+EXPORT void World_setVortexStrength(World* instance, int inx, float strength){
+    instance->setVortexStrength(inx, strength); 
 }
 
 

@@ -49,7 +49,9 @@ public class ClothTest : MonoBehaviour
                 }
             }
         }
-        attractorId = world.AddAttractor(new Vector3(0, 0, 0), 0, 0.1f, 100000, Dotty.World.Falloff.Squared);
+        attractorId = world.AddAttractor(new Vector3(0, 0, 0), 0, 0.1f, 100000, Dotty.Falloff.Squared);
+        world.SetHasCollisionFloor(true); 
+        world.SetCollisionFloor(0, 0, 0);
     }
 
     // Update is called once per frame
@@ -61,10 +63,10 @@ public class ClothTest : MonoBehaviour
         Vector3 newPosition = new Vector3(0, 0, 0);
         
         unsafe {
-            Dotty.World.Particle* ptr = world.GetParticlesPtr(); 
+            Dotty.Particle* ptr = world.GetParticlesPtr(); 
             int bound = world.GetParticlesPoolBound(); 
             for(int i = 0; i < bound; i++){
-                Dotty.World.Particle p = *ptr; 
+                Dotty.Particle p = *ptr; 
                 newPosition.x = p.position.x;
                 newPosition.y = p.position.y;
                 newPosition.z = p.position.z;

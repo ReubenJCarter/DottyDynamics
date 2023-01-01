@@ -4,7 +4,8 @@
 
 enum Falloff{Constant, Linear, Squared, LinearWell, SquaredWell}; 
 enum NoiseType{Simplex, SimplexCurl, Perlin, PerlinCurl, Value, ValueCurl}; 
-enum BoundShape{Cuboid, Sphere, Ellipsoid};
+enum ShapeType{Box, Sphere, Ellipsoid};
+
 
 struct Particle {
     Vec3 position;
@@ -47,7 +48,7 @@ struct Vortex {
 struct NoiseField {
     Vec3 position; 
     Vec3 boundSize; 
-    BoundShape boundShape;
+    ShapeType boundShape;
     float falloffRatio; 
     Falloff falloff; 
     float noiseScale; 
@@ -56,4 +57,9 @@ struct NoiseField {
     NoiseType noiseType; 
     float viscosity; 
     bool isVelocity; 
+}; 
+
+struct BoxCollider {
+    Vec3 position; 
+    Vec3 size;
 }; 
