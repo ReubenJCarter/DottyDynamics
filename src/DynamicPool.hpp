@@ -68,6 +68,15 @@ class DynamicPool {
             
         }
 
+        void clear(){
+            emptyCount = 0;
+            bound = 0;
+            count = 0; 
+            for(int i = 0; i < poolSize; i++){
+                inUse[i] = false; 
+            }
+        }
+
         void remove(unsigned int inx){
             if(!inUse[inx] || inx > bound){
                 return; 

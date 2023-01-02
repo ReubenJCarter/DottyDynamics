@@ -62,4 +62,11 @@ struct NoiseField {
 struct BoxCollider {
     Vec3 position; 
     Vec3 size;
+    bool inverse; 
+}; 
+
+struct SphereCollider {
+    Vec3 position; 
+    float size;
+    bool inverse;
 }; 

@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class ClothTest : MonoBehaviour
 {
-    Dotty.World world; 
+    public Dotty.World world; 
 
     public GameObject spherePrefab; 
     Transform[] sphereTransforms;
@@ -16,7 +16,6 @@ public class ClothTest : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        world = new Dotty.World(); 
         CreateCloth(); 
     }
 
@@ -55,13 +54,9 @@ public class ClothTest : MonoBehaviour
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
-        
-        world.Update();
-
         Vector3 newPosition = new Vector3(0, 0, 0);
-        
         unsafe {
             Dotty.Particle* ptr = world.GetParticlesPtr(); 
             int bound = world.GetParticlesPoolBound(); 
@@ -82,7 +77,6 @@ public class ClothTest : MonoBehaviour
             float enter = 0.0f;
             if (plane.Raycast(ray, out enter)){
                 Vector3 hitPoint = ray.GetPoint(enter);
-                Debug.Log("Pressed primary button. " + hitPoint.x + " " + hitPoint.y);
                 attractorOn = true; 
                 hitPoint.z = -1; 
                 world.SetAttractorPosition(attractorId, hitPoint); 

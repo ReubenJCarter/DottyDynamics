@@ -32,15 +32,25 @@ extern "C" {
     EXPORT int World_getParticlesPoolBound(World* instance);
 
     EXPORT int World_addAttrator(World* instance, Vec3 position, float strength, float minDist, float maxDist, Falloff falloff); 
+    EXPORT Attractor* World_getAttractorPtr(World* instance, int inx);
     EXPORT void World_destroyAttractor(World* instance, int inx); 
+    EXPORT void World_clearAttractors(World* instance);
     EXPORT void World_setAttractorPosition(World* instance, int inx, Vec3 position);
     EXPORT void World_setAttractorStrength(World* instance, int inx, float strength);
+    EXPORT void World_setAttractorMinDist(World* instance, int inx, float minDist); 
+    EXPORT void World_setAttractorMaxDist(World* instance, int inx, float maxDist);
+    EXPORT void World_setAttractorFalloff(World* instance, int inx, Falloff falloff);
 
     EXPORT int World_addVortex(World* instance, Vec3 position, Vec3 normal, float strength, float minDist, float maxDist, Falloff falloff); 
+    EXPORT Vortex* World_getVortexPtr(World* instance, int inx);
     EXPORT void World_destroyVortex(World* instance, int inx); 
+    EXPORT void World_clearVortices(World* instance);
     EXPORT void World_setVortexPosition(World* instance, int inx, Vec3 position);
     EXPORT void World_setVortexNormal(World* instance, int inx, Vec3 normal);
     EXPORT void World_setVortexStrength(World* instance, int inx, float strength);
+    EXPORT void World_setVortexMinDist(World* instance, int inx, float minDist); 
+    EXPORT void World_setVortexMaxDist(World* instance, int inx, float maxDist);
+    EXPORT void World_setVortexFalloff(World* instance, int inx, Falloff falloff);
 
     EXPORT int World_addRod(World* instance, int a, int b, float length, float stiffness);
     EXPORT void World_destroyRod(World* instance, int inx);
@@ -56,4 +66,5 @@ extern "C" {
     EXPORT int World_addNoiseField(World* instance, NoiseType noiseType, float strength, float noiseScale, bool isVelocity);
     EXPORT void World_setNoiseFieldViscosity(World* instance, int inx, float viscosity); 
     EXPORT void World_destroyNoiseField(World* instance, int inx); 
+    EXPORT void World_clearNoiseFields(World* instance);
 }

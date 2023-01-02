@@ -25,7 +25,10 @@ class World {
         DynamicPool<Vortex> vortices;
         DynamicPool<Vec3> globalForces;
         DynamicPool<NoiseField> noiseFields;   
-        DynamicPool<NoiseGenerator> noiseGenerators;      
+        DynamicPool<NoiseGenerator> noiseGenerators;    
+        DynamicPool<BoxCollider> boxColliders;    
+        DynamicPool<SphereCollider> sphereColliders;    
+          
         
         float collisionFloorStaticFriction; 
         float collisionFloorKineticFriction; 
@@ -405,10 +408,21 @@ class World {
         void updateCollisionBounds(){
             if(hasCollisionFloor){
 
+                unsigned int maxParticleCount = particles.getBound();
+                
+                for (int i = 0; i < maxParticleCount; i++){
+                    float py = particles[i].positionNext.y; 
+                    float disp = collisionFloorHeight - py; 
+                    particles[i].positionNext.y += disp > 0 ? disp : 0; 
+                }                
             }
         }
 
         void updateBoxColliders(){
+
+        }
+
+        void updateSphereColliders(){
 
         }
 
@@ -467,8 +481,6 @@ class World {
                     particles[i].positionNext.z = particles[i].position.z + deltaT * particles[i].velocity.z;
                 } 
  
-                //update boundry Collisions
-
                 //update colliders
                 updateCollisionBounds(); 
                 updateBoxColliders(); 
@@ -562,8 +574,16 @@ class World {
             return attractors.add(a);  
         }
 
+        Attractor* getAttractorPtr(int inx){
+            return &(attractors[inx]); 
+        }
+
         void destroyAttractor(int inx){
             attractors.remove(inx); 
+        }
+
+        void clearAttractors(){
+            attractors.clear(); 
         }
 
         void setAttractorPosition(int inx, Vec3 position){
@@ -572,6 +592,18 @@ class World {
 
         void setAttractorStrength(int inx, float strength){
             attractors[inx].strength = strength; 
+        }
+
+        void setAttractorMinDist(int inx, float minDist){
+            attractors[inx].minDist = minDist; 
+        }
+
+        void setAttractorMaxDist(int inx, float maxDist){
+            attractors[inx].maxDist = maxDist; 
+        }
+
+        void setAttractorFalloff(int inx, Falloff falloff){
+            attractors[inx].falloff = falloff;
         }
 
 
@@ -586,8 +618,16 @@ class World {
             return vortices.add(v);  
         }
 
+        Vortex* getVortexPtr(int inx){
+            return &(vortices[inx]);
+        }
+
         void destroyVortex(int inx){
             vortices.remove(inx); 
+        }
+
+        void clearVortices(){
+            vortices.clear(); 
         }
 
         void setVortexPosition(int inx, Vec3 position){
@@ -600,6 +640,18 @@ class World {
 
         void setVortexStrength(int inx, float strength){
             vortices[inx].strength = strength; 
+        }
+
+        void setVortexMinDist(int inx, float minDist){
+            vortices[inx].minDist = minDist; 
+        }
+
+        void setVortexMaxDist(int inx, float maxDist){
+            vortices[inx].maxDist = maxDist; 
+        }
+
+        void setVortexFalloff(int inx, Falloff falloff){
+            vortices[inx].falloff = falloff; 
         }
 
 
@@ -673,12 +725,19 @@ class World {
             return noiseGenerators.add(gen);   
         }
 
-        void setNoiseFieldViscosity(int inx, float viscosity){
-            noiseFields[inx].viscosity = viscosity; 
-        }
-
         void destroyNoiseField(int inx){
             noiseFields.remove(inx); 
             noiseGenerators.remove(inx);
         }
+
+        void clearNoiseFields(){
+            noiseFields.clear(); 
+            noiseGenerators.clear(); 
+        }
+
+        void setNoiseFieldViscosity(int inx, float viscosity){
+            noiseFields[inx].viscosity = viscosity; 
+        }
+
+        
 }; 

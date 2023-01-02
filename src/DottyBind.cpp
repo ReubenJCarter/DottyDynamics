@@ -71,8 +71,16 @@ EXPORT int World_addAttrator(World* instance, Vec3 position, float strength, flo
     return instance->addAttrator(position, strength, minDist, maxDist, falloff); 
 }
 
+EXPORT Attractor* World_getAttractorPtr(World* instance, int inx){
+    return instance->getAttractorPtr(inx);
+}
+
 EXPORT void World_destroyAttractor(World* instance, int inx){
     instance->destroyAttractor(inx);
+}
+
+EXPORT void World_clearAttractors(World* instance){
+    instance->clearAttractors(); 
 }
 
 EXPORT void World_setAttractorPosition(World* instance, int inx, Vec3 position){
@@ -83,14 +91,34 @@ EXPORT void World_setAttractorStrength(World* instance, int inx, float strength)
     instance->setAttractorStrength(inx, strength);
 }
 
+EXPORT void World_setAttractorMinDist(World* instance, int inx, float minDist){
+    instance->setAttractorMinDist(inx, minDist); 
+}
+
+EXPORT void World_setAttractorMaxDist(World* instance, int inx, float maxDist){
+    instance->setAttractorMaxDist(inx, maxDist); 
+}
+
+EXPORT void World_setAttractorFalloff(World* instance, int inx, Falloff falloff){
+    instance->setAttractorFalloff(inx, falloff); 
+}
+
 
 
 EXPORT int World_addVortex(World* instance, Vec3 position, Vec3 normal, float strength, float minDist, float maxDist, Falloff falloff){
     return instance->addVortex(position, normal, strength, minDist, maxDist, falloff);
 }
 
+EXPORT Vortex* World_getVortexPtr(World* instance, int inx){
+    return instance->getVortexPtr(inx);
+}
+
 EXPORT void World_destroyVortex(World* instance, int inx){
     instance->destroyVortex(inx); 
+}
+
+EXPORT void World_clearVortices(World* instance){
+    instance->clearVortices(); 
 }
 
 EXPORT void World_setVortexPosition(World* instance, int inx, Vec3 position){
@@ -104,6 +132,19 @@ EXPORT void World_setVortexNormal(World* instance, int inx, Vec3 normal){
 EXPORT void World_setVortexStrength(World* instance, int inx, float strength){
     instance->setVortexStrength(inx, strength); 
 }
+
+EXPORT void World_setVortexMinDist(World* instance, int inx, float minDist){
+    instance->setVortexMinDist(inx, minDist); 
+}
+
+EXPORT void World_setVortexMaxDist(World* instance, int inx, float maxDist){
+    instance->setVortexMaxDist(inx, maxDist); 
+}
+
+EXPORT void World_setVortexFalloff(World* instance, int inx, Falloff falloff){
+    instance->setVortexFalloff(inx, falloff); 
+}
+
 
 
 
@@ -157,4 +198,8 @@ EXPORT void World_setNoiseFieldViscosity(World* instance, int inx, float viscosi
 
 EXPORT void World_destroyNoiseField(World* instance, int inx){
     instance->destroyNoiseField(inx); 
+}
+
+EXPORT void World_clearNoiseFields(World* instance){
+    instance->clearNoiseFields(); 
 }
