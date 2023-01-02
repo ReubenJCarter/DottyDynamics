@@ -2,10 +2,9 @@
 
 #include "thirdparty/VecMath/VecMath.hpp"
 
-enum Falloff{Constant, Linear, Squared, LinearWell, SquaredWell}; 
+enum Falloff{Constant, InvDist, InvDist2, InvDistWell, InvDist2Well }; 
 enum NoiseType{Simplex, SimplexCurl, Perlin, PerlinCurl, Value, ValueCurl}; 
-enum ShapeType{Box, Sphere, Ellipsoid};
-
+enum ShapeType{Box, Sphere, Ellipsoid}; 
 
 struct Particle {
     Vec3 position;
@@ -36,6 +35,15 @@ struct Attractor {
     Falloff falloff; 
 }; 
 
+struct StrangeAttractor {
+    Vec3 position; 
+    Vec3 scale; 
+    float strength;
+    float minDist; 
+    float maxDist; 
+    float param[10]; 
+}; 
+
 struct Vortex {
     Vec3 position; 
     Vec3 normal; 
@@ -61,12 +69,17 @@ struct NoiseField {
 
 struct BoxCollider {
     Vec3 position; 
+    Mat3 invRotation; 
     Vec3 size;
+    float staticFriction; 
+    float kineticFriction; 
     bool inverse; 
 }; 
 
 struct SphereCollider {
     Vec3 position; 
-    float size;
+    float radius;
+    float staticFriction; 
+    float kineticFriction; 
     bool inverse;
 }; 

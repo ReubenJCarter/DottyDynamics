@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor; 
 
 namespace Dotty{
     public class Attractor : MonoBehaviour
@@ -13,12 +14,7 @@ namespace Dotty{
         public float strength = 10; 
         public float minDistance = 0.1f; 
         public float maxDistance = 1000; 
-        public Falloff falloff = Falloff.Squared; 
-
-        // Start is called before the first frame update
-        void Start()
-        {
-        }
+        public Falloff falloff = Falloff.InvDist2; 
 
         void OnEnable()
         {
@@ -47,6 +43,51 @@ namespace Dotty{
                 (*ptr).maxDist = maxDistance; 
                 (*ptr).falloff = falloff; 
             } 
+        }
+    }
+
+
+    [CustomEditor(typeof(Attractor))]
+    public class AttractorEditor : Editor
+    {
+        public void OnSceneGUI()
+        {
+            var t = target as Attractor;
+
+
+            EditorGUI.BeginChangeCheck();
+
+            Handles.color = Color.red;
+            float maxDistance = Handles.RadiusHandle(Quaternion.identity, t.transform.position, t.maxDistance);
+
+            if (EditorGUI.EndChangeCheck()){
+                Undo.RecordObject(target, "Changed Max Distance");
+                t.maxDistance = maxDistance;
+            }
+
+
+            EditorGUI.BeginChangeCheck();
+            
+            Handles.color = Color.blue;
+            float minDistance = Handles.RadiusHandle(Quaternion.identity, t.transform.position, t.minDistance);
+
+            if (EditorGUI.EndChangeCheck()){
+                Undo.RecordObject(target, "Changed Min Distance");
+                t.minDistance = minDistance;
+            }
+
+            Handles.color = Color.white;
+            Vector3 normal = t.transform.rotation * Vector3.up;
+            float s = t.strength*5; 
+
+            Handles.DrawDottedLine(t.transform.position, t.transform.position + new Vector3(s, 0, 0), 4);
+            Handles.DrawDottedLine(t.transform.position, t.transform.position + new Vector3(-s, 0, 0), 4);
+
+            Handles.DrawDottedLine(t.transform.position, t.transform.position + new Vector3(0, s, 0), 4);
+            Handles.DrawDottedLine(t.transform.position, t.transform.position + new Vector3(0, -s, 0), 4);
+
+            Handles.DrawDottedLine(t.transform.position, t.transform.position + new Vector3(0, 0, s), 4);
+            Handles.DrawDottedLine(t.transform.position, t.transform.position + new Vector3(0, 0, -s), 4);
         }
     }
 }

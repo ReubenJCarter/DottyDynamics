@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Dotty{
-    public class NoiseField : MonoBehaviour
+    public class SphereCollide : MonoBehaviour
     {
         // Start is called before the first frame update
         void Start()

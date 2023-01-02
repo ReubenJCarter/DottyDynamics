@@ -33,7 +33,7 @@ public class CurlNoiseTest : MonoBehaviour
         //world.AddNoiseField(Dotty.World.NoiseType.Simplex, 0.1f, 40.0f, false); 
         //world.AddAttractor(new Vector3(5, 5, 5), 0.1f, 20, 100000, Dotty.World.Falloff.LinearWell); 
 
-        attractorId = world.AddAttractor(new Vector3(0, 0, 0), 10, 1f, 100000, Dotty.Falloff.Squared);
+        attractorId = world.AddAttractor(new Vector3(0, 0, 0), 10, 1f, 100000, Dotty.Falloff.InvDist2);
     }
 
     // Update is called once per frame

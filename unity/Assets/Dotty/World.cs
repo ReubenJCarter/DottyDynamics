@@ -262,21 +262,21 @@ namespace Dotty{
         #else
         [DllImport ("Dotty")]   
         #endif
-        private static extern int World_destroyRod(IntPtr instance, int inx);
+        private static extern void World_destroyRod(IntPtr instance, int inx);
 
         #if UNITY_IPHONE
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
-        private static extern int World_setRodStiffness(IntPtr instance, int inx, float stiffness);
+        private static extern void World_setRodStiffness(IntPtr instance, int inx, float stiffness);
 
         #if UNITY_IPHONE
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
-        private static extern int World_setRodLength(IntPtr instance, int inx, float length);
+        private static extern void World_setRodLength(IntPtr instance, int inx, float length);
 
 
 
@@ -292,28 +292,28 @@ namespace Dotty{
         #else
         [DllImport ("Dotty")]   
         #endif
-        private static extern int World_destroyAnchorRod(IntPtr instance, int inx);
+        private static extern void World_destroyAnchorRod(IntPtr instance, int inx);
 
         #if UNITY_IPHONE
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
-        private static extern int World_setAnchorRodStiffness(IntPtr instance, int inx, float stiffness);
+        private static extern void World_setAnchorRodStiffness(IntPtr instance, int inx, float stiffness);
 
         #if UNITY_IPHONE
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
-        private static extern int World_setAnchorRodLength(IntPtr instance, int inx, float length);
+        private static extern void World_setAnchorRodLength(IntPtr instance, int inx, float length);
 
         #if UNITY_IPHONE
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
-        private static extern int World_setAnchorRodPosition(IntPtr instance, int inx, Vec3 position);
+        private static extern void World_setAnchorRodPosition(IntPtr instance, int inx, Vec3 position);
 
 
 
@@ -329,14 +329,14 @@ namespace Dotty{
         #else
         [DllImport ("Dotty")]   
         #endif
-        private static extern int World_setNoiseFieldViscosity(IntPtr instance, int inx, float viscosity);
+        private static extern void World_setNoiseFieldViscosity(IntPtr instance, int inx, float viscosity);
 
         #if UNITY_IPHONE
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
-        private static extern int World_destroyNoiseField(IntPtr instance, int inx);
+        private static extern void World_destroyNoiseField(IntPtr instance, int inx);
 
         #if UNITY_IPHONE
         [DllImport ("__Internal")]
@@ -345,7 +345,71 @@ namespace Dotty{
         #endif
         private static extern void World_clearNoiseFields(IntPtr instance);
 
-        
+
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern int World_addSphereCollider(IntPtr instance, Vec3 position, float radius, float kineticFriction, float staticFriction, bool inverse);
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern IntPtr World_getSphereColliderPtr(IntPtr instance, int inx); 
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_destroySphereCollider(IntPtr instance, int inx);
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_clearSphereColliders(IntPtr instance);
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setSphereColliderPosition(IntPtr instance, int inx, Vec3 position);
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setSphereColliderRadius(IntPtr instance, int inx, float radius);
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setSphereColliderKineticFriction(IntPtr instance, int inx, float kineticFriction); 
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setSphereColliderStaticFriction(IntPtr instance, int inx, float staticFriction); 
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setSphereColliderInverse(IntPtr instance, int inx, bool inverse); 
+
 
         private IntPtr ntv; 
 
@@ -609,5 +673,9 @@ namespace Dotty{
         public void ClearNoiseFields(){
             World_clearNoiseFields(ntv); 
         }
+
+
+
+        
     }
 }

@@ -19,6 +19,14 @@ class DynamicPool {
             count = 0; 
         }
 
+        ~DynamicPool(){
+            if(poolSize > 0){
+                delete[] data;
+                delete[] inUse;
+                delete[] emptyList;
+            }
+        }
+
         void setPoolSize(unsigned int sz){
 
             if(poolSize > 0){

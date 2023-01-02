@@ -67,4 +67,19 @@ extern "C" {
     EXPORT void World_setNoiseFieldViscosity(World* instance, int inx, float viscosity); 
     EXPORT void World_destroyNoiseField(World* instance, int inx); 
     EXPORT void World_clearNoiseFields(World* instance);
+
+    EXPORT int World_addSphereCollider(World* instance, Vec3 position, float radius, float kineticFriction, float staticFriction, bool inverse);
+    EXPORT SphereCollider* World_getSphereColliderPtr(World* instance, int inx); 
+    EXPORT void World_destroySphereCollider(World* instance, int inx);
+    EXPORT void World_clearSphereColliders(World* instance);
+    EXPORT void World_setSphereColliderPosition(World* instance, int inx, Vec3 position);
+    EXPORT void World_setSphereColliderRadius(World* instance, int inx, float radius);
+    EXPORT void World_setSphereColliderKineticFriction(World* instance, int inx, float kineticFriction); 
+    EXPORT void World_setSphereColliderStaticFriction(World* instance, int inx, float staticFriction); 
+    EXPORT void World_setSphereColliderInverse(World* instance, int inx, bool inverse); 
+
+    EXPORT int World_addBoxCollider(World* instance, Vec3 position, Mat3 invRotation, Vec3 size, float kineticFriction, float staticFriction, bool inverse);
+    EXPORT BoxCollider* World_getBoxColliderPtr(World* instance, int inx); 
+    EXPORT void World_destroyBoxCollider(World* instance, int inx);
+    EXPORT void World_clearBoxColliders(World* instance);
 }

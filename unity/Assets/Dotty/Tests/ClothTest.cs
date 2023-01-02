@@ -48,7 +48,7 @@ public class ClothTest : MonoBehaviour
                 }
             }
         }
-        attractorId = world.AddAttractor(new Vector3(0, 0, 0), 0, 0.1f, 100000, Dotty.Falloff.Squared);
+        attractorId = world.AddAttractor(new Vector3(0, 0, 0), 0, 0.1f, 100000, Dotty.Falloff.InvDist2);
         world.SetHasCollisionFloor(true); 
         world.SetCollisionFloor(0, 0, 0);
     }

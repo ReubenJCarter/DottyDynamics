@@ -203,3 +203,59 @@ EXPORT void World_destroyNoiseField(World* instance, int inx){
 EXPORT void World_clearNoiseFields(World* instance){
     instance->clearNoiseFields(); 
 }
+
+
+
+EXPORT int World_addSphereCollider(World* instance, Vec3 position, float radius, float kineticFriction, float staticFriction, bool inverse){
+    return instance->addSphereCollider(position, radius, kineticFriction, staticFriction, inverse); 
+}
+
+EXPORT SphereCollider* World_getSphereColliderPtr(World* instance, int inx){
+    return instance->getSphereColliderPtr(inx); 
+}
+
+EXPORT void World_destroySphereCollider(World* instance, int inx){
+    instance->destroySphereCollider(inx);
+}
+
+EXPORT void World_clearSphereColliders(World* instance){
+    instance->clearSphereColliders();
+}
+
+EXPORT void World_setSphereColliderPosition(World* instance, int inx, Vec3 position){
+    instance->setSphereColliderPosition(inx, position); 
+}
+
+EXPORT void World_setSphereColliderRadius(World* instance, int inx, float radius){
+    instance->setSphereColliderRadius(inx, radius); 
+}
+
+EXPORT void World_setSphereColliderKineticFriction(World* instance, int inx, float kineticFriction){
+    instance->setSphereColliderKineticFriction(inx, kineticFriction); 
+}
+
+EXPORT void World_setSphereColliderStaticFriction(World* instance, int inx, float staticFriction){
+    instance->setSphereColliderStaticFriction(inx, staticFriction); 
+}
+
+EXPORT void World_setSphereColliderInverse(World* instance, int inx, bool inverse){
+    instance->setSphereColliderInverse(inx, inverse);
+}
+
+
+
+EXPORT int World_addBoxCollider(World* instance, Vec3 position, Mat3 invRotation, Vec3 size, float kineticFriction, float staticFriction, bool inverse){
+    return instance->addBoxCollider(position, invRotation, size, kineticFriction, staticFriction, inverse); 
+}
+
+EXPORT BoxCollider* World_getBoxColliderPtr(World* instance, int inx){
+    return instance->getBoxColliderPtr(inx); 
+}
+
+EXPORT void World_destroyBoxCollider(World* instance, int inx){
+    instance->destroyBoxCollider(inx); 
+}
+
+EXPORT void World_clearBoxColliders(World* instance){
+    instance->clearBoxColliders(); 
+}

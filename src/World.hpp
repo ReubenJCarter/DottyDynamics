@@ -16,6 +16,10 @@ class World {
         int substeps; 
         float globalDamping; 
         float gravity;
+        float collisionFloorStaticFriction; 
+        float collisionFloorKineticFriction; 
+        float collisionFloorHeight; 
+        bool hasCollisionFloor;
         DynamicPool<Particle> particles;
         DynamicPool<Rod> rods;
         DynamicPool<AnchorRod> anchorRods;
@@ -28,12 +32,7 @@ class World {
         DynamicPool<NoiseGenerator> noiseGenerators;    
         DynamicPool<BoxCollider> boxColliders;    
         DynamicPool<SphereCollider> sphereColliders;    
-          
-        
-        float collisionFloorStaticFriction; 
-        float collisionFloorKineticFriction; 
-        float collisionFloorHeight; 
-        bool hasCollisionFloor; 
+         
 
         void updateGlobalForces(){
 
@@ -75,7 +74,7 @@ class World {
                     if(!attractors.isInUse(i))
                       continue; 
 
-                    if(attractors[i].falloff == Falloff::Squared){
+                    if(attractors[i].falloff == Falloff::InvDist2){
                         for(int p = 0; p < pcount; p++){
                             float xDiff = attractors[i].position.x - particles[p].position.x; 
                             float yDiff = attractors[i].position.y - particles[p].position.y;
@@ -97,7 +96,7 @@ class World {
                             particles[p].velocity.z += timestep * particles[p].invMass * zDiff * distFactor * attractors[i].strength;
                         }
                     }
-                    else if(attractors[i].falloff == Falloff::Linear){
+                    else if(attractors[i].falloff == Falloff::InvDist){
                         for(int p = 0; p < pcount; p++){
                             float xDiff = attractors[i].position.x - particles[p].position.x; 
                             float yDiff = attractors[i].position.y - particles[p].position.y;
@@ -119,7 +118,7 @@ class World {
                             particles[p].velocity.z += timestep * particles[p].invMass * zDiff * distFactor * attractors[i].strength;
                         }
                     }
-                    else if(attractors[i].falloff == Falloff::LinearWell){
+                    else if(attractors[i].falloff == Falloff::InvDistWell){
                         for(int p = 0; p < pcount; p++){
                             float xDiff = attractors[i].position.x - particles[p].position.x; 
                             float yDiff = attractors[i].position.y - particles[p].position.y;
@@ -135,7 +134,7 @@ class World {
                             particles[p].velocity.z += timestep * particles[p].invMass * zDiff * distFactor * attractors[i].strength;
                         }
                     }
-                    else if(attractors[i].falloff == Falloff::SquaredWell){
+                    else if(attractors[i].falloff == Falloff::InvDist2Well){
                         for(int p = 0; p < pcount; p++){
                             float xDiff = attractors[i].position.x - particles[p].position.x; 
                             float yDiff = attractors[i].position.y - particles[p].position.y;
@@ -171,7 +170,7 @@ class World {
                     if(!vortices.isInUse(i))
                         continue; 
 
-                    if(vortices[i].falloff == Falloff::Squared){
+                    if(vortices[i].falloff == Falloff::InvDist2){
                         for(int p = 0; p < pcount; p++){
                             float xDiff = vortices[i].position.x - particles[p].position.x; 
                             float yDiff = vortices[i].position.y - particles[p].position.y;
@@ -419,11 +418,73 @@ class World {
         }
 
         void updateBoxColliders(){
+            unsigned int maxColliderCount = boxColliders.getBound(); 
+            unsigned int pcount = particles.getBound();
 
+            threadPool.parallelize_loop(pcount, [this, maxColliderCount](const int a, const int b){
+                
+                for(int i = 0; i < maxColliderCount; i++){
+
+                    if(!boxColliders.isInUse(i))
+                            continue; 
+
+                    for(int p = a; p < b; p++){
+                        
+                        float halfsx = boxColliders[i].size.x/2;
+                        float halfsy = boxColliders[i].size.y/2;
+                        float halfsz = boxColliders[i].size.z/2;
+
+                        Vec3 ppos = particles[p].position; 
+                        ppos.multm(boxColliders[i].invRotation); 
+
+                        if(ppos.x > halfsx || ppos.x < -halfsx || ppos.y > halfsy || ppos.y < -halfsy || ppos.z > halfsz || ppos.z < -halfsz){
+                            continue; 
+                        }
+
+
+                    }
+                }
+
+            }).wait();
         }
 
         void updateSphereColliders(){
+            
+            unsigned int maxColliderCount = sphereColliders.getBound(); 
+            unsigned int pcount = particles.getBound();
 
+            threadPool.parallelize_loop(pcount, [this, maxColliderCount](const int a, const int b){
+                
+                for(int i = 0; i < maxColliderCount; i++){
+
+                    if(!sphereColliders.isInUse(i))
+                            continue; 
+
+                    for(int p = a; p < b; p++){
+                    
+                        float xDiff = sphereColliders[i].position.x - particles[p].position.x; 
+                        float yDiff = sphereColliders[i].position.y - particles[p].position.y;
+                        float zDiff = sphereColliders[i].position.z - particles[p].position.z;
+
+                        float dist2 = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff; 
+                        float dist = sqrt(dist2); 
+                        float pen = sphereColliders[i].radius - dist; 
+
+                        float xDiffNorm = xDiff / dist; 
+                        float yDiffNorm = yDiff / dist; 
+                        float zDiffNorm = zDiff / dist; 
+
+                        float dispX = xDiffNorm * pen;
+                        float dispY = yDiffNorm * pen; 
+                        float dispZ = zDiffNorm * pen; 
+
+                        particles[p].positionNext.x -= pen > 0 ? dispX : 0; 
+                        particles[p].positionNext.y -= pen > 0 ? dispY : 0; 
+                        particles[p].positionNext.z -= pen > 0 ? dispZ : 0; 
+                    }
+                }
+
+            }).wait();
         }
 
 
@@ -435,6 +496,11 @@ class World {
             substeps = 4; 
             globalDamping = 1;
             gravity = 9.81; 
+
+            collisionFloorStaticFriction = 0; 
+            collisionFloorKineticFriction = 0; 
+            collisionFloorHeight = 0; 
+            hasCollisionFloor = false;
             
             particles.setPoolSize(100000); 
             rodDeltas.setPoolSize(100000); 
@@ -447,8 +513,11 @@ class World {
             vortices.setPoolSize(1000); 
             globalForces.setPoolSize(1000); 
 
-            noiseFields.setPoolSize(100); 
-            noiseGenerators.setPoolSize(100); 
+            noiseFields.setPoolSize(50); 
+            noiseGenerators.setPoolSize(50); 
+
+            boxColliders.setPoolSize(1000); 
+            sphereColliders.setPoolSize(1000);
         }
         
         
@@ -484,6 +553,7 @@ class World {
                 //update colliders
                 updateCollisionBounds(); 
                 updateBoxColliders(); 
+                updateSphereColliders(); 
 
                 //update rods 
                 updateRods(); 
@@ -709,7 +779,7 @@ class World {
             n.position = Vec3(0, 0, 0); 
             n.boundShape = ShapeType::Sphere; 
             n.boundSize = Vec3(std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max()); 
-            n.falloff = Falloff::Linear; 
+            n.falloff = Falloff::InvDist; 
             n.falloffRatio = 0; 
             n.viscosity = 1.0f;
 
@@ -739,5 +809,97 @@ class World {
             noiseFields[inx].viscosity = viscosity; 
         }
 
+
+
+        int addSphereCollider(Vec3 position, float radius, float kineticFriction, float staticFriction, bool inverse){
+            SphereCollider c; 
+            c.position = position; 
+            c.radius = radius;
+            c.kineticFriction = kineticFriction;
+            c.staticFriction = staticFriction; 
+            c.inverse = inverse;
+            return sphereColliders.add(c);  
+        }
+
+        SphereCollider* getSphereColliderPtr(int inx){
+            return &(sphereColliders[inx]); 
+        }
+
+        void destroySphereCollider(int inx){
+            sphereColliders.remove(inx); 
+        }
+
+        void clearSphereColliders(){
+            sphereColliders.clear(); 
+        }
+
+        void setSphereColliderPosition(int inx, Vec3 position){
+            sphereColliders[inx].position = position; 
+        }
+
+        void setSphereColliderRadius(int inx, float radius){
+            sphereColliders[inx].radius = radius; 
+        }
+
+        void setSphereColliderKineticFriction(int inx, float kineticFriction){
+            sphereColliders[inx].kineticFriction = kineticFriction; 
+        }
+
+        void setSphereColliderStaticFriction(int inx, float staticFriction){
+            sphereColliders[inx].staticFriction = staticFriction; 
+        }
+
+        void setSphereColliderInverse(int inx, bool inverse){
+            sphereColliders[inx].inverse = inverse; 
+        }
+
+
+
+        int addBoxCollider(Vec3 position, Mat3 invRotation, Vec3 size, float kineticFriction, float staticFriction, bool inverse){
+            BoxCollider c; 
+            c.position = position; 
+            c.invRotation = invRotation; 
+            c.size = size;
+            c.kineticFriction = kineticFriction;
+            c.staticFriction = staticFriction; 
+            c.inverse = inverse;
+            return boxColliders.add(c);  
+        }
+
+        BoxCollider* getBoxColliderPtr(int inx){
+            return &(boxColliders[inx]); 
+        }
+
+        void destroyBoxCollider(int inx){
+            boxColliders.remove(inx); 
+        }
+
+        void clearBoxColliders(){
+            boxColliders.clear(); 
+        }
+
+        void setBoxColliderPosition(int inx, Vec3 position){
+            boxColliders[inx].position = position; 
+        }
+
+        void setBoxColliderInvRotation(int inx, Mat3 invRotation){
+            boxColliders[inx].invRotation = invRotation; 
+        }
+
+        void setBoxColliderSize(int inx, Vec3 size){
+            boxColliders[inx].size = size; 
+        }
+
+        void setBoxColliderKineticFriction(int inx, float kineticFriction){
+            boxColliders[inx].kineticFriction = kineticFriction; 
+        }
+
+        void setBoxColliderStaticFriction(int inx, float staticFriction){
+            boxColliders[inx].staticFriction = staticFriction; 
+        }
+
+        void setBoxColliderInverse(int inx, bool inverse){
+            boxColliders[inx].inverse = inverse; 
+        }
         
 }; 
