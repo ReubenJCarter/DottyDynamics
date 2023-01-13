@@ -12,7 +12,7 @@ namespace Dotty{
         public World world; 
 
 
-        public Vector3 size; 
+        public Vector3 size = new Vector3(1, 1, 1); 
         public float staticFriction; 
         public float kineticFriction; 
         public bool inverse; 
@@ -64,14 +64,123 @@ namespace Dotty{
         }
     }
 
-    [CustomEditor(typeof(BoxCollider))]
+    [CustomEditor(typeof(BoxCollide))]
     public class BoxCollideEditor : Editor
     {
+        private void DrawWireCube(BoxCollide t){
+            Vector3 a = t.transform.TransformPoint( new Vector3(-t.size.x/2, -t.size.y/2, -t.size.z/2) ); 
+            Vector3 b = t.transform.TransformPoint( new Vector3(-t.size.x/2, t.size.y/2, -t.size.z/2) ); 
+            Vector3 c = t.transform.TransformPoint( new Vector3(t.size.x/2, t.size.y/2, -t.size.z/2) ); 
+            Vector3 d = t.transform.TransformPoint( new Vector3(t.size.x/2, -t.size.y/2, -t.size.z/2) ); 
+
+            Vector3 e = t.transform.TransformPoint( new Vector3(-t.size.x/2, -t.size.y/2, t.size.z/2) ); 
+            Vector3 f = t.transform.TransformPoint( new Vector3(-t.size.x/2, t.size.y/2, t.size.z/2) ); 
+            Vector3 g = t.transform.TransformPoint( new Vector3(t.size.x/2, t.size.y/2, t.size.z/2) ); 
+            Vector3 h = t.transform.TransformPoint( new Vector3(t.size.x/2, -t.size.y/2, t.size.z/2) ); 
+
+            Handles.DrawLine(a, b);
+            Handles.DrawLine(b, c);
+            Handles.DrawLine(c, d);
+            Handles.DrawLine(d, a);
+
+            Handles.DrawLine(e, f);
+            Handles.DrawLine(f, g);
+            Handles.DrawLine(g, h);
+            Handles.DrawLine(h, e);
+
+            Handles.DrawLine(a, e);
+            Handles.DrawLine(b, f);
+            Handles.DrawLine(c, g);
+            Handles.DrawLine(d, h);
+        }
+
         public void OnSceneGUI()
         {
-            var t = target as BoxCollider;
+            var t = target as BoxCollide;
 
 
+            
+
+            Handles.color = Color.white;
+            //Handles.DrawWireCube(t.transform.position, t.size); 
+            DrawWireCube(t); 
+
+            float handleSz = 0.03f;
+
+            //Handle x axis 
+            EditorGUI.BeginChangeCheck();
+
+            Vector3 targetPosition = t.transform.TransformPoint( new Vector3(t.size.x/2, 0f, 0f) ); 
+            Vector3 targetAxis = t.transform.TransformDirection( new Vector3(1, 0, 0)); 
+            Vector3 newTargetPosition = Handles.Slider(targetPosition, targetAxis, handleSz * HandleUtility.GetHandleSize(targetPosition), Handles.DotHandleCap, 0.1f);
+            Vector3 newSize = t.transform.InverseTransformPoint( newTargetPosition ) * 2;
+
+            if (EditorGUI.EndChangeCheck()) {
+                Undo.RecordObject(target, "Changed Size");
+                t.size.x = newSize.x; 
+            }
+
+            EditorGUI.BeginChangeCheck();
+            
+            targetPosition = t.transform.TransformPoint( new Vector3(-t.size.x/2, 0f, 0f) ); 
+            targetAxis = t.transform.TransformDirection( new Vector3(-1, 0, 0)); 
+            newTargetPosition = Handles.Slider(targetPosition, targetAxis, handleSz * HandleUtility.GetHandleSize(targetPosition), Handles.DotHandleCap, 0.1f);
+            newSize = t.transform.InverseTransformPoint( newTargetPosition ) * -2;
+
+            if (EditorGUI.EndChangeCheck()) {
+                Undo.RecordObject(target, "Changed Size");
+                t.size.x = newSize.x; 
+            }
+
+            //Handle y axis 
+            EditorGUI.BeginChangeCheck();
+
+            targetPosition = t.transform.TransformPoint( new Vector3(0, t.size.y/2, 0f) ); 
+            targetAxis = t.transform.TransformDirection( new Vector3(0, 1, 0)); 
+            newTargetPosition = Handles.Slider(targetPosition, targetAxis, handleSz * HandleUtility.GetHandleSize(targetPosition), Handles.DotHandleCap, 0.1f);
+            newSize = t.transform.InverseTransformPoint( newTargetPosition ) * 2;
+
+            if (EditorGUI.EndChangeCheck()) {
+                Undo.RecordObject(target, "Changed Size");
+                t.size.y = newSize.y; 
+            }
+
+            EditorGUI.BeginChangeCheck();
+            
+            targetPosition = t.transform.TransformPoint( new Vector3(0f, -t.size.y/2, 0f) ); 
+            targetAxis = t.transform.TransformDirection( new Vector3(0, -1, 0)); 
+            newTargetPosition = Handles.Slider(targetPosition, targetAxis, handleSz * HandleUtility.GetHandleSize(targetPosition), Handles.DotHandleCap, 0.1f);
+            newSize = t.transform.InverseTransformPoint( newTargetPosition ) * -2;
+
+            if (EditorGUI.EndChangeCheck()) {
+                Undo.RecordObject(target, "Changed Size");
+                t.size.y = newSize.y; 
+            }
+
+            //Handle z axis 
+            EditorGUI.BeginChangeCheck();
+
+            targetPosition = t.transform.TransformPoint( new Vector3(0, 0f, t.size.z/2) ); 
+            targetAxis = t.transform.TransformDirection( new Vector3(0, 0, 1)); 
+            newTargetPosition = Handles.Slider(targetPosition, targetAxis, handleSz * HandleUtility.GetHandleSize(targetPosition), Handles.DotHandleCap, 0.1f);
+            newSize = t.transform.InverseTransformPoint( newTargetPosition ) * 2;
+
+            if (EditorGUI.EndChangeCheck()) {
+                Undo.RecordObject(target, "Changed Size");
+                t.size.z = newSize.z; 
+            }
+
+            EditorGUI.BeginChangeCheck();
+            
+            targetPosition = t.transform.TransformPoint( new Vector3(0f, 0f, -t.size.z/2) ); 
+            targetAxis = t.transform.TransformDirection( new Vector3(0, 0, -1)); 
+            newTargetPosition = Handles.Slider(targetPosition, targetAxis, handleSz * HandleUtility.GetHandleSize(targetPosition), Handles.DotHandleCap, 0.1f);
+            newSize = t.transform.InverseTransformPoint( newTargetPosition ) * -2;
+
+            if (EditorGUI.EndChangeCheck()) {
+                Undo.RecordObject(target, "Changed Size");
+                t.size.z = newSize.z; 
+            }
 
         }
     }
