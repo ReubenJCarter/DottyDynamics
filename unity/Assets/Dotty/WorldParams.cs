@@ -11,19 +11,19 @@ namespace Dotty{
         public World world; 
 
         [Header("Timing & Performance")]
-        public float timestep; 
-        public int substeps; 
+        public float timestep = 0.0166666f; 
+        public int substeps = 1; 
 
         [Header("Global Environment")]
         [Range(0.0f, 1.0f)]
-        public float globalDamping;
-        public float gravity; 
+        public float globalDamping = 1;
+        public float gravity = 9.81f ; 
 
         [Header("Floor Boundry")]
-        public bool hasCollisionFloor; 
-        public float collisionFloorHeight; 
-        public float collisionFloorKineticFriction; 
-        public float collisionFloorStaticFriction; 
+        public bool hasCollisionFloor = false; 
+        public float collisionFloorHeight = 0; 
+        public float collisionFloorKineticFriction = 0; 
+        public float collisionFloorStaticFriction = 0; 
         
         void UpdateInternal() {
             unsafe {
@@ -42,6 +42,9 @@ namespace Dotty{
         // Start is called before the first frame update
         void Start()
         {
+            if(world == null){
+                world = World.instance; 
+            }
             UpdateInternal(); 
         }
 

@@ -244,10 +244,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0a153485bd66544993c5a1229a8c698, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  world: {fileID: 0}
-  timestep: 0
-  substeps: 0
-  globalDamping: 0
+  world: {fileID: 849942375}
+  timestep: 0.0166666
+  substeps: 1
+  globalDamping: 1
   gravity: 0
   hasCollisionFloor: 0
   collisionFloorHeight: 0

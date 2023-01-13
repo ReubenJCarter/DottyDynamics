@@ -18,7 +18,7 @@ extern "C" {
     
     EXPORT void World_update(World* instance);
 
-    EXPORT WorldParams* getWorldParamsPtr(World* instance)
+    EXPORT WorldParams* World_getWorldParamsPtr(World* instance);
 
     EXPORT void World_setGravity(World* instance, float gravity); 
     EXPORT void World_setTimestep(World* instance, float timestep); 

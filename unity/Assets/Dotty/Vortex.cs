@@ -32,6 +32,10 @@ namespace Dotty{
 
         // Start is called before the first frame update
         void Start() {
+            if(world == null){
+                world = World.instance; 
+            }
+            
             started = true; 
             AddInternal(); 
         }

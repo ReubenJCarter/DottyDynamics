@@ -29,6 +29,10 @@ namespace Dotty {
         }
 
         void Start() {
+            if(world == null){
+                world = World.instance; 
+            }
+            
             started = true; 
             AddInternal(); 
         }

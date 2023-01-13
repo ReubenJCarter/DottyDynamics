@@ -17,28 +17,49 @@ namespace Dotty{
         public float kineticFriction; 
         public bool inverse; 
 
-        void OnEnable()
-        {
-            Vector3 position = transform.position;
-            //internalId = world.AddBoxCollider(position, strength, minDistance, maxDistance, falloff); 
-            unsafe{
-                //ptr = world.GetBoxColliderPtr(internalId); 
+        void AddInternal() {
+            Vector3 position = transform.position; 
+            Matrix4x4 invRot = Matrix4x4.Rotate(transform.rotation).inverse;
+            internalId = world.AddBoxCollider(position, invRot, size, kineticFriction, staticFriction, inverse); 
+            unsafe {
+                ptr = world.GetBoxColliderPtr(internalId); 
+            }
+        }
+        
+        void RemoveInternal() {
+            world.DestroyBoxCollider(internalId); 
+        }
+
+        // Start is called before the first frame update
+        void Start() {
+            if(world == null){
+                world = World.instance; 
+            }
+            
+            started = true; 
+            AddInternal(); 
+        }
+
+        void OnEnable() {
+            if(started) {
+                AddInternal(); 
             }
         }
 
-        void OnDisable()
-        {
-            //world.DestroyBoxCollider(internalId); 
+        void OnDisable() {
+            RemoveInternal();
         }
 
         // Update is called once per frame
         void Update()
         {
             Vector3 position = transform.position; 
+            Matrix4x4 invRot = Matrix4x4.Rotate(transform.rotation).inverse;
             unsafe{
                 (*ptr).position.x = position.x;
                 (*ptr).position.y = position.y;
                 (*ptr).position.z = position.z; 
+                
             } 
         }
     }
