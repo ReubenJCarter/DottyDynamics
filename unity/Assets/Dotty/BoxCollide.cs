@@ -4,9 +4,9 @@ using UnityEngine;
 using UnityEditor;
 
 namespace Dotty{
-    public class BoxCollide : MonoBehaviour
-    {
+    public class BoxCollide : MonoBehaviour {
         private int internalId; 
+        private bool started; 
         unsafe private BoxColliderNtv* ptr; 
         
         public World world; 

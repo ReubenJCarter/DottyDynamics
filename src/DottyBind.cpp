@@ -19,6 +19,11 @@ EXPORT void World_update(World* instance){
 }
 
 
+EXPORT WorldParams* World_getWorldParamsPtr(World* instance){
+    return instance->getWorldParamsPtr(); 
+}
+
+
 EXPORT void World_setGravity(World* instance, float gravity){
     instance->setGravity(gravity); 
 }
@@ -101,6 +106,52 @@ EXPORT void World_setAttractorMaxDist(World* instance, int inx, float maxDist){
 
 EXPORT void World_setAttractorFalloff(World* instance, int inx, Falloff falloff){
     instance->setAttractorFalloff(inx, falloff); 
+}
+
+
+
+EXPORT int World_addStrangeAttrator(World* instance, Vec3 position, Vec3 scale, StrangeAttractorType type, float strength, float minDist, float maxDist, Falloff falloff){
+    return instance->addStrangeAttrator(position, scale, type, strength, minDist, maxDist, falloff); 
+}
+
+EXPORT StrangeAttractor* World_getStrangeAttractorPtr(World* instance, int inx){
+    return instance->getStrangeAttractorPtr(inx);
+}
+
+EXPORT void World_destroyStrangeAttractor(World* instance, int inx){
+    instance->destroyStrangeAttractor(inx);
+}
+
+EXPORT void World_clearStrangeAttractors(World* instance){
+    instance->clearStrangeAttractors(); 
+}
+
+EXPORT void World_setStrangeAttractorPosition(World* instance, int inx, Vec3 position){
+    instance->setStrangeAttractorPosition(inx, position);
+}
+
+EXPORT void World_setStrangeAttractorScale(World* instance, int inx, Vec3 scale){
+    instance->setStrangeAttractorScale(inx, scale);
+}
+
+EXPORT void World_setStrangeAttractorType(World* instance, int inx, StrangeAttractorType type){
+    instance->setStrangeAttractorType(inx, type);
+}
+
+EXPORT void World_setStrangeAttractorStrength(World* instance, int inx, float strength){
+    instance->setStrangeAttractorStrength(inx, strength);
+}
+
+EXPORT void World_setStrangeAttractorMinDist(World* instance, int inx, float minDist){
+    instance->setStrangeAttractorMinDist(inx, minDist); 
+}
+
+EXPORT void World_setStrangeAttractorMaxDist(World* instance, int inx, float maxDist){
+    instance->setStrangeAttractorMaxDist(inx, maxDist); 
+}
+
+EXPORT void World_setStrangeAttractorFalloff(World* instance, int inx, Falloff falloff){
+    instance->setStrangeAttractorFalloff(inx, falloff); 
 }
 
 
@@ -192,16 +243,28 @@ EXPORT int World_addNoiseField(World* instance, NoiseType noiseType, float stren
     return instance->addNoiseField(noiseType, strength, noiseScale, isVelocity); 
 }
 
-EXPORT void World_setNoiseFieldViscosity(World* instance, int inx, float viscosity){
-    instance->setNoiseFieldViscosity(inx, viscosity); 
-}
-
 EXPORT void World_destroyNoiseField(World* instance, int inx){
     instance->destroyNoiseField(inx); 
 }
 
 EXPORT void World_clearNoiseFields(World* instance){
     instance->clearNoiseFields(); 
+}
+
+EXPORT void World_setNoiseFieldNoiseType(World* instance, int inx, NoiseType noiseType){
+    instance->setNoiseFieldNoiseType(inx, noiseType);
+}
+
+EXPORT void World_setNoiseFieldStrength(World* instance, int inx, float strength){
+    instance->setNoiseFieldStrength(inx, strength); 
+}
+
+EXPORT void World_setNoiseFieldNoiseScale(World* instance, int inx, float noiseScale){
+    instance->setNoiseFieldNoiseScale(inx, noiseScale); 
+}
+
+EXPORT void World_setNoiseFieldViscosity(World* instance, int inx, float viscosity){
+    instance->setNoiseFieldViscosity(inx, viscosity); 
 }
 
 
@@ -258,4 +321,28 @@ EXPORT void World_destroyBoxCollider(World* instance, int inx){
 
 EXPORT void World_clearBoxColliders(World* instance){
     instance->clearBoxColliders(); 
+}
+
+EXPORT void World_setBoxColliderPosition(World* instance, int inx, Vec3 position){
+    instance->setBoxColliderPosition(inx, position); 
+}
+
+EXPORT void World_setBoxColliderInvRotation(World* instance, int inx, Mat3 invRotation){
+    instance->setBoxColliderInvRotation(inx, invRotation); 
+}
+
+EXPORT void World_setBoxColliderSize(World* instance, int inx, Vec3 size){
+    instance->setBoxColliderSize(inx, size); 
+}
+
+EXPORT void World_setBoxColliderKineticFriction(World* instance, int inx, float kineticFriction){
+    instance->setBoxColliderKineticFriction(inx, kineticFriction); 
+}
+
+EXPORT void World_setBoxColliderStaticFriction(World* instance, int inx, float staticFriction){
+    instance->setBoxColliderStaticFriction(inx, staticFriction); 
+}
+
+EXPORT void World_setBoxColliderInverse(World* instance, int inx, bool inverse){
+    instance->setBoxColliderInverse(inx, inverse); 
 }

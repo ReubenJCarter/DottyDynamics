@@ -5,6 +5,7 @@
 enum Falloff{Constant, InvDist, InvDist2, InvDistWell, InvDist2Well }; 
 enum NoiseType{Simplex, SimplexCurl, Perlin, PerlinCurl, Value, ValueCurl}; 
 enum ShapeType{Box, Sphere, Ellipsoid}; 
+enum StrangeAttractorType{Aizawa, Arneodo, Dadras, Dequan, Lorenz, LorenzMod2, Thomas }; 
 
 struct Particle {
     Vec3 position;
@@ -38,9 +39,11 @@ struct Attractor {
 struct StrangeAttractor {
     Vec3 position; 
     Vec3 scale; 
+    StrangeAttractorType type; 
     float strength;
     float minDist; 
-    float maxDist; 
+    float maxDist;
+    Falloff falloff;  
     float param[10]; 
 }; 
 

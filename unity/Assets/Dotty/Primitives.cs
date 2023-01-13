@@ -6,6 +6,19 @@ using System;
 
 
 namespace Dotty{
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct WorldParamsNtv{
+        public float timestep; 
+        public int substeps; 
+        public float globalDamping; 
+        public float gravity;
+        public float collisionFloorStaticFriction; 
+        public float collisionFloorKineticFriction; 
+        public float collisionFloorHeight; 
+        public bool hasCollisionFloor;
+    }
+
     public enum Falloff{Constant, InvDist, InvDist2, InvDistWell, InvDist2Well}
     public enum NoiseType{Simplex, SimplexCurl, Perlin, PerlinCurl, Value, ValueCurl}
     public enum ShapeType{Box, Sphere, Ellipsoid}
@@ -45,6 +58,15 @@ namespace Dotty{
         public float maxDist; 
         public Falloff falloff; 
     }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct SphereColliderNtv {
+        public Vec3 position; 
+        public float radius;
+        public float staticFriction; 
+        public float kineticFriction; 
+        public bool inverse;
+    } 
 
     [StructLayout(LayoutKind.Sequential)]
     public struct BoxColliderNtv {

@@ -7,25 +7,29 @@
 #include "DynamicPool.hpp"
 #include "NoiseGenerator.hpp"
 
+struct WorldParams {
+    float timestep; 
+    int substeps; 
+    float globalDamping; 
+    float gravity;
+    float collisionFloorStaticFriction; 
+    float collisionFloorKineticFriction; 
+    float collisionFloorHeight; 
+    bool hasCollisionFloor;
+};
 
 class World {
     private:
-        BS::thread_pool threadPool;
+        WorldParams params; 
 
-        float timestep; 
-        int substeps; 
-        float globalDamping; 
-        float gravity;
-        float collisionFloorStaticFriction; 
-        float collisionFloorKineticFriction; 
-        float collisionFloorHeight; 
-        bool hasCollisionFloor;
+        BS::thread_pool threadPool;
         DynamicPool<Particle> particles;
         DynamicPool<Rod> rods;
         DynamicPool<AnchorRod> anchorRods;
         DynamicPool<Vec3> rodDeltas; 
         DynamicPool<int> rodDeltaCount; 
         DynamicPool<Attractor> attractors;
+        DynamicPool<StrangeAttractor> strangeAttractors; 
         DynamicPool<Vortex> vortices;
         DynamicPool<Vec3> globalForces;
         DynamicPool<NoiseField> noiseFields;   
@@ -37,25 +41,29 @@ class World {
         void updateGlobalForces(){
 
             unsigned int maxGlobalForceCount = globalForces.getBound(); 
+            unsigned int pcount = particles.getBound();
 
-            threadPool.parallelize_loop(maxGlobalForceCount, [this](const int a, const int b){
+            threadPool.parallelize_loop(pcount, [this, maxGlobalForceCount](const int a, const int b){
+
+                float timestep = params.timestep; 
                 
-                unsigned int pcount = particles.getBound();
-                
-                for(int i = a; i < b; i++){
+                for(int i = 0; i < maxGlobalForceCount; i++){
 
                     if(!globalForces.isInUse(i))
                         continue; 
+                    
+                    for(int p = a; p < b; p++){
 
-                    float xDiff = globalForces[i].x; 
-                    float yDiff = globalForces[i].y;
-                    float zDiff = globalForces[i].z; 
+                        float xDiff = globalForces[i].x; 
+                        float yDiff = globalForces[i].y;
+                        float zDiff = globalForces[i].z; 
 
-                    for(int p = 0; p < pcount; p++){
                         particles[p].velocity.x += timestep * particles[p].invMass * xDiff;
                         particles[p].velocity.y += timestep * particles[p].invMass * yDiff;
                         particles[p].velocity.z += timestep * particles[p].invMass * zDiff;
+                    
                     }
+
                 }
 
             }).wait();
@@ -64,18 +72,40 @@ class World {
         void updateAttractors(){
 
             unsigned int maxAttractorCount = attractors.getBound(); 
+            unsigned int pcount = particles.getBound();
 
-            threadPool.parallelize_loop(maxAttractorCount, [this](const int a, const int b){
+            threadPool.parallelize_loop(pcount, [this, maxAttractorCount](const int a, const int b){
                 
-                unsigned int pcount = particles.getBound();
-            
-                for(int i = a; i < b; i++){
+                float timestep = params.timestep; 
+
+                for(int i = 0; i < maxAttractorCount; i++){
 
                     if(!attractors.isInUse(i))
-                      continue; 
+                        continue;          
+               
 
-                    if(attractors[i].falloff == Falloff::InvDist2){
-                        for(int p = 0; p < pcount; p++){
+                    if(attractors[i].falloff == Falloff::Constant){
+                        for(int p = a; p < b; p++){
+                            float xDiff = attractors[i].position.x - particles[p].position.x; 
+                            float yDiff = attractors[i].position.y - particles[p].position.y;
+                            float zDiff = attractors[i].position.z - particles[p].position.z;
+
+                            float dist2 = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff; 
+                            float dist = sqrt(dist2); 
+
+                            float distFactor; 
+                            if(dist > attractors[i].maxDist)
+                                distFactor = 0;
+                            else
+                                distFactor = 1; 
+
+                            particles[p].velocity.x += timestep * particles[p].invMass * xDiff * distFactor * attractors[i].strength;
+                            particles[p].velocity.y += timestep * particles[p].invMass * yDiff * distFactor * attractors[i].strength;
+                            particles[p].velocity.z += timestep * particles[p].invMass * zDiff * distFactor * attractors[i].strength;
+                        }
+                    }
+                    else if(attractors[i].falloff == Falloff::InvDist2){
+                        for(int p = a; p < b; p++){
                             float xDiff = attractors[i].position.x - particles[p].position.x; 
                             float yDiff = attractors[i].position.y - particles[p].position.y;
                             float zDiff = attractors[i].position.z - particles[p].position.z;
@@ -97,7 +127,7 @@ class World {
                         }
                     }
                     else if(attractors[i].falloff == Falloff::InvDist){
-                        for(int p = 0; p < pcount; p++){
+                        for(int p = a; p < b; p++){
                             float xDiff = attractors[i].position.x - particles[p].position.x; 
                             float yDiff = attractors[i].position.y - particles[p].position.y;
                             float zDiff = attractors[i].position.z - particles[p].position.z;
@@ -119,7 +149,7 @@ class World {
                         }
                     }
                     else if(attractors[i].falloff == Falloff::InvDistWell){
-                        for(int p = 0; p < pcount; p++){
+                        for(int p = a; p < b; p++){
                             float xDiff = attractors[i].position.x - particles[p].position.x; 
                             float yDiff = attractors[i].position.y - particles[p].position.y;
                             float zDiff = attractors[i].position.z - particles[p].position.z;
@@ -135,7 +165,7 @@ class World {
                         }
                     }
                     else if(attractors[i].falloff == Falloff::InvDist2Well){
-                        for(int p = 0; p < pcount; p++){
+                        for(int p = a; p < b; p++){
                             float xDiff = attractors[i].position.x - particles[p].position.x; 
                             float yDiff = attractors[i].position.y - particles[p].position.y;
                             float zDiff = attractors[i].position.z - particles[p].position.z;
@@ -151,8 +181,124 @@ class World {
                             particles[p].velocity.z += timestep * particles[p].invMass * zDiff * distFactor * attractors[i].strength;
                         }
                     }
+                
                 }
+            }).wait();
 
+        }
+
+        void updateStrangeAttractors(){
+
+            unsigned int maxAttractorCount = strangeAttractors.getBound(); 
+            unsigned int pcount = particles.getBound();
+
+            threadPool.parallelize_loop(pcount, [this, maxAttractorCount](const int a, const int b){
+
+                float timestep = params.timestep; 
+
+                for(int i = 0; i < maxAttractorCount; i++){
+
+                    if(!strangeAttractors.isInUse(i))
+                        continue;          
+               
+
+                    if(strangeAttractors[i].falloff == Falloff::Constant){
+                        for(int p = a; p < b; p++){
+                            float xDiff = strangeAttractors[i].position.x - particles[p].position.x; 
+                            float yDiff = strangeAttractors[i].position.y - particles[p].position.y;
+                            float zDiff = strangeAttractors[i].position.z - particles[p].position.z;
+
+                            float dist2 = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff; 
+                            float dist = sqrt(dist2); 
+                            float distFactor; 
+                            if(dist > strangeAttractors[i].maxDist)
+                                distFactor = 0;
+                            else
+                                distFactor = 1; 
+
+                            particles[p].velocity.x += timestep * particles[p].invMass * xDiff * distFactor * strangeAttractors[i].strength;
+                            particles[p].velocity.y += timestep * particles[p].invMass * yDiff * distFactor * strangeAttractors[i].strength;
+                            particles[p].velocity.z += timestep * particles[p].invMass * zDiff * distFactor * strangeAttractors[i].strength;
+                        }
+                    }
+                    else if(strangeAttractors[i].falloff == Falloff::InvDist2){
+                        for(int p = a; p < b; p++){
+                            float xDiff = strangeAttractors[i].position.x - particles[p].position.x; 
+                            float yDiff = strangeAttractors[i].position.y - particles[p].position.y;
+                            float zDiff = strangeAttractors[i].position.z - particles[p].position.z;
+
+                            float dist2 = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff; 
+                            float dist = sqrt(dist2); 
+                            float distFactor; 
+                            if(dist > strangeAttractors[i].maxDist)
+                                distFactor = 0;
+                            else if(dist < strangeAttractors[i].minDist)
+                                distFactor = dist == 0 ? 0 : 1 / (strangeAttractors[i].minDist * strangeAttractors[i].minDist * dist);
+                            else
+                                distFactor = 1 / (dist2 * dist); 
+
+                            particles[p].velocity.x += timestep * particles[p].invMass * xDiff * distFactor * strangeAttractors[i].strength;
+                            particles[p].velocity.y += timestep * particles[p].invMass * yDiff * distFactor * strangeAttractors[i].strength;
+                            particles[p].velocity.z += timestep * particles[p].invMass * zDiff * distFactor * strangeAttractors[i].strength;
+                        }
+                    }
+                    else if(strangeAttractors[i].falloff == Falloff::InvDist){
+                        for(int p = a; p < b; p++){
+                            float xDiff = strangeAttractors[i].position.x - particles[p].position.x; 
+                            float yDiff = strangeAttractors[i].position.y - particles[p].position.y;
+                            float zDiff = strangeAttractors[i].position.z - particles[p].position.z;
+
+                            float dist2 = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff; 
+                            float dist = sqrt(dist2); 
+
+                            float distFactor; 
+                            if(dist > strangeAttractors[i].maxDist)
+                                distFactor = 0;
+                            else if(dist < strangeAttractors[i].minDist)
+                                distFactor = dist == 0 ? 0 : 1 / (strangeAttractors[i].minDist * dist);
+                            else
+                                distFactor = 1 / (dist2); 
+
+                            particles[p].velocity.x += timestep * particles[p].invMass * xDiff * distFactor * strangeAttractors[i].strength;
+                            particles[p].velocity.y += timestep * particles[p].invMass * yDiff * distFactor * strangeAttractors[i].strength;
+                            particles[p].velocity.z += timestep * particles[p].invMass * zDiff * distFactor * strangeAttractors[i].strength;
+                        }
+                    }
+                    else if(strangeAttractors[i].falloff == Falloff::InvDistWell){
+                        for(int p = a; p < b; p++){
+                            float xDiff = strangeAttractors[i].position.x - particles[p].position.x; 
+                            float yDiff = strangeAttractors[i].position.y - particles[p].position.y;
+                            float zDiff = strangeAttractors[i].position.z - particles[p].position.z;
+
+                            float dist2 = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff; 
+                            float dist = sqrt(dist2); 
+
+                            float distFactor = dist > strangeAttractors[i].maxDist || dist < strangeAttractors[i].minDist ? 0 : dist - strangeAttractors[i].minDist;
+
+                            particles[p].velocity.x += timestep * particles[p].invMass * xDiff * distFactor * strangeAttractors[i].strength;
+                            particles[p].velocity.y += timestep * particles[p].invMass * yDiff * distFactor * strangeAttractors[i].strength;
+                            particles[p].velocity.z += timestep * particles[p].invMass * zDiff * distFactor * strangeAttractors[i].strength;
+                        }
+                    }
+                    else if(strangeAttractors[i].falloff == Falloff::InvDist2Well){
+                        for(int p = a; p < b; p++){
+                            float xDiff = strangeAttractors[i].position.x - particles[p].position.x; 
+                            float yDiff = strangeAttractors[i].position.y - particles[p].position.y;
+                            float zDiff = strangeAttractors[i].position.z - particles[p].position.z;
+
+                            float dist2 = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff;
+                            float maxDist2 = strangeAttractors[i].maxDist * strangeAttractors[i].maxDist; 
+                            float minDist2 = strangeAttractors[i].minDist * strangeAttractors[i].minDist; 
+
+                            float distFactor = dist2 > maxDist2 || dist2 < minDist2 ? 0 : dist2 - minDist2;
+
+                            particles[p].velocity.x += timestep * particles[p].invMass * xDiff * distFactor * strangeAttractors[i].strength;
+                            particles[p].velocity.y += timestep * particles[p].invMass * yDiff * distFactor * strangeAttractors[i].strength;
+                            particles[p].velocity.z += timestep * particles[p].invMass * zDiff * distFactor * strangeAttractors[i].strength;
+                        }
+                    }
+                
+                }
             }).wait();
 
         }
@@ -160,18 +306,19 @@ class World {
         void updateVortices(){
 
             unsigned int maxVorticesCount = vortices.getBound(); 
+            unsigned int pcount = particles.getBound();
 
-            threadPool.parallelize_loop(maxVorticesCount, [this](const int a, const int b){
+            threadPool.parallelize_loop(pcount, [this, maxVorticesCount](const int a, const int b){
                 
-                unsigned int pcount = particles.getBound();
+                float timestep = params.timestep; 
                 
-                for(int i = a; i < b; i++){
+                for(int i = 0; i < maxVorticesCount; i++){
 
                     if(!vortices.isInUse(i))
                         continue; 
 
-                    if(vortices[i].falloff == Falloff::InvDist2){
-                        for(int p = 0; p < pcount; p++){
+                    //if(vortices[i].falloff == Falloff::InvDist2){
+                        for(int p = a; p < b; p++){
                             float xDiff = vortices[i].position.x - particles[p].position.x; 
                             float yDiff = vortices[i].position.y - particles[p].position.y;
                             float zDiff = vortices[i].position.z - particles[p].position.z;
@@ -199,7 +346,7 @@ class World {
                             particles[p].velocity.y += timestep * particles[p].invMass * cy * distFactor;
                             particles[p].velocity.z += timestep * particles[p].invMass * cz * distFactor;
                         }
-                    }
+                    //}
                 }
 
             }).wait();
@@ -208,19 +355,20 @@ class World {
 
         void updateNoiseFieldsForces(){
             unsigned int noiseFieldsCount = noiseFields.getBound(); 
+            unsigned int pcount = particles.getBound();
 
-            threadPool.parallelize_loop(noiseFieldsCount, [this](const int a, const int b){
+            threadPool.parallelize_loop(pcount, [this, noiseFieldsCount](const int a, const int b){
                 
-                unsigned int pcount = particles.getBound();
-                
-                for(int i = a; i < b; i++){
+                float timestep = params.timestep; 
+
+                for(int i = 0; i < noiseFieldsCount; i++){
 
                     if(!noiseFields.isInUse(i))
                         continue; 
 
                     if(!noiseFields[i].isVelocity){
                         if(noiseFields[i].noiseType == NoiseType::Simplex || noiseFields[i].noiseType == NoiseType::Perlin || noiseFields[i].noiseType == NoiseType::Value){
-                            for(int p = 0; p < pcount; p++){
+                            for(int p = a; p < b; p++){
 
                                 Vec3 coord = particles[p].position; 
                                 coord.mults(noiseFields[i].noiseScale); 
@@ -237,7 +385,7 @@ class World {
                             }
                         }
                         else if(noiseFields[i].noiseType == NoiseType::SimplexCurl || noiseFields[i].noiseType == NoiseType::PerlinCurl || noiseFields[i].noiseType == NoiseType::ValueCurl){
-                            for(int p = 0; p < pcount; p++){
+                            for(int p = a; p < b; p++){
 
                                 Vec3 coord = particles[p].position; 
                                 coord.mults(noiseFields[i].noiseScale); 
@@ -256,7 +404,7 @@ class World {
                     }
                     else{
                         if(noiseFields[i].noiseType == NoiseType::Simplex || noiseFields[i].noiseType == NoiseType::Perlin || noiseFields[i].noiseType == NoiseType::Value){
-                            for(int p = 0; p < pcount; p++){
+                            for(int p = a; p < b; p++){
 
                                 Vec3 coord = particles[p].position; 
                                 coord.mults(noiseFields[i].noiseScale); 
@@ -280,7 +428,7 @@ class World {
                             }
                         }
                         else if(noiseFields[i].noiseType == NoiseType::SimplexCurl || noiseFields[i].noiseType == NoiseType::PerlinCurl || noiseFields[i].noiseType == NoiseType::ValueCurl){
-                            for(int p = 0; p < pcount; p++){
+                            for(int p = a; p < b; p++){
 
                                 Vec3 coord = particles[p].position; 
                                 coord.mults(noiseFields[i].noiseScale); 
@@ -405,14 +553,18 @@ class World {
         }
 
         void updateCollisionBounds(){
+            
+            float hasCollisionFloor = params.hasCollisionFloor; 
+            float collisionFloorHeight = params.collisionFloorHeight; 
+
             if(hasCollisionFloor){
 
                 unsigned int maxParticleCount = particles.getBound();
                 
                 for (int i = 0; i < maxParticleCount; i++){
                     float py = particles[i].positionNext.y; 
-                    float disp = collisionFloorHeight - py; 
-                    particles[i].positionNext.y += disp > 0 ? disp : 0; 
+                    float pen = collisionFloorHeight - py; 
+                    particles[i].positionNext.y += pen > 0 ? pen : 0; 
                 }                
             }
         }
@@ -462,9 +614,9 @@ class World {
 
                     for(int p = a; p < b; p++){
                     
-                        float xDiff = sphereColliders[i].position.x - particles[p].position.x; 
-                        float yDiff = sphereColliders[i].position.y - particles[p].position.y;
-                        float zDiff = sphereColliders[i].position.z - particles[p].position.z;
+                        float xDiff = sphereColliders[i].position.x - particles[p].positionNext.x; 
+                        float yDiff = sphereColliders[i].position.y - particles[p].positionNext.y;
+                        float zDiff = sphereColliders[i].position.z - particles[p].positionNext.z;
 
                         float dist2 = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff; 
                         float dist = sqrt(dist2); 
@@ -478,9 +630,11 @@ class World {
                         float dispY = yDiffNorm * pen; 
                         float dispZ = zDiffNorm * pen; 
 
-                        particles[p].positionNext.x -= pen > 0 ? dispX : 0; 
-                        particles[p].positionNext.y -= pen > 0 ? dispY : 0; 
-                        particles[p].positionNext.z -= pen > 0 ? dispZ : 0; 
+                        if(pen > 0){
+                            particles[p].positionNext.x -= dispX;
+                            particles[p].positionNext.y -= dispY;
+                            particles[p].positionNext.z -= dispZ;
+                        }
                     }
                 }
 
@@ -492,15 +646,15 @@ class World {
         
 
         World(){
-            timestep = 0.016666; 
-            substeps = 4; 
-            globalDamping = 1;
-            gravity = 9.81; 
+            params.timestep = 0.016666; 
+            params.substeps = 1; 
+            params.globalDamping = 1;
+            params.gravity = 9.81; 
 
-            collisionFloorStaticFriction = 0; 
-            collisionFloorKineticFriction = 0; 
-            collisionFloorHeight = 0; 
-            hasCollisionFloor = false;
+            params.collisionFloorStaticFriction = 0; 
+            params.collisionFloorKineticFriction = 0; 
+            params.collisionFloorHeight = 0; 
+            params.hasCollisionFloor = false;
             
             particles.setPoolSize(100000); 
             rodDeltas.setPoolSize(100000); 
@@ -510,6 +664,7 @@ class World {
             anchorRods.setPoolSize(200000);
 
             attractors.setPoolSize(1000);  
+            strangeAttractors.setPoolSize(1000); 
             vortices.setPoolSize(1000); 
             globalForces.setPoolSize(1000); 
 
@@ -523,6 +678,10 @@ class World {
         
 
         void update(){
+            float timestep = params.timestep; 
+            float substeps = params.substeps; 
+            float gravity = params.gravity; 
+            float globalDamping = params.globalDamping; 
 
             float deltaT = timestep / substeps; 
             float invDeltaT = 1.0f / deltaT; 
@@ -534,6 +693,7 @@ class World {
                 //Update forces 
                 updateGlobalForces(); 
                 updateAttractors(); 
+                updateStrangeAttractors(); 
                 updateVortices(); 
                 updateNoiseFieldsForces(); 
 
@@ -549,6 +709,8 @@ class World {
                     particles[i].positionNext.y = particles[i].position.y + deltaT * particles[i].velocity.y;
                     particles[i].positionNext.z = particles[i].position.z + deltaT * particles[i].velocity.z;
                 } 
+
+                //Apply pre stabalization for collision constraints (any unsatisfied constraints from the previous timestep dont propogate through )
  
                 //update colliders
                 updateCollisionBounds(); 
@@ -572,30 +734,34 @@ class World {
             }  
         }
 
+        WorldParams* getWorldParamsPtr(){
+            return &params; 
+        }
+
         void setGravity(float grav){
-            gravity = grav; 
+            params.gravity = grav; 
         }
 
         void setTimestep(float t){
-            timestep = t; 
+            params.timestep = t; 
         }
 
         void setSubsteps(float s){
-            substeps = s; 
+            params.substeps = s; 
         }
 
         void setGlobalDamping(float d){
-            globalDamping = d;
+            params.globalDamping = d;
         }
 
         void setHasCollisionFloor(bool h){
-            hasCollisionFloor = h; 
+            params.hasCollisionFloor = h; 
         }
 
         void setCollisionFloor(float height, float staticFriction, float kineticFriction){
-            collisionFloorStaticFriction = staticFriction; 
-            collisionFloorKineticFriction = kineticFriction; 
-            collisionFloorHeight = height; 
+            params.collisionFloorStaticFriction = staticFriction; 
+            params.collisionFloorKineticFriction = kineticFriction; 
+            params.collisionFloorHeight = height; 
         }
 
 
@@ -674,6 +840,59 @@ class World {
 
         void setAttractorFalloff(int inx, Falloff falloff){
             attractors[inx].falloff = falloff;
+        }
+
+
+        int addStrangeAttrator(Vec3 position, Vec3 scale, StrangeAttractorType type, float strength, float minDist, float maxDist, Falloff falloff){
+            StrangeAttractor a; 
+            a.position = position;
+            a.scale = scale;  
+            a.type = type; 
+            a.strength = strength;
+            a.minDist = minDist;
+            a.maxDist = maxDist; 
+            a.falloff = falloff;
+            return strangeAttractors.add(a);  
+        }
+
+        StrangeAttractor* getStrangeAttractorPtr(int inx){
+            return &(strangeAttractors[inx]); 
+        }
+
+        void destroyStrangeAttractor(int inx){
+            strangeAttractors.remove(inx); 
+        }
+
+        void clearStrangeAttractors(){
+            strangeAttractors.clear(); 
+        }
+
+        void setStrangeAttractorPosition(int inx, Vec3 position){
+            strangeAttractors[inx].position = position; 
+        }
+
+        void setStrangeAttractorScale(int inx, Vec3 scale){
+            strangeAttractors[inx].scale = scale; 
+        }
+
+        void setStrangeAttractorType(int inx, StrangeAttractorType type){
+            strangeAttractors[inx].type = type; 
+        }
+
+        void setStrangeAttractorStrength(int inx, float strength){
+            strangeAttractors[inx].strength = strength; 
+        }
+
+        void setStrangeAttractorMinDist(int inx, float minDist){
+            strangeAttractors[inx].minDist = minDist; 
+        }
+
+        void setStrangeAttractorMaxDist(int inx, float maxDist){
+            strangeAttractors[inx].maxDist = maxDist; 
+        }
+
+        void setStrangeAttractorFalloff(int inx, Falloff falloff){
+            strangeAttractors[inx].falloff = falloff;
         }
 
 
@@ -803,6 +1022,18 @@ class World {
         void clearNoiseFields(){
             noiseFields.clear(); 
             noiseGenerators.clear(); 
+        }
+
+        void setNoiseFieldNoiseType(int inx, NoiseType noiseType){
+            noiseFields[inx].noiseType = noiseType; 
+        }
+
+        void setNoiseFieldStrength(int inx, float strength){
+            noiseFields[inx].strength = strength; 
+        }
+
+        void setNoiseFieldNoiseScale(int inx, float noiseScale){
+            noiseFields[inx].noiseScale = noiseScale; 
         }
 
         void setNoiseFieldViscosity(int inx, float viscosity){

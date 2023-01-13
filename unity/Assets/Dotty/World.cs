@@ -32,6 +32,15 @@ namespace Dotty{
         #endif
         private static extern void World_update(IntPtr world);
 
+
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern IntPtr World_getWorldParamsPtr(IntPtr world); 
+
         #if UNITY_IPHONE
         [DllImport ("__Internal")]
         #else
@@ -411,11 +420,85 @@ namespace Dotty{
         private static extern void World_setSphereColliderInverse(IntPtr instance, int inx, bool inverse); 
 
 
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern int World_addBoxCollider(IntPtr instance, Vec3 position, Mat3 invRotation, Vec3 size, float kineticFriction, float staticFriction, bool inverse);
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern IntPtr World_getBoxColliderPtr(IntPtr instance, int inx);
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_destroyBoxCollider(IntPtr instance, int inx);
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_clearBoxColliders(IntPtr instance);
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setBoxColliderPosition(IntPtr instance, int inx, Vec3 position);
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setBoxColliderInvRotation(IntPtr instance, int inx, Mat3 invRotation);
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setBoxColliderSize(IntPtr instance, int inx, Vec3 size);
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setBoxColliderKineticFriction(IntPtr instance, int inx, float kineticFriction);
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setBoxColliderStaticFriction(IntPtr instance, int inx, float staticFriction);
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setBoxColliderInverse(IntPtr instance, int inx, bool inverse);
+
+
         private IntPtr ntv; 
+
+        public static World instance; 
 
         public void Awake(){
             ntv = createWorld();
-            
+            instance = this;
         }
 
         void OnDestroy(){
@@ -426,6 +509,11 @@ namespace Dotty{
             World_update(ntv); 
         }
 
+
+        unsafe public WorldParamsNtv* GetWorldParamsPtr(){
+            IntPtr ptr = World_getWorldParamsPtr(ntv); 
+            return (WorldParamsNtv*)ptr.ToPointer(); 
+        }
 
         public void SetGravity(float gravity){
             World_setGravity(ntv, gravity); 
@@ -677,5 +765,118 @@ namespace Dotty{
 
 
         
+        public int AddSphereCollider(Vector3 position, float radius, float kineticFriction, float staticFriction, bool inverse){
+            Vec3 pos = new Vec3();
+            pos.x = position.x; 
+            pos.y = position.y; 
+            pos.z = position.z;
+            
+            return World_addSphereCollider(ntv, pos, radius, kineticFriction, staticFriction, inverse); 
+        }
+
+        unsafe public SphereColliderNtv* GetSphereColliderPtr(int inx){
+            IntPtr ptr = World_getSphereColliderPtr(ntv, inx); 
+            return (SphereColliderNtv*)ptr.ToPointer(); 
+        }
+
+        public void DestroySphereCollider(int inx){
+            World_destroySphereCollider(ntv, inx); 
+        }
+
+        public void ClearSphereColliders(){
+            World_clearSphereColliders(ntv); 
+        }
+
+        public void SetSphereColliderPosition(int inx, Vector3 position){
+            Vec3 pos = new Vec3();
+            pos.x = position.x; 
+            pos.y = position.y; 
+            pos.z = position.z;
+            
+            World_setSphereColliderPosition(ntv, inx, pos); 
+        }
+
+        public void SetSphereColliderRadius(int inx, float radius){
+            World_setSphereColliderRadius(ntv, inx, radius); 
+        }
+
+        public void SetSphereColliderKineticFriction(int inx, float kineticFriction){
+            World_setSphereColliderKineticFriction(ntv, inx, kineticFriction);
+        }
+
+        public void SetSphereColliderStaticFriction(int inx, float staticFriction){
+            World_setSphereColliderStaticFriction(ntv, inx, staticFriction);
+        }
+
+        public void SetSphereColliderInverse(int inx, bool inverse){
+            World_setSphereColliderInverse(ntv, inx, inverse);
+        }
+
+
+        public int AddBoxCollider(Vector3 position, Matrix4x4 invRotation, Vector3 size, float kineticFriction, float staticFriction, bool inverse){
+            Vec3 pos = new Vec3();
+            pos.x = position.x; 
+            pos.y = position.y; 
+            pos.z = position.z;
+
+            Mat3 invRot = new Mat3(); 
+            
+            Vec3 sz = new Vec3();
+            sz.x = size.x; 
+            sz.y = size.y; 
+            sz.z = size.z;
+
+            return World_addBoxCollider(ntv, pos, invRot, sz, kineticFriction, staticFriction, inverse); 
+        }
+
+        unsafe public BoxColliderNtv* GetBoxColliderPtr(int inx){
+            IntPtr ptr = World_getBoxColliderPtr(ntv, inx); 
+            return (BoxColliderNtv*)ptr.ToPointer(); 
+        }
+
+        public void DestroyBoxCollider(int inx){
+            World_destroyBoxCollider(ntv, inx); 
+        }
+
+        public void ClearBoxColliders(){
+            World_clearBoxColliders(ntv); 
+        }
+
+        public void SetBoxColliderPosition(int inx, Vector3 position){
+            Vec3 pos = new Vec3();
+            pos.x = position.x; 
+            pos.y = position.y; 
+            pos.z = position.z;
+            
+            World_setBoxColliderPosition(ntv, inx, pos); 
+        }
+
+        public void SetBoxColliderInvRotation(int inx, Matrix4x4 invRotation){
+            Mat3 invRot = new Mat3();
+            //invRot.x0
+            
+            World_setBoxColliderInvRotation(ntv, inx, invRot); 
+        }
+
+        public void SetBoxColliderSize(int inx, Vector3 size){
+            Vec3 sz = new Vec3();
+            sz.x = size.x; 
+            sz.y = size.y; 
+            sz.z = size.z;
+
+            World_setBoxColliderSize(ntv, inx, sz); 
+        }
+
+        public void SetBoxColliderKineticFriction(int inx, float kineticFriction){
+            World_setBoxColliderKineticFriction(ntv, inx, kineticFriction);
+        }
+
+        public void SetBoxColliderStaticFriction(int inx, float staticFriction){
+            World_setBoxColliderStaticFriction(ntv, inx, staticFriction);
+        }
+
+        public void SetBoxColliderInverse(int inx, bool inverse){
+            World_setBoxColliderInverse(ntv, inx, inverse);
+        }
     }
 }

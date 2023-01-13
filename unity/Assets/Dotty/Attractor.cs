@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor; 
 
-namespace Dotty{
-    public class Attractor : MonoBehaviour
-    {
+namespace Dotty {
+    public class Attractor : MonoBehaviour {
         private int internalId; 
+        private bool started; 
         unsafe private AttractorNtv* ptr; 
         
         public World world; 
@@ -16,23 +16,35 @@ namespace Dotty{
         public float maxDistance = 1000; 
         public Falloff falloff = Falloff.InvDist2; 
 
-        void OnEnable()
-        {
-            Vector3 position = transform.position;
+        void AddInternal() {
+            Vector3 position = transform.position; 
             internalId = world.AddAttractor(position, strength, minDistance, maxDistance, falloff); 
-            unsafe{
+            unsafe {
                 ptr = world.GetAttractorPtr(internalId); 
             }
         }
-
-        void OnDisable()
-        {
+        
+        void RemoveInternal() {
             world.DestroyAttractor(internalId); 
         }
 
+        void Start() {
+            started = true; 
+            AddInternal(); 
+        }
+
+        void OnEnable() {
+            if(started) {
+                AddInternal(); 
+            }
+        }
+
+        void OnDisable() {
+            RemoveInternal(); 
+        }
+
         // Update is called once per frame
-        void Update()
-        {
+        void Update() {
             Vector3 position = transform.position; 
             unsafe{
                 (*ptr).position.x = position.x;
@@ -48,10 +60,8 @@ namespace Dotty{
 
 
     [CustomEditor(typeof(Attractor))]
-    public class AttractorEditor : Editor
-    {
-        public void OnSceneGUI()
-        {
+    public class AttractorEditor : Editor {
+        public void OnSceneGUI() {
             var t = target as Attractor;
 
 
@@ -60,7 +70,7 @@ namespace Dotty{
             Handles.color = Color.red;
             float maxDistance = Handles.RadiusHandle(Quaternion.identity, t.transform.position, t.maxDistance);
 
-            if (EditorGUI.EndChangeCheck()){
+            if (EditorGUI.EndChangeCheck()) {
                 Undo.RecordObject(target, "Changed Max Distance");
                 t.maxDistance = maxDistance;
             }
@@ -71,7 +81,7 @@ namespace Dotty{
             Handles.color = Color.blue;
             float minDistance = Handles.RadiusHandle(Quaternion.identity, t.transform.position, t.minDistance);
 
-            if (EditorGUI.EndChangeCheck()){
+            if (EditorGUI.EndChangeCheck()) {
                 Undo.RecordObject(target, "Changed Min Distance");
                 t.minDistance = minDistance;
             }

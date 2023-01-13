@@ -4,9 +4,9 @@ using UnityEngine;
 using UnityEditor; 
 
 namespace Dotty{
-    public class Vortex : MonoBehaviour
-    {
+    public class Vortex : MonoBehaviour {
         private int internalId; 
+        private bool started;
         unsafe private VortexNtv* ptr; 
         
         public World world; 
@@ -17,29 +17,37 @@ namespace Dotty{
         public Falloff falloff = Falloff.InvDist2; 
 
 
-        // Start is called before the first frame update
-        void Start()
-        {
-        }
-
-        void OnEnable()
-        {
+        void AddInternal() {
             Vector3 position = transform.position; 
             Vector3 normal = transform.rotation * Vector3.up;
             internalId = world.AddVortex(position, normal, strength, minDistance, maxDistance, falloff); 
-            unsafe{
+            unsafe {
                 ptr = world.GetVortexPtr(internalId); 
             }
         }
-
-        void OnDisable()
-        {
+        
+        void RemoveInternal() {
             world.DestroyVortex(internalId); 
         }
 
+        // Start is called before the first frame update
+        void Start() {
+            started = true; 
+            AddInternal(); 
+        }
+
+        void OnEnable() {
+            if(started) {
+                AddInternal(); 
+            }
+        }
+
+        void OnDisable() {
+            RemoveInternal();
+        }
+
         // Update is called once per frame
-        void Update()
-        {
+        void Update() {
             Vector3 position = transform.position; 
             Vector3 normal = transform.rotation * Vector3.up;
             unsafe{
@@ -58,10 +66,8 @@ namespace Dotty{
     }
 
     [CustomEditor(typeof(Vortex))]
-    public class VortexEditor : Editor
-    {
-        public void OnSceneGUI()
-        {
+    public class VortexEditor : Editor {
+        public void OnSceneGUI() {
             var t = target as Vortex;
 
 
