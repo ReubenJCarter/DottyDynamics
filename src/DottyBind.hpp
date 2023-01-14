@@ -33,6 +33,18 @@ extern "C" {
     EXPORT bool* World_getParticlesInUsePtr(World* instance);
     EXPORT int World_getParticlesPoolBound(World* instance);
 
+    EXPORT int World_addGlobalForce(World* instance, Vec3 position, Vec3 direction, float strength, Vec3 boundSize, BoundShapeType boundShape, float boundThickness, Falloff boundFalloff);
+    EXPORT GlobalForce* World_getGlobalForcePtr(World* instance, int inx); 
+    EXPORT void World_destroyGlobalForce(World* instance, int inx); 
+    EXPORT void World_clearGlobalForces(World* instance);
+    EXPORT void World_setGlobalForcePosition(World* instance, int inx, Vec3 position); 
+    EXPORT void World_setGlobalForceDirection(World* instance, int inx, Vec3 direction); 
+    EXPORT void World_setGlobalForceStrength(World* instance, int inx, float strength); 
+    EXPORT void World_setGlobalForceBoundSize(World* instance, int inx, Vec3 boundSize); 
+    EXPORT void World_setGlobalForceBoundShape(World* instance, int inx, BoundShapeType boundShape); 
+    EXPORT void World_setGlobalForceBoundThickness(World* instance, int inx, float boundThickness); 
+    EXPORT void World_setGlobalForceBoundFalloff(World* instance, int inx, Falloff boundFalloff); 
+
     EXPORT int World_addAttrator(World* instance, Vec3 position, float strength, float minDist, float maxDist, Falloff falloff); 
     EXPORT Attractor* World_getAttractorPtr(World* instance, int inx);
     EXPORT void World_destroyAttractor(World* instance, int inx); 
@@ -77,13 +89,19 @@ extern "C" {
     EXPORT void World_setAnchorRodLength(World* instance, int inx, float length);
     EXPORT void World_setAnchorRodPosition(World* instance, int inx, Vec3 position);
 
-    EXPORT int World_addNoiseField(World* instance, NoiseType noiseType, float strength, float noiseScale, bool isVelocity);
+    EXPORT int World_addNoiseField(World* instance, Vec3 position, NoiseType noiseType, float strength, float noiseScale, FieldMode mode, 
+                          BoundShapeType boundShape, Vec3 boundSize, Falloff boundFalloff, float boundThickness);
     EXPORT void World_destroyNoiseField(World* instance, int inx); 
     EXPORT void World_clearNoiseFields(World* instance);
+    EXPORT void World_setNoiseFieldPosition(World* instance, int inx, Vec3 position); 
     EXPORT void World_setNoiseFieldNoiseType(World* instance, int inx, NoiseType noiseType); 
     EXPORT void World_setNoiseFieldStrength(World* instance, int inx, float strength); 
     EXPORT void World_setNoiseFieldNoiseScale(World* instance, int inx, float noiseScale); 
-    EXPORT void World_setNoiseFieldViscosity(World* instance, int inx, float viscosity); 
+    EXPORT void World_setNoiseFieldMode(World* instance, int inx, FieldMode mode); 
+    EXPORT void World_setNoiseFieldBoundShape(World* instance, int inx, BoundShapeType boundShape); 
+    EXPORT void World_setNoiseFieldBoundSize(World* instance, int inx, float boundSize);
+    EXPORT void World_setNoiseFieldBoundFalloff(World* instance, int inx, Falloff boundFalloff);  
+    EXPORT void World_setNoiseFieldBoundThickness(World* instance, int inx, float thickness); 
 
     EXPORT int World_addSphereCollider(World* instance, Vec3 position, float radius, float kineticFriction, float staticFriction, bool inverse);
     EXPORT SphereCollider* World_getSphereColliderPtr(World* instance, int inx); 

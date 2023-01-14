@@ -247,10 +247,10 @@ MonoBehaviour:
   world: {fileID: 849942375}
   timestep: 0.0166666
   substeps: 1
-  globalDamping: 1
+  globalDamping: 0.561
   gravity: 0
-  hasCollisionFloor: 0
-  collisionFloorHeight: 0
+  hasCollisionFloor: 1
+  collisionFloorHeight: 0.08944023
   collisionFloorKineticFriction: 0
   collisionFloorStaticFriction: 0
 --- !u!1 &1273542177
@@ -459,7 +459,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1461354657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -474,9 +474,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   world: {fileID: 849942375}
   strength: 1
-  minDistance: 0.1
+  minDistance: 11.958663
   maxDistance: 172.50967
-  falloff: 2
+  falloff: 4
 --- !u!4 &1461354658
 Transform:
   m_ObjectHideFlags: 0

@@ -31,7 +31,7 @@ class World {
         DynamicPool<Attractor> attractors;
         DynamicPool<StrangeAttractor> strangeAttractors; 
         DynamicPool<Vortex> vortices;
-        DynamicPool<Vec3> globalForces;
+        DynamicPool<GlobalForce> globalForces;
         DynamicPool<NoiseField> noiseFields;   
         DynamicPool<NoiseGenerator> noiseGenerators;    
         DynamicPool<BoxCollider> boxColliders;    
@@ -54,13 +54,13 @@ class World {
                     
                     for(int p = a; p < b; p++){
 
-                        float xDiff = globalForces[i].x; 
-                        float yDiff = globalForces[i].y;
-                        float zDiff = globalForces[i].z; 
+                        float xDiff = globalForces[i].direction.x; 
+                        float yDiff = globalForces[i].direction.y;
+                        float zDiff = globalForces[i].direction.z; 
 
-                        particles[p].velocity.x += timestep * particles[p].invMass * xDiff;
-                        particles[p].velocity.y += timestep * particles[p].invMass * yDiff;
-                        particles[p].velocity.z += timestep * particles[p].invMass * zDiff;
+                        particles[p].velocity.x += timestep * particles[p].invMass * xDiff * globalForces[i].strength;
+                        particles[p].velocity.y += timestep * particles[p].invMass * yDiff * globalForces[i].strength;
+                        particles[p].velocity.z += timestep * particles[p].invMass * zDiff * globalForces[i].strength;
                     
                     }
 
@@ -366,7 +366,7 @@ class World {
                     if(!noiseFields.isInUse(i))
                         continue; 
 
-                    if(!noiseFields[i].isVelocity){
+                    if(!noiseFields[i].mode == FieldMode::CorrectionForce){
                         if(noiseFields[i].noiseType == NoiseType::Simplex || noiseFields[i].noiseType == NoiseType::Perlin || noiseFields[i].noiseType == NoiseType::Value){
                             for(int p = a; p < b; p++){
 
@@ -417,7 +417,7 @@ class World {
                                 float verrX = targetVelocityX - particles[p].velocity.x; 
                                 float verrY = targetVelocityY - particles[p].velocity.y; 
                                 float verrZ = targetVelocityZ - particles[p].velocity.z;
-                                float kp =  noiseFields[i].viscosity;
+                                float kp =  1;
                                 float correctingForceX = verrX * kp; 
                                 float correctingForceY = verrY * kp;
                                 float correctingForceZ = verrZ * kp;
@@ -441,7 +441,7 @@ class World {
                                 float verrX = targetVelocityX - particles[p].velocity.x; 
                                 float verrY = targetVelocityY - particles[p].velocity.y; 
                                 float verrZ = targetVelocityZ - particles[p].velocity.z;
-                                float kp =  noiseFields[i].viscosity;
+                                float kp =  1;
                                 float correctingForceX = verrX * kp; 
                                 float correctingForceY = verrY * kp;
                                 float correctingForceZ = verrZ * kp;
@@ -586,7 +586,8 @@ class World {
                         float halfsy = boxColliders[i].size.y/2;
                         float halfsz = boxColliders[i].size.z/2;
 
-                        Vec3 ppos = particles[p].position; 
+                        Vec3 ppos = particles[p].position;
+                        ppos.sub(boxColliders[i].position); 
                         ppos.multm(boxColliders[i].invRotation); 
 
                         if(ppos.x > halfsx || ppos.x < -halfsx || ppos.y > halfsy || ppos.y < -halfsy || ppos.z > halfsz || ppos.z < -halfsz){
@@ -648,7 +649,7 @@ class World {
         World(){
             params.timestep = 0.016666; 
             params.substeps = 1; 
-            params.globalDamping = 1;
+            params.globalDamping = 0.01f;
             params.gravity = 9.81; 
 
             params.collisionFloorStaticFriction = 0; 
@@ -701,9 +702,9 @@ class World {
                 for(int i = 0; i < maxParticleCount; i++){
                     particles[i].velocity.y -= deltaT * gravity; 
                     
-                    particles[i].velocity.x *= globalDamping; 
-                    particles[i].velocity.y *= globalDamping; 
-                    particles[i].velocity.z *= globalDamping;
+                    particles[i].velocity.x -= particles[i].velocity.x * globalDamping * deltaT; 
+                    particles[i].velocity.y -= particles[i].velocity.y * globalDamping * deltaT; 
+                    particles[i].velocity.z -= particles[i].velocity.z * globalDamping * deltaT;
 
                     particles[i].positionNext.x = particles[i].position.x + deltaT * particles[i].velocity.x; 
                     particles[i].positionNext.y = particles[i].position.y + deltaT * particles[i].velocity.y;
@@ -798,6 +799,63 @@ class World {
         int getParticlesPoolBounds(){
             return particles.getBound(); 
         }
+
+
+
+        int addGlobalForce(Vec3 position, Vec3 direction, float strength, Vec3 boundSize, 
+                           BoundShapeType boundShape, float boundThickness, Falloff boundFalloff){
+            GlobalForce g; 
+            g.position = position; 
+            g.direction = direction; 
+            g.strength = strength;
+            g.boundSize = boundSize; 
+            g.boundShape = boundShape;
+            g.boundThickness = boundThickness; 
+            g.boundFalloff = boundFalloff; 
+            return globalForces.add(g);  
+        }
+
+        GlobalForce* getGlobalForcePtr(int inx){
+            return &(globalForces[inx]); 
+        }
+
+        void destroyGlobalForce(int inx){
+            globalForces.remove(inx); 
+        }
+
+        void clearGlobalForces(){
+            globalForces.clear(); 
+        }
+
+        void setGlobalForcePosition(int inx, Vec3 position){
+            globalForces[inx].position = position; 
+        }
+
+        void setGlobalForceDirection(int inx, Vec3 direction){
+            globalForces[inx].direction = direction; 
+        }
+
+        void setGlobalForceStrength(int inx, float strength){
+            globalForces[inx].strength = strength; 
+        }
+
+        void setGlobalForceBoundSize(int inx, Vec3 boundSize){
+            globalForces[inx].boundSize = boundSize; 
+        }
+
+        void setGlobalForceBoundShape(int inx, BoundShapeType boundShape){
+            globalForces[inx].boundShape = boundShape; 
+        }
+
+        void setGlobalForceBoundThickness(int inx, float boundThickness){
+            globalForces[inx].boundThickness = boundThickness; 
+        }
+
+        void setGlobalForceBoundFalloff(int inx, Falloff boundFalloff){
+            globalForces[inx].boundFalloff = boundFalloff; 
+        }
+
+
 
 
         int addAttrator(Vec3 position, float strength, float minDist, float maxDist, Falloff falloff){
@@ -992,20 +1050,21 @@ class World {
         }
 
 
-        int addNoiseField(NoiseType noiseType, float strength, float noiseScale, bool isVelocity){
+        int addNoiseField(Vec3 position, NoiseType noiseType, float strength, float noiseScale, FieldMode mode, 
+                          BoundShapeType boundShape, Vec3 boundSize, Falloff boundFalloff, float boundThickness){
             NoiseField n; 
 
-            n.position = Vec3(0, 0, 0); 
-            n.boundShape = ShapeType::Sphere; 
-            n.boundSize = Vec3(std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max()); 
-            n.falloff = Falloff::InvDist; 
-            n.falloffRatio = 0; 
-            n.viscosity = 1.0f;
+            n.position = position; 
+            n.boundShape = boundShape; 
+            n.boundSize = boundSize; 
+            n.boundFalloff = boundFalloff; 
+            n.boundThickness = boundThickness; 
 
             n.noiseType = noiseType; 
             n.strength = strength; 
             n.noiseScale = noiseScale;
-            n.isVelocity = isVelocity; 
+            n.mode = mode; 
+
             noiseFields.add(n);
 
             NoiseGenerator gen; 
@@ -1024,6 +1083,10 @@ class World {
             noiseGenerators.clear(); 
         }
 
+        void setNoiseFieldPosition(int inx, Vec3 position){
+            noiseFields[inx].position = position; 
+        }
+
         void setNoiseFieldNoiseType(int inx, NoiseType noiseType){
             noiseFields[inx].noiseType = noiseType; 
         }
@@ -1036,10 +1099,25 @@ class World {
             noiseFields[inx].noiseScale = noiseScale; 
         }
 
-        void setNoiseFieldViscosity(int inx, float viscosity){
-            noiseFields[inx].viscosity = viscosity; 
+        void setNoiseFieldMode(int inx, FieldMode mode){
+            noiseFields[inx].mode = mode; 
         }
 
+        void setNoiseFieldBoundShape(int inx, BoundShapeType boundShape){
+            noiseFields[inx].boundShape = boundShape; 
+        }
+
+        void setNoiseFieldBoundSize(int inx, Vec3 boundSize){
+            noiseFields[inx].boundSize = boundSize; 
+        }
+
+        void setNoiseFieldBoundFalloff(int inx, Falloff falloff){
+            noiseFields[inx].boundFalloff = falloff; 
+        }
+
+        void setNoiseFieldBoundThickness(int inx, float thickness){
+            noiseFields[inx].boundThickness = thickness; 
+        }
 
 
         int addSphereCollider(Vec3 position, float radius, float kineticFriction, float staticFriction, bool inverse){

@@ -4,7 +4,8 @@
 
 enum Falloff{Constant, InvDist, InvDist2, InvDistWell, InvDist2Well }; 
 enum NoiseType{Simplex, SimplexCurl, Perlin, PerlinCurl, Value, ValueCurl}; 
-enum ShapeType{Box, Sphere, Ellipsoid}; 
+enum FieldMode{Force, CorrectionForce}; 
+enum BoundShapeType{Box, Sphere, Ellipsoid, Infinite}; 
 enum StrangeAttractorType{Aizawa, Arneodo, Dadras, Dequan, Lorenz, LorenzMod2, Thomas }; 
 
 struct Particle {
@@ -58,17 +59,26 @@ struct Vortex {
 
 struct NoiseField {
     Vec3 position; 
-    Vec3 boundSize; 
-    ShapeType boundShape;
-    float falloffRatio; 
-    Falloff falloff; 
     float noiseScale; 
     float strength;
     int resolution; 
-    NoiseType noiseType; 
-    float viscosity; 
-    bool isVelocity; 
+    NoiseType noiseType;  
+    FieldMode mode; 
+    Vec3 boundSize; 
+    BoundShapeType boundShape;
+    float boundThickness; 
+    Falloff boundFalloff; 
 }; 
+
+struct GlobalForce {
+    Vec3 position; 
+    Vec3 direction;
+    float strength; 
+    Vec3 boundSize; 
+    BoundShapeType boundShape;
+    float boundThickness; 
+    Falloff boundFalloff; 
+};
 
 struct BoxCollider {
     Vec3 position; 

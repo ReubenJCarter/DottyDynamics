@@ -7,6 +7,20 @@ using System;
 
 namespace Dotty{
 
+    public enum Falloff{Constant, InvDist, InvDist2, InvDistWell, InvDist2Well}
+    public enum NoiseType{Simplex, SimplexCurl, Perlin, PerlinCurl, Value, ValueCurl}
+    public enum FieldMode{Force, CorrectionForce}
+    public enum BoundShapeType{Box, Sphere, Ellipsoid, Infinite}
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct Vec3{
+        public float x, y, z;
+    }
+
+    public struct Mat3{
+        public float x0, y0, z0, x1, y1, z1, x2, y2, z2; 
+    }
+
     [StructLayout(LayoutKind.Sequential)]
     public struct WorldParamsNtv{
         public float timestep; 
@@ -19,19 +33,6 @@ namespace Dotty{
         public bool hasCollisionFloor;
     }
 
-    public enum Falloff{Constant, InvDist, InvDist2, InvDistWell, InvDist2Well}
-    public enum NoiseType{Simplex, SimplexCurl, Perlin, PerlinCurl, Value, ValueCurl}
-    public enum ShapeType{Box, Sphere, Ellipsoid}
-
-    [StructLayout(LayoutKind.Sequential)]
-    public struct Vec3{
-        public float x, y, z;
-    }
-
-    public struct Mat3{
-        public float x0, y0, z0, x1, y1, z1, x2, y2, z2; 
-    }
-    
     [StructLayout(LayoutKind.Sequential)]
     public struct Particle{
         public Vec3 position;

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor; 
 
 namespace Dotty{
     public class WorldParams : MonoBehaviour
@@ -16,7 +17,7 @@ namespace Dotty{
 
         [Header("Global Environment")]
         [Range(0.0f, 1.0f)]
-        public float globalDamping = 1;
+        public float globalDamping = 0.01f;
         public float gravity = 9.81f ; 
 
         [Header("Floor Boundry")]
@@ -52,6 +53,40 @@ namespace Dotty{
         void Update()
         {
             UpdateInternal(); 
+        }
+    }
+
+    [CustomEditor(typeof(WorldParams))]
+    public class WorldParamsEditor : Editor {
+        public void OnSceneGUI() {
+            var t = target as WorldParams;
+
+            if(t.hasCollisionFloor){
+                float h = t.collisionFloorHeight; 
+                float s = HandleUtility.GetHandleSize( new Vector3(0, t.collisionFloorHeight, 0) );
+
+                Vector3 a =  new Vector3(-s, h, -s); 
+                Vector3 b =  new Vector3(s, h, -s); 
+                Vector3 c =  new Vector3(s, h, s);  
+                Vector3 d =  new Vector3(-s, h, s);  
+
+                Handles.DrawLine(a, b); 
+                Handles.DrawLine(b, c); 
+                Handles.DrawLine(c, d); 
+                Handles.DrawLine(d, a); 
+
+
+                EditorGUI.BeginChangeCheck();
+
+                float handleSz = 1.5f;
+                Vector3 targetPosition = new Vector3(0, t.collisionFloorHeight, 0); 
+                Vector3 newTargetPosition = Handles.Slider(targetPosition, Vector3.up, handleSz * HandleUtility.GetHandleSize(targetPosition), Handles.ArrowHandleCap, 0.1f);
+
+                if (EditorGUI.EndChangeCheck()) {
+                    Undo.RecordObject(target, "Changed Height");
+                    t.collisionFloorHeight = (newTargetPosition).y; 
+                }
+            }
         }
     }
 }

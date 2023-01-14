@@ -72,6 +72,52 @@ EXPORT int World_getParticlesPoolBound(World* instance){
 
 
 
+EXPORT int World_addGlobalForce(World* instance, Vec3 position, Vec3 direction, float strength, Vec3 boundSize, BoundShapeType boundShape, float boundThickness, Falloff boundFalloff){
+    return instance->addGlobalForce(position, direction, strength, boundSize, boundShape, boundThickness, boundFalloff); 
+}
+
+EXPORT GlobalForce* World_getGlobalForcePtr(World* instance, int inx){
+    return instance->getGlobalForcePtr(inx); 
+}
+
+EXPORT void World_destroyGlobalForce(World* instance, int inx){
+    instance->destroyGlobalForce(inx); 
+}
+
+EXPORT void World_clearGlobalForces(World* instance){
+    instance->clearGlobalForces(); 
+}
+
+EXPORT void World_setGlobalForcePosition(World* instance, int inx, Vec3 position){
+    instance->setGlobalForcePosition(inx, position); 
+}
+
+EXPORT void World_setGlobalForceDirection(World* instance, int inx, Vec3 direction){
+    instance->setGlobalForceDirection(inx, direction); 
+}
+
+EXPORT void World_setGlobalForceStrength(World* instance, int inx, float strength){
+    instance->setGlobalForceStrength(inx, strength); 
+}
+
+EXPORT void World_setGlobalForceBoundSize(World* instance, int inx, Vec3 boundSize){
+    instance->setGlobalForceBoundSize(inx, boundSize); 
+}
+
+EXPORT void World_setGlobalForceBoundShape(World* instance, int inx, BoundShapeType boundShape){
+    instance->setGlobalForceBoundShape(inx, boundShape); 
+}
+
+EXPORT void World_setGlobalForceBoundThickness(World* instance, int inx, float boundThickness){
+    instance->setGlobalForceBoundThickness(inx, boundThickness);
+}
+
+EXPORT void World_setGlobalForceBoundFalloff(World* instance, int inx, Falloff boundFalloff){
+    instance->setGlobalForceBoundFalloff(inx, boundFalloff);
+}
+
+
+
 EXPORT int World_addAttrator(World* instance, Vec3 position, float strength, float minDist, float maxDist, Falloff falloff){
     return instance->addAttrator(position, strength, minDist, maxDist, falloff); 
 }
@@ -239,8 +285,9 @@ EXPORT void World_setAnchorRodPosition(World* instance, int inx, Vec3 position){
 
 
 
-EXPORT int World_addNoiseField(World* instance, NoiseType noiseType, float strength, float noiseScale, bool isVelocity){
-    return instance->addNoiseField(noiseType, strength, noiseScale, isVelocity); 
+EXPORT int World_addNoiseField(World* instance, Vec3 position, NoiseType noiseType, float strength, float noiseScale, FieldMode mode, 
+                          BoundShapeType boundShape, Vec3 boundSize, Falloff boundFalloff, float boundThickness){
+    return instance->addNoiseField(position, noiseType, strength, noiseScale, mode, boundShape, boundSize, boundFalloff, boundThickness); 
 }
 
 EXPORT void World_destroyNoiseField(World* instance, int inx){
@@ -249,6 +296,10 @@ EXPORT void World_destroyNoiseField(World* instance, int inx){
 
 EXPORT void World_clearNoiseFields(World* instance){
     instance->clearNoiseFields(); 
+}
+
+EXPORT void World_setNoiseFieldPosition(World* instance, int inx, Vec3 position){
+    instance->setNoiseFieldPosition(inx, position); 
 }
 
 EXPORT void World_setNoiseFieldNoiseType(World* instance, int inx, NoiseType noiseType){
@@ -263,8 +314,24 @@ EXPORT void World_setNoiseFieldNoiseScale(World* instance, int inx, float noiseS
     instance->setNoiseFieldNoiseScale(inx, noiseScale); 
 }
 
-EXPORT void World_setNoiseFieldViscosity(World* instance, int inx, float viscosity){
-    instance->setNoiseFieldViscosity(inx, viscosity); 
+EXPORT void World_setNoiseMode(World* instance, int inx, FieldMode mode){
+    instance->setNoiseFieldMode(inx, mode); 
+}
+
+EXPORT void World_setNoiseFieldBoundShape(World* instance, int inx, BoundShapeType boundShape){
+    instance->setNoiseFieldBoundShape(inx, boundShape); 
+}
+
+EXPORT void World_setNoiseFieldBoundSize(World* instance, int inx, Vec3 boundSize){
+    instance->setNoiseFieldBoundSize(inx, boundSize); 
+}
+
+EXPORT void World_setNoiseFieldBounFalloff(World* instance, int inx, Falloff boundFalloff){
+    instance->setNoiseFieldBoundFalloff(inx, boundFalloff); 
+}
+
+EXPORT void World_setNoiseFieldBounThickness(World* instance, int inx, float thickness){
+    instance->setNoiseFieldBoundThickness(inx, thickness); 
 }
 
 
