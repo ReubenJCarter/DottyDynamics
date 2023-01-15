@@ -42,6 +42,17 @@ namespace Dotty{
     }
 
     [StructLayout(LayoutKind.Sequential)]
+    public struct GlobalForceNtv{
+        public Vec3 position; 
+        public Vec3 direction;
+        public float strength; 
+        public Vec3 boundSize; 
+        public BoundShapeType boundShape;
+        public float boundThickness; 
+        public Falloff boundFalloff; 
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
     public struct AttractorNtv{
         public Vec3 position; 
         public float strength;

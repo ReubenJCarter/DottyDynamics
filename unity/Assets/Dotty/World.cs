@@ -121,6 +121,84 @@ namespace Dotty{
         private static extern int World_getParticlesPoolBound(IntPtr world);
 
 
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern int World_addGlobalForce(IntPtr instance, Vec3 position, Vec3 direction, float strength, Vec3 boundSize, BoundShapeType boundShape, float boundThickness, Falloff boundFalloff);
+        
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern IntPtr World_getGlobalForcePtr(IntPtr instance, int inx); 
+        
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_destroyGlobalForce(IntPtr instance, int inx); 
+        
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_clearGlobalForces(IntPtr instance);
+        
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setGlobalForcePosition(IntPtr instance, int inx, Vec3 position); 
+        
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setGlobalForceDirection(IntPtr instance, int inx, Vec3 direction); 
+        
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setGlobalForceStrength(IntPtr instance, int inx, float strength); 
+        
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setGlobalForceBoundSize(IntPtr instance, int inx, Vec3 boundSize); 
+        
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setGlobalForceBoundShape(IntPtr instance, int inx, BoundShapeType boundShape); 
+        
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setGlobalForceBoundThickness(IntPtr instance, int inx, float boundThickness); 
+        
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setGlobalForceBoundFalloff(IntPtr instance, int inx, Falloff boundFalloff); 
+
+
 
         #if UNITY_IPHONE
         [DllImport ("__Internal")]
@@ -326,33 +404,92 @@ namespace Dotty{
 
 
 
-        #if UNITY_IPHONE
-        [DllImport ("__Internal")]
-        #else
-        [DllImport ("Dotty")]   
-        #endif
-        private static extern int World_addNoiseField(IntPtr instance, NoiseType noiseType, float strength, float noiseScale, bool isVelocity);
 
         #if UNITY_IPHONE
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
-        private static extern void World_setNoiseFieldViscosity(IntPtr instance, int inx, float viscosity);
-
+        private static extern int World_addNoiseField(IntPtr instance, Vec3 position, NoiseType noiseType, float strength, float noiseScale, FieldMode mode, 
+                                                      BoundShapeType boundShape, Vec3 boundSize, Falloff boundFalloff, float boundThickness);
+        
         #if UNITY_IPHONE
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
-        private static extern void World_destroyNoiseField(IntPtr instance, int inx);
-
+        private static extern void World_destroyNoiseField(IntPtr instance, int inx); 
+        
         #if UNITY_IPHONE
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_clearNoiseFields(IntPtr instance);
+        
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setNoiseFieldPosition(IntPtr instance, int inx, Vec3 position); 
+        
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setNoiseFieldNoiseType(IntPtr instance, int inx, NoiseType noiseType); 
+        
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setNoiseFieldStrength(IntPtr instance, int inx, float strength); 
+        
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setNoiseFieldNoiseScale(IntPtr instance, int inx, float noiseScale); 
+        
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setNoiseFieldMode(IntPtr instance, int inx, FieldMode mode); 
+        
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setNoiseFieldBoundShape(IntPtr instance, int inx, BoundShapeType boundShape); 
+        
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setNoiseFieldBoundSize(IntPtr instance, int inx, float boundSize);
+        
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setNoiseFieldBoundFalloff(IntPtr instance, int inx, Falloff boundFalloff);  
+        
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setNoiseFieldBoundThickness(IntPtr instance, int inx, float thickness); 
+
 
 
 
@@ -587,6 +724,80 @@ namespace Dotty{
         }
 
 
+        public int AddGlobalForce(Vector3 position, Vector3 direction, float strength, Vector3 boundSize, BoundShapeType boundShape, float boundThickness, Falloff boundFalloff){
+            Vec3 pos = new Vec3();
+            pos.x = position.x; 
+            pos.y = position.y; 
+            pos.z = position.z;
+            
+            Vec3 dir = new Vec3();
+            dir.x = direction.x; 
+            dir.y = direction.y; 
+            dir.z = direction.z;
+
+            Vec3 sz = new Vec3();
+            sz.x = boundSize.x; 
+            sz.y = boundSize.y; 
+            sz.z = boundSize.z;
+            
+            return World_addGlobalForce(ntv, pos, dir, strength, sz, boundShape, boundThickness, boundFalloff);
+        }
+
+        unsafe public GlobalForceNtv* GetGlobalForcePtr(int inx){
+            IntPtr ptr = World_getGlobalForcePtr(ntv, inx); 
+            return (GlobalForceNtv*)ptr.ToPointer(); 
+        } 
+
+        public void DestroyGlobalForce(int inx){
+            World_destroyGlobalForce(ntv, inx); 
+        }
+
+        public void ClearGlobalForces(){
+            World_clearGlobalForces(ntv); 
+        }
+
+        void SetGlobalForcePosition(int inx, Vector3 position){
+            Vec3 pos = new Vec3();
+            pos.x = position.x; 
+            pos.y = position.y; 
+            pos.z = position.z;
+            World_setGlobalForcePosition(ntv, inx, pos); 
+        }
+
+        void SetGlobalForceDirection(int inx, Vector3 direction){
+            Vec3 dir = new Vec3();
+            dir.x = direction.x; 
+            dir.y = direction.y; 
+            dir.z = direction.z;
+            World_setGlobalForceDirection(ntv, inx, dir); 
+        }
+
+        void SetGlobalForceStrength(int inx, float strength){
+            World_setGlobalForceStrength(ntv, inx, strength); 
+        }
+
+        void SetGlobalForceBoundSize(int inx, Vector3 boundSize){
+            Vec3 sz = new Vec3();
+            sz.x = boundSize.x; 
+            sz.y = boundSize.y; 
+            sz.z = boundSize.z;
+            World_setGlobalForceBoundSize(ntv, inx, sz); 
+        }
+
+        void SetGlobalForceBoundShape(int inx, BoundShapeType boundShape){
+            World_setGlobalForceBoundShape(ntv, inx, boundShape); 
+        }
+
+        void SetGlobalForceBoundThickness(int inx, float boundThickness){
+            World_setGlobalForceBoundThickness(ntv, inx, boundThickness); 
+        }
+
+        void SetGlobalForceBoundFalloff(int inx, Falloff boundFalloff){
+            World_setGlobalForceBoundFalloff(ntv, inx, boundFalloff); 
+        }
+
+
+
         public int AddAttractor(Vector3 position, float strength, float minDist, float maxDist, Falloff falloff){
             Vec3 pos = new Vec3();
             pos.x = position.x; 
@@ -747,11 +958,18 @@ namespace Dotty{
 
 
         public int AddNoiseField(NoiseType noiseType, float strength, float noiseScale, bool isVelocity){
-            return World_addNoiseField(ntv, noiseType, strength, noiseScale, isVelocity); 
-        }
 
-        public void SetNoiseFieldViscosity(int inx, float viscosity){
-            World_setNoiseFieldViscosity(ntv, inx, viscosity); 
+            Vec3 pos = new Vec3();
+            pos.x = 0;  
+            pos.y = 0; 
+            pos.z = 0;
+
+            Vec3 sz = new Vec3();
+            sz.x = 0; 
+            sz.y = 0; 
+            sz.z = 0;
+
+            return World_addNoiseField(ntv, pos, noiseType, strength, noiseScale, FieldMode.Force, BoundShapeType.Box, sz, Falloff.Constant, 0); 
         }
 
         public void DestroyNoiseField(int inx){
