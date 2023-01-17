@@ -33,6 +33,31 @@ namespace Dotty{
         private static extern void World_update(IntPtr world);
 
 
+        private IntPtr ntv; 
+
+        public static World instance; 
+
+        public void Awake(){
+            ntv = createWorld();
+            instance = this;
+        }
+
+        void OnDestroy(){
+            freeWorld(ntv);
+        }
+
+        public void FixedUpdate(){
+            World_update(ntv); 
+        }
+
+
+
+
+        /*
+        *
+        *WORLD PARAMS
+        *
+        */
 
         #if UNITY_IPHONE
         [DllImport ("__Internal")]
@@ -83,7 +108,42 @@ namespace Dotty{
         #endif
         private static extern void World_setCollisionFloor(IntPtr instance, float height, float staticFriction, float kineticFriction);
 
+        unsafe public WorldParamsNtv* GetWorldParamsPtr(){
+            IntPtr ptr = World_getWorldParamsPtr(ntv); 
+            return (WorldParamsNtv*)ptr.ToPointer(); 
+        }
 
+        public void SetGravity(float gravity){
+            World_setGravity(ntv, gravity); 
+        }
+        
+        public void SetTimestep(float timestep){
+            World_setTimestep(ntv, timestep); 
+        }
+
+        public void SetSubsteps(float substeps){
+            World_setSubsteps(ntv, substeps); 
+        }
+
+        public void SetGlobalDamping(float globalDamping){
+            World_setGlobalDamping(ntv, globalDamping); 
+        }
+
+        public void SetHasCollisionFloor(bool h){
+            World_setHasCollisionFloor(ntv, h); 
+        }
+
+        public void SetCollisionFloor(float height, float staticFriction, float kineticFriction){
+            World_setCollisionFloor(ntv, height, staticFriction, kineticFriction);
+        }
+
+
+
+        /*
+        *
+        *PARTICLES
+        *
+        */
 
         #if UNITY_IPHONE
         [DllImport ("__Internal")]
@@ -120,8 +180,61 @@ namespace Dotty{
         #endif
         private static extern int World_getParticlesPoolBound(IntPtr world);
 
+        public int AddParticle(Vector3 initialPosition, Vector3 initialVelocity, float invMass){
 
-        #if UNITY_IPHONE
+            Vec3 initialPositionInternal = new Vec3();
+            initialPositionInternal.x = initialPosition.x; 
+            initialPositionInternal.y = initialPosition.y; 
+            initialPositionInternal.z = initialPosition.z; 
+
+            Vec3 initialVelocityInternal = new Vec3();
+            initialVelocityInternal.x = initialVelocity.x; 
+            initialVelocityInternal.y = initialVelocity.y; 
+            initialVelocityInternal.z = initialVelocity.z;
+
+            return World_addParticle(ntv, initialPositionInternal, initialVelocityInternal, invMass); 
+        }
+
+        void DestroyParticle(int inx){
+            World_destroyParticle(ntv, inx);
+        }
+
+        public int GetParticlesPoolBound(){
+            return World_getParticlesPoolBound(ntv); 
+        } 
+
+        unsafe public NativeArray<Particle> GetParticlesData(){
+            IntPtr ptr = World_getParticlesPtr(ntv); 
+            int count = World_getParticlesPoolBound(ntv); 
+            NativeArray<Particle> narr = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<Particle>(ptr.ToPointer(), count, Allocator.None);
+            #if ENABLE_UNITY_COLLECTIONS_CHECKS
+            //NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref narr, AtomicSafetyHandle.GetTempMemoryHandle());
+            NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref narr, AtomicSafetyHandle.Create());
+            #endif
+            return narr; 
+        }
+
+        unsafe public Particle* GetParticlesPtr(){
+            IntPtr ptr = World_getParticlesPtr(ntv); 
+            return (Particle*)ptr.ToPointer(); 
+        }
+
+        unsafe public NativeArray<bool> GetParticlesInUseData(){
+            IntPtr ptr = World_getParticlesInUsePtr(ntv); 
+            int count = World_getParticlesPoolBound(ntv); 
+            NativeArray<bool> arr = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<bool>(ptr.ToPointer(), count, Allocator.None);
+            return arr; 
+        }
+
+
+
+        /*
+        *
+        *GLOBAL FORCE
+        *
+        */
+
+         #if UNITY_IPHONE
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
@@ -196,9 +309,87 @@ namespace Dotty{
         #else
         [DllImport ("Dotty")]   
         #endif
-        private static extern void World_setGlobalForceBoundFalloff(IntPtr instance, int inx, Falloff boundFalloff); 
+        private static extern void World_setGlobalForceBoundFalloff(IntPtr instance, int inx, Falloff boundFalloff);
+
+        public int AddGlobalForce(Vector3 position, Vector3 direction, float strength, Vector3 boundSize, BoundShapeType boundShape, float boundThickness, Falloff boundFalloff){
+            Vec3 pos = new Vec3();
+            pos.x = position.x; 
+            pos.y = position.y; 
+            pos.z = position.z;
+            
+            Vec3 dir = new Vec3();
+            dir.x = direction.x; 
+            dir.y = direction.y; 
+            dir.z = direction.z;
+
+            Vec3 sz = new Vec3();
+            sz.x = boundSize.x; 
+            sz.y = boundSize.y; 
+            sz.z = boundSize.z;
+            
+            return World_addGlobalForce(ntv, pos, dir, strength, sz, boundShape, boundThickness, boundFalloff);
+        }
+
+        unsafe public GlobalForceNtv* GetGlobalForcePtr(int inx){
+            IntPtr ptr = World_getGlobalForcePtr(ntv, inx); 
+            return (GlobalForceNtv*)ptr.ToPointer(); 
+        } 
+
+        public void DestroyGlobalForce(int inx){
+            World_destroyGlobalForce(ntv, inx); 
+        }
+
+        public void ClearGlobalForces(){
+            World_clearGlobalForces(ntv); 
+        }
+
+        void SetGlobalForcePosition(int inx, Vector3 position){
+            Vec3 pos = new Vec3();
+            pos.x = position.x; 
+            pos.y = position.y; 
+            pos.z = position.z;
+            World_setGlobalForcePosition(ntv, inx, pos); 
+        }
+
+        void SetGlobalForceDirection(int inx, Vector3 direction){
+            Vec3 dir = new Vec3();
+            dir.x = direction.x; 
+            dir.y = direction.y; 
+            dir.z = direction.z;
+            World_setGlobalForceDirection(ntv, inx, dir); 
+        }
+
+        void SetGlobalForceStrength(int inx, float strength){
+            World_setGlobalForceStrength(ntv, inx, strength); 
+        }
+
+        void SetGlobalForceBoundSize(int inx, Vector3 boundSize){
+            Vec3 sz = new Vec3();
+            sz.x = boundSize.x; 
+            sz.y = boundSize.y; 
+            sz.z = boundSize.z;
+            World_setGlobalForceBoundSize(ntv, inx, sz); 
+        }
+
+        void SetGlobalForceBoundShape(int inx, BoundShapeType boundShape){
+            World_setGlobalForceBoundShape(ntv, inx, boundShape); 
+        }
+
+        void SetGlobalForceBoundThickness(int inx, float boundThickness){
+            World_setGlobalForceBoundThickness(ntv, inx, boundThickness); 
+        }
+
+        void SetGlobalForceBoundFalloff(int inx, Falloff boundFalloff){
+            World_setGlobalForceBoundFalloff(ntv, inx, boundFalloff); 
+        }
 
 
+
+        /*
+        *
+        *ATTRACTOR
+        *
+        */
 
         #if UNITY_IPHONE
         [DllImport ("__Internal")]
@@ -263,7 +454,60 @@ namespace Dotty{
         #endif
         private static extern void World_setAttractorFalloff(IntPtr instance, int inx, Falloff falloff);
 
+        public int AddAttractor(Vector3 position, float strength, float minDist, float maxDist, Falloff falloff){
+            Vec3 pos = new Vec3();
+            pos.x = position.x; 
+            pos.y = position.y; 
+            pos.z = position.z;
+            
+            return World_addAttrator(ntv, pos, strength, minDist, maxDist, falloff); 
+        }
 
+        unsafe public AttractorNtv* GetAttractorPtr(int inx){
+            IntPtr ptr = World_getAttractorPtr(ntv, inx); 
+            return (AttractorNtv*)ptr.ToPointer(); 
+        }
+
+        public void DestroyAttractor(int inx){
+            World_destroyAttractor(ntv, inx); 
+        }
+
+        public void ClearAttractors(){
+            World_clearAttractors(ntv); 
+        }
+
+        public void SetAttractorPosition(int inx, Vector3 position){
+            Vec3 pos = new Vec3();
+            pos.x = position.x; 
+            pos.y = position.y; 
+            pos.z = position.z;
+            
+            World_setAttractorPosition(ntv, inx, pos); 
+        }
+
+        public void SetAttractorStrength(int inx, float strength){
+            World_setAttractorStrength(ntv, inx, strength); 
+        }
+
+        public void SetAttractorMinDist(int inx, float minDist){
+            World_setAttractorMinDist(ntv, inx, minDist);
+        }
+
+        public void SetAttractorMaxDist(int inx, float maxDist){
+            World_setAttractorMaxDist(ntv, inx, maxDist);
+        }
+
+        public void SetAttractorFalloff(int inx, Falloff falloff){
+            World_setAttractorFalloff(ntv, inx, falloff);
+        }
+
+
+
+        /*
+        *
+        *VORTEX
+        *
+        */
 
         #if UNITY_IPHONE
         [DllImport ("__Internal")]
@@ -335,7 +579,73 @@ namespace Dotty{
         #endif
         private static extern void World_setVortexFalloff(IntPtr instance, int inx, Falloff falloff);
 
+        public int AddVortex(Vector3 position, Vector3 normal, float strength, float minDist, float maxDist, Falloff falloff){
+            Vec3 pos = new Vec3();
+            pos.x = position.x; 
+            pos.y = position.y; 
+            pos.z = position.z;
+            Vec3 norm = new Vec3(); 
+            norm.x = normal.x; 
+            norm.y = normal.y; 
+            norm.z = normal.z; 
+            
+            return World_addVortex(ntv, pos, norm, strength, minDist, maxDist, falloff); 
+        }
 
+        unsafe public VortexNtv* GetVortexPtr(int inx){
+            IntPtr ptr = World_getVortexPtr(ntv, inx); 
+            return (VortexNtv*)ptr.ToPointer(); 
+        }
+
+        public void DestroyVortex(int inx){
+            World_destroyVortex(ntv, inx); 
+        }
+
+        public void ClearVortices(){
+            World_clearVortices(ntv); 
+        }
+
+        public void SetVortexPosition(int inx, Vector3 position){
+            Vec3 pos = new Vec3();
+            pos.x = position.x; 
+            pos.y = position.y; 
+            pos.z = position.z;
+            
+            World_setVortexPosition(ntv, inx, pos); 
+        }
+
+        public void SetVortexNormal(int inx, Vector3 normal){
+            Vec3 norm = new Vec3();
+            norm.x = normal.x; 
+            norm.y = normal.y; 
+            norm.z = normal.z;
+            
+            World_setVortexNormal(ntv, inx, norm); 
+        }
+
+        public void SetVortexStrength(int inx, float strength){
+            World_setVortexStrength(ntv, inx, strength); 
+        }
+
+        public void SetVortexMinDist(int inx, float minDist){
+            World_setVortexMinDist(ntv, inx, minDist);
+        }
+
+        public void SetVortexMaxDist(int inx, float maxDist){
+            World_setVortexMaxDist(ntv, inx, maxDist);
+        }
+
+        public void SetVortexFalloff(int inx, Falloff falloff){
+            World_setVortexFalloff(ntv, inx, falloff);
+        }
+
+
+
+        /*
+        *
+        *RODS
+        *
+        */
 
         #if UNITY_IPHONE
         [DllImport ("__Internal")]
@@ -364,8 +674,6 @@ namespace Dotty{
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setRodLength(IntPtr instance, int inx, float length);
-
-
 
         #if UNITY_IPHONE
         [DllImport ("__Internal")]
@@ -402,8 +710,59 @@ namespace Dotty{
         #endif
         private static extern void World_setAnchorRodPosition(IntPtr instance, int inx, Vec3 position);
 
+        public int AddRod(int a, int b, float length, float stiffness){
+            return World_addRod(ntv, a, b, length, stiffness); 
+        }
+
+        public void DestroyRod(int inx){
+            World_destroyRod(ntv, inx); 
+        }
+
+        public void SetRodLength(int inx, float length){
+            World_setRodLength(ntv, inx, length); 
+        }
+
+        public void SetRodStiffness(int inx, float stiffness){
+            World_setRodStiffness(ntv, inx, stiffness); 
+        }
+
+        public int AddAnchorRod(int a, Vector3 position, float length, float stiffness){
+            Vec3 pos = new Vec3();
+            pos.x = position.x; 
+            pos.y = position.y; 
+            pos.z = position.z;
+
+            return World_addAnchorRod(ntv, a, pos, length, stiffness); 
+        }
+
+        public void DestroyAnchorRod(int inx){
+            World_destroyAnchorRod(ntv, inx); 
+        }
+
+        public void SetAnchorRodLength(int inx, float length){
+            World_setAnchorRodLength(ntv, inx, length); 
+        }
+
+        public void SetAnchorRodStiffness(int inx, float stiffness){
+            World_setAnchorRodStiffness(ntv, inx, stiffness); 
+        }
+
+        public void SetAnchorRodPosition(int inx, Vector3 position){
+            Vec3 pos = new Vec3();
+            pos.x = position.x; 
+            pos.y = position.y; 
+            pos.z = position.z;
+
+            World_setAnchorRodPosition(ntv, inx, pos); 
+        }
 
 
+
+        /*
+        *
+        *NOISE FIELD
+        *
+        */
 
         #if UNITY_IPHONE
         [DllImport ("__Internal")]
@@ -490,8 +849,36 @@ namespace Dotty{
         #endif
         private static extern void World_setNoiseFieldBoundThickness(IntPtr instance, int inx, float thickness); 
 
+        public int AddNoiseField(NoiseType noiseType, float strength, float noiseScale, bool isVelocity){
+
+            Vec3 pos = new Vec3();
+            pos.x = 0;  
+            pos.y = 0; 
+            pos.z = 0;
+
+            Vec3 sz = new Vec3();
+            sz.x = 0; 
+            sz.y = 0; 
+            sz.z = 0;
+
+            return World_addNoiseField(ntv, pos, noiseType, strength, noiseScale, FieldMode.Force, BoundShapeType.Box, sz, Falloff.Constant, 0); 
+        }
+
+        public void DestroyNoiseField(int inx){
+            World_destroyNoiseField(ntv, inx); 
+        }
+
+        public void ClearNoiseFields(){
+            World_clearNoiseFields(ntv); 
+        }
 
 
+
+        /*
+        *
+        *SPHERE COLLIDER
+        *
+        */
 
         #if UNITY_IPHONE
         [DllImport ("__Internal")]
@@ -555,8 +942,61 @@ namespace Dotty{
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setSphereColliderInverse(IntPtr instance, int inx, bool inverse); 
+        
+        public int AddSphereCollider(Vector3 position, float radius, float kineticFriction, float staticFriction, bool inverse){
+            Vec3 pos = new Vec3();
+            pos.x = position.x; 
+            pos.y = position.y; 
+            pos.z = position.z;
+            
+            return World_addSphereCollider(ntv, pos, radius, kineticFriction, staticFriction, inverse); 
+        }
+
+        unsafe public SphereColliderNtv* GetSphereColliderPtr(int inx){
+            IntPtr ptr = World_getSphereColliderPtr(ntv, inx); 
+            return (SphereColliderNtv*)ptr.ToPointer(); 
+        }
+
+        public void DestroySphereCollider(int inx){
+            World_destroySphereCollider(ntv, inx); 
+        }
+
+        public void ClearSphereColliders(){
+            World_clearSphereColliders(ntv); 
+        }
+
+        public void SetSphereColliderPosition(int inx, Vector3 position){
+            Vec3 pos = new Vec3();
+            pos.x = position.x; 
+            pos.y = position.y; 
+            pos.z = position.z;
+            
+            World_setSphereColliderPosition(ntv, inx, pos); 
+        }
+
+        public void SetSphereColliderRadius(int inx, float radius){
+            World_setSphereColliderRadius(ntv, inx, radius); 
+        }
+
+        public void SetSphereColliderKineticFriction(int inx, float kineticFriction){
+            World_setSphereColliderKineticFriction(ntv, inx, kineticFriction);
+        }
+
+        public void SetSphereColliderStaticFriction(int inx, float staticFriction){
+            World_setSphereColliderStaticFriction(ntv, inx, staticFriction);
+        }
+
+        public void SetSphereColliderInverse(int inx, bool inverse){
+            World_setSphereColliderInverse(ntv, inx, inverse);
+        }
 
 
+
+        /*
+        *
+        *BOX COLLIDER
+        *
+        */
 
         #if UNITY_IPHONE
         [DllImport ("__Internal")]
@@ -627,409 +1067,6 @@ namespace Dotty{
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setBoxColliderInverse(IntPtr instance, int inx, bool inverse);
-
-
-        private IntPtr ntv; 
-
-        public static World instance; 
-
-        public void Awake(){
-            ntv = createWorld();
-            instance = this;
-        }
-
-        void OnDestroy(){
-            freeWorld(ntv);
-        }
-
-        public void FixedUpdate(){
-            World_update(ntv); 
-        }
-
-
-        unsafe public WorldParamsNtv* GetWorldParamsPtr(){
-            IntPtr ptr = World_getWorldParamsPtr(ntv); 
-            return (WorldParamsNtv*)ptr.ToPointer(); 
-        }
-
-        public void SetGravity(float gravity){
-            World_setGravity(ntv, gravity); 
-        }
-        
-        public void SetTimestep(float timestep){
-            World_setTimestep(ntv, timestep); 
-        }
-
-        public void SetSubsteps(float substeps){
-            World_setSubsteps(ntv, substeps); 
-        }
-
-        public void SetGlobalDamping(float globalDamping){
-            World_setGlobalDamping(ntv, globalDamping); 
-        }
-
-        public void SetHasCollisionFloor(bool h){
-            World_setHasCollisionFloor(ntv, h); 
-        }
-
-        public void SetCollisionFloor(float height, float staticFriction, float kineticFriction){
-            World_setCollisionFloor(ntv, height, staticFriction, kineticFriction);
-        }
-
-
-        public int AddParticle(Vector3 initialPosition, Vector3 initialVelocity, float invMass){
-
-            Vec3 initialPositionInternal = new Vec3();
-            initialPositionInternal.x = initialPosition.x; 
-            initialPositionInternal.y = initialPosition.y; 
-            initialPositionInternal.z = initialPosition.z; 
-
-            Vec3 initialVelocityInternal = new Vec3();
-            initialVelocityInternal.x = initialVelocity.x; 
-            initialVelocityInternal.y = initialVelocity.y; 
-            initialVelocityInternal.z = initialVelocity.z;
-
-            return World_addParticle(ntv, initialPositionInternal, initialVelocityInternal, invMass); 
-        }
-
-        void DestroyParticle(int inx){
-            World_destroyParticle(ntv, inx);
-        }
-
-        public int GetParticlesPoolBound(){
-            return World_getParticlesPoolBound(ntv); 
-        } 
-
-        unsafe public NativeArray<Particle> GetParticlesData(){
-            IntPtr ptr = World_getParticlesPtr(ntv); 
-            int count = World_getParticlesPoolBound(ntv); 
-            NativeArray<Particle> narr = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<Particle>(ptr.ToPointer(), count, Allocator.None);
-            #if ENABLE_UNITY_COLLECTIONS_CHECKS
-            //NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref narr, AtomicSafetyHandle.GetTempMemoryHandle());
-            NativeArrayUnsafeUtility.SetAtomicSafetyHandle(ref narr, AtomicSafetyHandle.Create());
-            #endif
-            return narr; 
-        }
-
-        unsafe public Particle* GetParticlesPtr(){
-            IntPtr ptr = World_getParticlesPtr(ntv); 
-            return (Particle*)ptr.ToPointer(); 
-        }
-
-        unsafe public NativeArray<bool> GetParticlesInUseData(){
-            IntPtr ptr = World_getParticlesInUsePtr(ntv); 
-            int count = World_getParticlesPoolBound(ntv); 
-            NativeArray<bool> arr = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<bool>(ptr.ToPointer(), count, Allocator.None);
-            return arr; 
-        }
-
-
-        public int AddGlobalForce(Vector3 position, Vector3 direction, float strength, Vector3 boundSize, BoundShapeType boundShape, float boundThickness, Falloff boundFalloff){
-            Vec3 pos = new Vec3();
-            pos.x = position.x; 
-            pos.y = position.y; 
-            pos.z = position.z;
-            
-            Vec3 dir = new Vec3();
-            dir.x = direction.x; 
-            dir.y = direction.y; 
-            dir.z = direction.z;
-
-            Vec3 sz = new Vec3();
-            sz.x = boundSize.x; 
-            sz.y = boundSize.y; 
-            sz.z = boundSize.z;
-            
-            return World_addGlobalForce(ntv, pos, dir, strength, sz, boundShape, boundThickness, boundFalloff);
-        }
-
-        unsafe public GlobalForceNtv* GetGlobalForcePtr(int inx){
-            IntPtr ptr = World_getGlobalForcePtr(ntv, inx); 
-            return (GlobalForceNtv*)ptr.ToPointer(); 
-        } 
-
-        public void DestroyGlobalForce(int inx){
-            World_destroyGlobalForce(ntv, inx); 
-        }
-
-        public void ClearGlobalForces(){
-            World_clearGlobalForces(ntv); 
-        }
-
-        void SetGlobalForcePosition(int inx, Vector3 position){
-            Vec3 pos = new Vec3();
-            pos.x = position.x; 
-            pos.y = position.y; 
-            pos.z = position.z;
-            World_setGlobalForcePosition(ntv, inx, pos); 
-        }
-
-        void SetGlobalForceDirection(int inx, Vector3 direction){
-            Vec3 dir = new Vec3();
-            dir.x = direction.x; 
-            dir.y = direction.y; 
-            dir.z = direction.z;
-            World_setGlobalForceDirection(ntv, inx, dir); 
-        }
-
-        void SetGlobalForceStrength(int inx, float strength){
-            World_setGlobalForceStrength(ntv, inx, strength); 
-        }
-
-        void SetGlobalForceBoundSize(int inx, Vector3 boundSize){
-            Vec3 sz = new Vec3();
-            sz.x = boundSize.x; 
-            sz.y = boundSize.y; 
-            sz.z = boundSize.z;
-            World_setGlobalForceBoundSize(ntv, inx, sz); 
-        }
-
-        void SetGlobalForceBoundShape(int inx, BoundShapeType boundShape){
-            World_setGlobalForceBoundShape(ntv, inx, boundShape); 
-        }
-
-        void SetGlobalForceBoundThickness(int inx, float boundThickness){
-            World_setGlobalForceBoundThickness(ntv, inx, boundThickness); 
-        }
-
-        void SetGlobalForceBoundFalloff(int inx, Falloff boundFalloff){
-            World_setGlobalForceBoundFalloff(ntv, inx, boundFalloff); 
-        }
-
-
-
-        public int AddAttractor(Vector3 position, float strength, float minDist, float maxDist, Falloff falloff){
-            Vec3 pos = new Vec3();
-            pos.x = position.x; 
-            pos.y = position.y; 
-            pos.z = position.z;
-            
-            return World_addAttrator(ntv, pos, strength, minDist, maxDist, falloff); 
-        }
-
-        unsafe public AttractorNtv* GetAttractorPtr(int inx){
-            IntPtr ptr = World_getAttractorPtr(ntv, inx); 
-            return (AttractorNtv*)ptr.ToPointer(); 
-        }
-
-        public void DestroyAttractor(int inx){
-            World_destroyAttractor(ntv, inx); 
-        }
-
-        public void ClearAttractors(){
-            World_clearAttractors(ntv); 
-        }
-
-        public void SetAttractorPosition(int inx, Vector3 position){
-            Vec3 pos = new Vec3();
-            pos.x = position.x; 
-            pos.y = position.y; 
-            pos.z = position.z;
-            
-            World_setAttractorPosition(ntv, inx, pos); 
-        }
-
-        public void SetAttractorStrength(int inx, float strength){
-            World_setAttractorStrength(ntv, inx, strength); 
-        }
-
-        public void SetAttractorMinDist(int inx, float minDist){
-            World_setAttractorMinDist(ntv, inx, minDist);
-        }
-
-        public void SetAttractorMaxDist(int inx, float maxDist){
-            World_setAttractorMaxDist(ntv, inx, maxDist);
-        }
-
-        public void SetAttractorFalloff(int inx, Falloff falloff){
-            World_setAttractorFalloff(ntv, inx, falloff);
-        }
-
-
-        public int AddVortex(Vector3 position, Vector3 normal, float strength, float minDist, float maxDist, Falloff falloff){
-            Vec3 pos = new Vec3();
-            pos.x = position.x; 
-            pos.y = position.y; 
-            pos.z = position.z;
-            Vec3 norm = new Vec3(); 
-            norm.x = normal.x; 
-            norm.y = normal.y; 
-            norm.z = normal.z; 
-            
-            return World_addVortex(ntv, pos, norm, strength, minDist, maxDist, falloff); 
-        }
-
-        unsafe public VortexNtv* GetVortexPtr(int inx){
-            IntPtr ptr = World_getVortexPtr(ntv, inx); 
-            return (VortexNtv*)ptr.ToPointer(); 
-        }
-
-        public void DestroyVortex(int inx){
-            World_destroyVortex(ntv, inx); 
-        }
-
-        public void ClearVortices(){
-            World_clearVortices(ntv); 
-        }
-
-        public void SetVortexPosition(int inx, Vector3 position){
-            Vec3 pos = new Vec3();
-            pos.x = position.x; 
-            pos.y = position.y; 
-            pos.z = position.z;
-            
-            World_setVortexPosition(ntv, inx, pos); 
-        }
-
-        public void SetVortexNormal(int inx, Vector3 normal){
-            Vec3 norm = new Vec3();
-            norm.x = normal.x; 
-            norm.y = normal.y; 
-            norm.z = normal.z;
-            
-            World_setVortexNormal(ntv, inx, norm); 
-        }
-
-        public void SetVortexStrength(int inx, float strength){
-            World_setVortexStrength(ntv, inx, strength); 
-        }
-
-        public void SetVortexMinDist(int inx, float minDist){
-            World_setVortexMinDist(ntv, inx, minDist);
-        }
-
-        public void SetVortexMaxDist(int inx, float maxDist){
-            World_setVortexMaxDist(ntv, inx, maxDist);
-        }
-
-        public void SetVortexFalloff(int inx, Falloff falloff){
-            World_setVortexFalloff(ntv, inx, falloff);
-        }
-
-
-        public int AddRod(int a, int b, float length, float stiffness){
-            return World_addRod(ntv, a, b, length, stiffness); 
-        }
-
-        public void DestroyRod(int inx){
-            World_destroyRod(ntv, inx); 
-        }
-
-        public void SetRodLength(int inx, float length){
-            World_setRodLength(ntv, inx, length); 
-        }
-
-        public void SetRodStiffness(int inx, float stiffness){
-            World_setRodStiffness(ntv, inx, stiffness); 
-        }
-
-
-
-        public int AddAnchorRod(int a, Vector3 position, float length, float stiffness){
-            Vec3 pos = new Vec3();
-            pos.x = position.x; 
-            pos.y = position.y; 
-            pos.z = position.z;
-
-            return World_addAnchorRod(ntv, a, pos, length, stiffness); 
-        }
-
-        public void DestroyAnchorRod(int inx){
-            World_destroyAnchorRod(ntv, inx); 
-        }
-
-        public void SetAnchorRodLength(int inx, float length){
-            World_setAnchorRodLength(ntv, inx, length); 
-        }
-
-        public void SetAnchorRodStiffness(int inx, float stiffness){
-            World_setAnchorRodStiffness(ntv, inx, stiffness); 
-        }
-
-        public void SetAnchorRodPosition(int inx, Vector3 position){
-            Vec3 pos = new Vec3();
-            pos.x = position.x; 
-            pos.y = position.y; 
-            pos.z = position.z;
-
-            World_setAnchorRodPosition(ntv, inx, pos); 
-        }
-
-
-
-        public int AddNoiseField(NoiseType noiseType, float strength, float noiseScale, bool isVelocity){
-
-            Vec3 pos = new Vec3();
-            pos.x = 0;  
-            pos.y = 0; 
-            pos.z = 0;
-
-            Vec3 sz = new Vec3();
-            sz.x = 0; 
-            sz.y = 0; 
-            sz.z = 0;
-
-            return World_addNoiseField(ntv, pos, noiseType, strength, noiseScale, FieldMode.Force, BoundShapeType.Box, sz, Falloff.Constant, 0); 
-        }
-
-        public void DestroyNoiseField(int inx){
-            World_destroyNoiseField(ntv, inx); 
-        }
-
-        public void ClearNoiseFields(){
-            World_clearNoiseFields(ntv); 
-        }
-
-
-
-        
-        public int AddSphereCollider(Vector3 position, float radius, float kineticFriction, float staticFriction, bool inverse){
-            Vec3 pos = new Vec3();
-            pos.x = position.x; 
-            pos.y = position.y; 
-            pos.z = position.z;
-            
-            return World_addSphereCollider(ntv, pos, radius, kineticFriction, staticFriction, inverse); 
-        }
-
-        unsafe public SphereColliderNtv* GetSphereColliderPtr(int inx){
-            IntPtr ptr = World_getSphereColliderPtr(ntv, inx); 
-            return (SphereColliderNtv*)ptr.ToPointer(); 
-        }
-
-        public void DestroySphereCollider(int inx){
-            World_destroySphereCollider(ntv, inx); 
-        }
-
-        public void ClearSphereColliders(){
-            World_clearSphereColliders(ntv); 
-        }
-
-        public void SetSphereColliderPosition(int inx, Vector3 position){
-            Vec3 pos = new Vec3();
-            pos.x = position.x; 
-            pos.y = position.y; 
-            pos.z = position.z;
-            
-            World_setSphereColliderPosition(ntv, inx, pos); 
-        }
-
-        public void SetSphereColliderRadius(int inx, float radius){
-            World_setSphereColliderRadius(ntv, inx, radius); 
-        }
-
-        public void SetSphereColliderKineticFriction(int inx, float kineticFriction){
-            World_setSphereColliderKineticFriction(ntv, inx, kineticFriction);
-        }
-
-        public void SetSphereColliderStaticFriction(int inx, float staticFriction){
-            World_setSphereColliderStaticFriction(ntv, inx, staticFriction);
-        }
-
-        public void SetSphereColliderInverse(int inx, bool inverse){
-            World_setSphereColliderInverse(ntv, inx, inverse);
-        }
-
 
         public int AddBoxCollider(Vector3 position, Matrix4x4 invRotation, Vector3 size, float kineticFriction, float staticFriction, bool inverse){
             Vec3 pos = new Vec3();
