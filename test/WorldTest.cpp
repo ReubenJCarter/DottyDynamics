@@ -18,7 +18,7 @@ int main(){
     }
 
     for(int i = 0; i < attractorCount; i++){
-        world.addAttrator(Vec3(randf(),  randf(),  randf()), 1, 0.01, 100, Falloff::InvDist2); 
+        world.attractorSystem.addAttrator(Vec3(randf(),  randf(),  randf()), 1, 0.01, 100, Falloff::InvDist2); 
     }
 
 

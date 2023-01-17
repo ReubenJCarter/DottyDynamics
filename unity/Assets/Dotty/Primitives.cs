@@ -10,7 +10,7 @@ namespace Dotty{
     public enum Falloff{Constant, InvDist, InvDist2, InvDistWell, InvDist2Well}
     public enum NoiseType{Simplex, SimplexCurl, Perlin, PerlinCurl, Value, ValueCurl}
     public enum FieldMode{Force, CorrectionForce}
-    public enum BoundShapeType{Box, Sphere, Ellipsoid, Infinite}
+    public enum BoundShapeType{Box, Sphere, Infinite}
 
     [StructLayout(LayoutKind.Sequential)]
     public struct Vec3{
@@ -50,6 +50,7 @@ namespace Dotty{
         public BoundShapeType boundShape;
         public float boundThickness; 
         public Falloff boundFalloff; 
+        public Mat3 boundInvRotation; 
     }
 
     [StructLayout(LayoutKind.Sequential)]

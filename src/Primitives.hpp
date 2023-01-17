@@ -5,8 +5,19 @@
 enum Falloff{Constant, InvDist, InvDist2, InvDistWell, InvDist2Well }; 
 enum NoiseType{Simplex, SimplexCurl, Perlin, PerlinCurl, Value, ValueCurl}; 
 enum FieldMode{Force, CorrectionForce}; 
-enum BoundShapeType{Box, Sphere, Ellipsoid, Infinite}; 
+enum BoundShapeType{Box, Sphere, Infinite}; 
 enum StrangeAttractorType{Aizawa, Arneodo, Dadras, Dequan, Lorenz, LorenzMod2, Thomas }; 
+
+struct WorldParams {
+    float timestep; 
+    int substeps; 
+    float globalDamping; 
+    float gravity;
+    float collisionFloorStaticFriction; 
+    float collisionFloorKineticFriction; 
+    float collisionFloorHeight; 
+    bool hasCollisionFloor;
+};
 
 struct Particle {
     Vec3 position;
@@ -68,6 +79,7 @@ struct NoiseField {
     BoundShapeType boundShape;
     float boundThickness; 
     Falloff boundFalloff; 
+    Mat3 boundInvRotation; 
 }; 
 
 struct GlobalForce {
@@ -78,6 +90,7 @@ struct GlobalForce {
     BoundShapeType boundShape;
     float boundThickness; 
     Falloff boundFalloff; 
+    Mat3 boundInvRotation; 
 };
 
 struct BoxCollider {

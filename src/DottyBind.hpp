@@ -44,6 +44,7 @@ extern "C" {
     EXPORT void World_setGlobalForceBoundShape(World* instance, int inx, BoundShapeType boundShape); 
     EXPORT void World_setGlobalForceBoundThickness(World* instance, int inx, float boundThickness); 
     EXPORT void World_setGlobalForceBoundFalloff(World* instance, int inx, Falloff boundFalloff); 
+    EXPORT void World_setGlobalForceBoundInvRotation(World* instance, int inx, Mat3 invRotation);
 
     EXPORT int World_addAttrator(World* instance, Vec3 position, float strength, float minDist, float maxDist, Falloff falloff); 
     EXPORT Attractor* World_getAttractorPtr(World* instance, int inx);
@@ -102,6 +103,7 @@ extern "C" {
     EXPORT void World_setNoiseFieldBoundSize(World* instance, int inx, float boundSize);
     EXPORT void World_setNoiseFieldBoundFalloff(World* instance, int inx, Falloff boundFalloff);  
     EXPORT void World_setNoiseFieldBoundThickness(World* instance, int inx, float thickness); 
+    EXPORT void World_setNoiseFieldBoundInvRotation(World* instance, int inx, Mat3 invRotation);
 
     EXPORT int World_addSphereCollider(World* instance, Vec3 position, float radius, float kineticFriction, float staticFriction, bool inverse);
     EXPORT SphereCollider* World_getSphereColliderPtr(World* instance, int inx); 
