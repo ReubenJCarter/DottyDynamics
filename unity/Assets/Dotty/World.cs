@@ -239,7 +239,7 @@ namespace Dotty{
         #else
         [DllImport ("Dotty")]   
         #endif
-        private static extern int World_addGlobalForce(IntPtr instance, Vec3 position, Vec3 direction, float strength, Vec3 boundSize, BoundShapeType boundShape, float boundThickness, Falloff boundFalloff);
+        private static extern int World_addGlobalForce(IntPtr instance, Vec3 position, Vec3 direction, float strength, Vec3 boundSize, BoundShapeType boundShape, float boundThickness, Falloff boundFalloff, Mat3 boundInvRotation);
         
         #if UNITY_IPHONE
         [DllImport ("__Internal")]
@@ -311,7 +311,14 @@ namespace Dotty{
         #endif
         private static extern void World_setGlobalForceBoundFalloff(IntPtr instance, int inx, Falloff boundFalloff);
 
-        public int AddGlobalForce(Vector3 position, Vector3 direction, float strength, Vector3 boundSize, BoundShapeType boundShape, float boundThickness, Falloff boundFalloff){
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setGlobalForceBoundInvRotation(IntPtr instance, int inx, Mat3 boundInvRotation);
+
+        public int AddGlobalForce(Vector3 position, Vector3 direction, float strength, Vector3 boundSize, BoundShapeType boundShape, float boundThickness, Falloff boundFalloff, Matrix4x4 boundInvRotation){
             Vec3 pos = new Vec3();
             pos.x = position.x; 
             pos.y = position.y; 
@@ -326,8 +333,19 @@ namespace Dotty{
             sz.x = boundSize.x; 
             sz.y = boundSize.y; 
             sz.z = boundSize.z;
+
+            Mat3 ir = new Mat3(); 
+            ir.x0 = boundInvRotation[0, 0]; 
+            ir.y0 = boundInvRotation[1, 0]; 
+            ir.z0 = boundInvRotation[2, 0]; 
+            ir.x1 = boundInvRotation[0, 1]; 
+            ir.y1 = boundInvRotation[1, 1]; 
+            ir.z1 = boundInvRotation[2, 1]; 
+            ir.x2 = boundInvRotation[0, 2]; 
+            ir.y2 = boundInvRotation[1, 2]; 
+            ir.z2 = boundInvRotation[2, 2]; 
             
-            return World_addGlobalForce(ntv, pos, dir, strength, sz, boundShape, boundThickness, boundFalloff);
+            return World_addGlobalForce(ntv, pos, dir, strength, sz, boundShape, boundThickness, boundFalloff, ir);
         }
 
         unsafe public GlobalForceNtv* GetGlobalForcePtr(int inx){
@@ -381,6 +399,22 @@ namespace Dotty{
 
         void SetGlobalForceBoundFalloff(int inx, Falloff boundFalloff){
             World_setGlobalForceBoundFalloff(ntv, inx, boundFalloff); 
+        }
+
+        void SetGlobalForceBoundInvRotation(int inx, Matrix4x4 boundInvRotation){
+
+            Mat3 ir = new Mat3(); 
+            ir.x0 = boundInvRotation[0, 0]; 
+            ir.y0 = boundInvRotation[1, 0]; 
+            ir.z0 = boundInvRotation[2, 0]; 
+            ir.x1 = boundInvRotation[0, 1]; 
+            ir.y1 = boundInvRotation[1, 1]; 
+            ir.z1 = boundInvRotation[2, 1]; 
+            ir.x2 = boundInvRotation[0, 2]; 
+            ir.y2 = boundInvRotation[1, 2]; 
+            ir.z2 = boundInvRotation[2, 2];
+
+            World_setGlobalForceBoundInvRotation(ntv, inx, ir); 
         }
 
 
@@ -1073,15 +1107,24 @@ namespace Dotty{
             pos.x = position.x; 
             pos.y = position.y; 
             pos.z = position.z;
-
-            Mat3 invRot = new Mat3(); 
             
             Vec3 sz = new Vec3();
             sz.x = size.x; 
             sz.y = size.y; 
             sz.z = size.z;
 
-            return World_addBoxCollider(ntv, pos, invRot, sz, kineticFriction, staticFriction, inverse); 
+            Mat3 ir = new Mat3(); 
+            ir.x0 = invRotation[0, 0]; 
+            ir.y0 = invRotation[1, 0]; 
+            ir.z0 = invRotation[2, 0]; 
+            ir.x1 = invRotation[0, 1]; 
+            ir.y1 = invRotation[1, 1]; 
+            ir.z1 = invRotation[2, 1]; 
+            ir.x2 = invRotation[0, 2]; 
+            ir.y2 = invRotation[1, 2]; 
+            ir.z2 = invRotation[2, 2]; 
+
+            return World_addBoxCollider(ntv, pos, ir, sz, kineticFriction, staticFriction, inverse); 
         }
 
         unsafe public BoxColliderNtv* GetBoxColliderPtr(int inx){
@@ -1107,10 +1150,19 @@ namespace Dotty{
         }
 
         public void SetBoxColliderInvRotation(int inx, Matrix4x4 invRotation){
-            Mat3 invRot = new Mat3();
-            //invRot.x0
+
+            Mat3 ir = new Mat3(); 
+            ir.x0 = invRotation[0, 0]; 
+            ir.y0 = invRotation[1, 0]; 
+            ir.z0 = invRotation[2, 0]; 
+            ir.x1 = invRotation[0, 1]; 
+            ir.y1 = invRotation[1, 1]; 
+            ir.z1 = invRotation[2, 1]; 
+            ir.x2 = invRotation[0, 2]; 
+            ir.y2 = invRotation[1, 2]; 
+            ir.z2 = invRotation[2, 2];
             
-            World_setBoxColliderInvRotation(ntv, inx, invRot); 
+            World_setBoxColliderInvRotation(ntv, inx, ir); 
         }
 
         public void SetBoxColliderSize(int inx, Vector3 size){

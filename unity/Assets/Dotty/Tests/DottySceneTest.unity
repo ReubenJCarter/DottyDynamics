@@ -155,10 +155,10 @@ MonoBehaviour:
   world: {fileID: 849942375}
   direction: {x: 1, y: 0, z: 0}
   strength: 1
-  boundSize: {x: 0, y: 0, z: 0}
-  boundShape: 2
-  boundThickness: 0
-  boundFalloff: 0
+  boundSize: {x: 11.807615, y: 11.748972, z: 12.310468}
+  boundShape: 0
+  boundThickness: 0.1
+  boundFalloff: 1
 --- !u!4 &59831904
 Transform:
   m_ObjectHideFlags: 0
@@ -166,14 +166,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 59831902}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.2038824, y: 0.15389952, z: -35.091366}
+  m_LocalRotation: {x: 0, y: 0.22588627, z: 0, w: 0.9741537}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 9
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 26.11, z: 0}
 --- !u!1 &327763712
 GameObject:
   m_ObjectHideFlags: 0

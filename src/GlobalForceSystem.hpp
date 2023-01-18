@@ -4,6 +4,7 @@
 #include "thirdparty/VecMath/VecMath.hpp"
 #include "Primitives.hpp"
 #include "DynamicPool.hpp"
+#include "IntersectionTesting.hpp"
 
 class GlobalForceSystem {
     private:
@@ -32,19 +33,52 @@ class GlobalForceSystem {
                     
                         for(int p = a; p < b; p++){
 
-                            float xDiff = globalForces[i].direction.x; 
-                            float yDiff = globalForces[i].direction.y;
-                            float zDiff = globalForces[i].direction.z; 
+                            float xDir = globalForces[i].direction.x; 
+                            float yDir = globalForces[i].direction.y;
+                            float zDir = globalForces[i].direction.z; 
 
-                            particles[p].velocity.x += timestep * particles[p].invMass * xDiff * globalForces[i].strength;
-                            particles[p].velocity.y += timestep * particles[p].invMass * yDiff * globalForces[i].strength;
-                            particles[p].velocity.z += timestep * particles[p].invMass * zDiff * globalForces[i].strength;
+                            particles[p].velocity.x += timestep * particles[p].invMass * xDir * globalForces[i].strength;
+                            particles[p].velocity.y += timestep * particles[p].invMass * yDir * globalForces[i].strength;
+                            particles[p].velocity.z += timestep * particles[p].invMass * zDir * globalForces[i].strength;
                         
                         }
 
                     }else if(globalForces[i].boundShape == BoundShapeType::Sphere){
                         
+                        for(int p = a; p < b; p++){
 
+                            
+                            float xDir = globalForces[i].direction.x; 
+                            float yDir = globalForces[i].direction.y;
+                            float zDir = globalForces[i].direction.z; 
+
+                            particles[p].velocity.x += timestep * particles[p].invMass * xDir * globalForces[i].strength;
+                            particles[p].velocity.y += timestep * particles[p].invMass * yDir * globalForces[i].strength;
+                            particles[p].velocity.z += timestep * particles[p].invMass * zDir * globalForces[i].strength;
+                        
+                        }
+
+                    }else if(globalForces[i].boundShape == BoundShapeType::Box){
+                        
+                        for(int p = a; p < b; p++){
+
+                            float boundStrength = getBoxBoundStrength( 
+                                particles[p].positionNext, 
+                                globalForces[i].position, 
+                                globalForces[i].boundSize, 
+                                globalForces[i].boundShape, 
+                                globalForces[i].boundThickness, 
+                                globalForces[i].boundFalloff, 
+                                globalForces[i].boundInvRotation); 
+
+                            float xDir = globalForces[i].direction.x; 
+                            float yDir = globalForces[i].direction.y;
+                            float zDir = globalForces[i].direction.z; 
+
+                            particles[p].velocity.x += timestep * particles[p].invMass * xDir * globalForces[i].strength * boundStrength;
+                            particles[p].velocity.y += timestep * particles[p].invMass * yDir * globalForces[i].strength * boundStrength;
+                            particles[p].velocity.z += timestep * particles[p].invMass * zDir * globalForces[i].strength * boundStrength;
+                        }
                     }
 
                 }
@@ -53,7 +87,7 @@ class GlobalForceSystem {
         }
 
         int addGlobalForce(Vec3 position, Vec3 direction, float strength, Vec3 boundSize, 
-                           BoundShapeType boundShape, float boundThickness, Falloff boundFalloff){
+                           BoundShapeType boundShape, float boundThickness, Falloff boundFalloff, Mat3 boundInvRotation){
             GlobalForce g; 
             g.position = position; 
             g.direction = direction; 
@@ -62,6 +96,7 @@ class GlobalForceSystem {
             g.boundShape = boundShape;
             g.boundThickness = boundThickness; 
             g.boundFalloff = boundFalloff; 
+            g.boundInvRotation = boundInvRotation; 
             return globalForces.add(g);  
         }
 

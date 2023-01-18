@@ -72,8 +72,9 @@ EXPORT int World_getParticlesPoolBound(World* instance){
 
 
 
-EXPORT int World_addGlobalForce(World* instance, Vec3 position, Vec3 direction, float strength, Vec3 boundSize, BoundShapeType boundShape, float boundThickness, Falloff boundFalloff){
-    return instance->globalForceSystem.addGlobalForce(position, direction, strength, boundSize, boundShape, boundThickness, boundFalloff); 
+EXPORT int World_addGlobalForce(World* instance, Vec3 position, Vec3 direction, float strength, Vec3 boundSize, BoundShapeType boundShape, 
+                                float boundThickness, Falloff boundFalloff, Mat3 boundInvRotation){
+    return instance->globalForceSystem.addGlobalForce(position, direction, strength, boundSize, boundShape, boundThickness, boundFalloff, boundInvRotation); 
 }
 
 EXPORT GlobalForce* World_getGlobalForcePtr(World* instance, int inx){
