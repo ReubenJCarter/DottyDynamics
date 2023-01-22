@@ -55,11 +55,31 @@ namespace Dotty{
         {
             Vector3 position = transform.position; 
             Matrix4x4 invRot = Matrix4x4.Rotate(transform.rotation).inverse;
+            Mat3 ir = new Mat3(); 
+            ir.x0 = invRot[0, 0]; 
+            ir.y0 = invRot[1, 0]; 
+            ir.z0 = invRot[2, 0]; 
+            ir.x1 = invRot[0, 1]; 
+            ir.y1 = invRot[1, 1]; 
+            ir.z1 = invRot[2, 1]; 
+            ir.x2 = invRot[0, 2]; 
+            ir.y2 = invRot[1, 2]; 
+            ir.z2 = invRot[2, 2]; 
+
+            Vec3 sz = new Vec3(); 
+            sz.x = size.x; 
+            sz.y = size.y; 
+            sz.z = size.z;
+
             unsafe{
                 (*ptr).position.x = position.x;
                 (*ptr).position.y = position.y;
                 (*ptr).position.z = position.z; 
-                
+                (*ptr).invRotation = ir; 
+                (*ptr).size = sz; 
+                (*ptr).staticFriction = staticFriction; 
+                (*ptr).kineticFriction = kineticFriction;
+                (*ptr).inverse = inverse;  
             } 
         }
     }

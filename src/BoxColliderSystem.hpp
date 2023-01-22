@@ -7,6 +7,7 @@
 
 class BoxColliderSystem {
     private:
+        enum BoxSide{xp, xn, yp, yn, zp, zn};
         DynamicPool<BoxCollider> boxColliders;
 
     public: 
@@ -25,10 +26,23 @@ class BoxColliderSystem {
                     if(!boxColliders.isInUse(i))
                             continue; 
 
+                    //get normal matrix from invRotation
+                    Mat3 normalMatrix = boxColliders[i].invRotation; 
+                    normalMatrix.inv(); 
+
+                    //compute normals for each side 
+                    Vec3 sideNormals[6]; 
+                    sideNormals[xp] = Vec3(1, 0, 0).multm(normalMatrix); 
+                    sideNormals[xn] = Vec3(-1, 0, 0).multm(normalMatrix); 
+                    sideNormals[yp] = Vec3(0, 1, 0).multm(normalMatrix); 
+                    sideNormals[yn] = Vec3(0, -1, 0).multm(normalMatrix); 
+                    sideNormals[zp] = Vec3(0, 0, 1).multm(normalMatrix); 
+                    sideNormals[zn] = Vec3(0, 0, -1).multm(normalMatrix); 
+
                     for(int p = a; p < b; p++){
 
                         //Transform point into correct space for test 
-                        Vec3 ppos = particles[p].position;
+                        Vec3 ppos = particles[p].positionNext;
                         ppos.sub(boxColliders[i].position); 
                         ppos.multm(boxColliders[i].invRotation); 
 
@@ -42,7 +56,41 @@ class BoxColliderSystem {
                         }
 
                         //if the particle is in the box, find the side it is closest to 
+                        float dxp = halfsx - ppos.x; 
+                        float dxn = ppos.x + halfsx;
+                        float dyp = halfsy - ppos.y; 
+                        float dyn = ppos.y + halfsy;
+                        float dzp = halfsz - ppos.z; 
+                        float dzn = ppos.z + halfsz;
 
+                        float mind = dxp; 
+                        int minSide = BoxSide::xp; 
+                        if(dxn < mind){
+                            mind = dxn; 
+                            minSide = xn; 
+                        }
+                        if(dyp < mind){
+                            mind = dyp; 
+                            minSide = yp; 
+                        }
+                        if(dyn < mind){
+                            mind = dyn; 
+                            minSide = yn; 
+                        }
+                        if(dzp < mind){
+                            mind = dzp; 
+                            minSide = zp; 
+                        }
+                        if(dzn < mind){
+                            mind = dzn; 
+                            minSide = zn; 
+                        }
+
+                        //project the particle onto the closest side 
+                        Vec3 norm = sideNormals[minSide]; 
+                        particles[p].positionNext.x += norm.x * mind;
+                        particles[p].positionNext.y += norm.y * mind;
+                        particles[p].positionNext.z += norm.z * mind;
                     }
                 }
 
