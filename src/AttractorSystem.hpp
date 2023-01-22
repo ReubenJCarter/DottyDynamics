@@ -4,6 +4,7 @@
 #include "thirdparty/VecMath/VecMath.hpp"
 #include "Primitives.hpp"
 #include "DynamicPool.hpp"
+#include "FalloffFunctions.hpp"
 
 class AttractorSystem {
     private:
@@ -35,14 +36,7 @@ class AttractorSystem {
                             float yDiff = attractors[i].position.y - particles[p].position.y;
                             float zDiff = attractors[i].position.z - particles[p].position.z;
 
-                            float dist2 = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff; 
-                            float dist = sqrt(dist2); 
-
-                            float distFactor; 
-                            if(dist > attractors[i].maxDist)
-                                distFactor = 0;
-                            else
-                                distFactor = 1; 
+                            float distFactor = falloffConstant(xDiff, yDiff, zDiff, attractors[i].maxDist); 
 
                             particles[p].velocity.x += timestep * particles[p].invMass * xDiff * distFactor * attractors[i].strength;
                             particles[p].velocity.y += timestep * particles[p].invMass * yDiff * distFactor * attractors[i].strength;
@@ -55,16 +49,7 @@ class AttractorSystem {
                             float yDiff = attractors[i].position.y - particles[p].position.y;
                             float zDiff = attractors[i].position.z - particles[p].position.z;
 
-                            float dist2 = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff; 
-                            float dist = sqrt(dist2); 
-
-                            float distFactor; 
-                            if(dist > attractors[i].maxDist)
-                                distFactor = 0;
-                            else if(dist < attractors[i].minDist)
-                                distFactor = dist == 0 ? 0 : 1 / (attractors[i].minDist * attractors[i].minDist * dist);
-                            else
-                                distFactor = 1 / (dist2 * dist); 
+                            float distFactor = falloffInvDist2(xDiff, yDiff, zDiff, attractors[i].minDist, attractors[i].maxDist); 
 
                             particles[p].velocity.x += timestep * particles[p].invMass * xDiff * distFactor * attractors[i].strength;
                             particles[p].velocity.y += timestep * particles[p].invMass * yDiff * distFactor * attractors[i].strength;
@@ -77,16 +62,7 @@ class AttractorSystem {
                             float yDiff = attractors[i].position.y - particles[p].position.y;
                             float zDiff = attractors[i].position.z - particles[p].position.z;
 
-                            float dist2 = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff; 
-                            float dist = sqrt(dist2); 
-
-                            float distFactor; 
-                            if(dist > attractors[i].maxDist)
-                                distFactor = 0;
-                            else if(dist < attractors[i].minDist)
-                                distFactor = dist == 0 ? 0 : 1 / (attractors[i].minDist * dist);
-                            else
-                                distFactor = 1 / (dist2); 
+                            float distFactor = falloffInvDist(xDiff, yDiff, zDiff, attractors[i].minDist, attractors[i].maxDist); 
 
                             particles[p].velocity.x += timestep * particles[p].invMass * xDiff * distFactor * attractors[i].strength;
                             particles[p].velocity.y += timestep * particles[p].invMass * yDiff * distFactor * attractors[i].strength;
@@ -99,10 +75,7 @@ class AttractorSystem {
                             float yDiff = attractors[i].position.y - particles[p].position.y;
                             float zDiff = attractors[i].position.z - particles[p].position.z;
 
-                            float dist2 = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff; 
-                            float dist = sqrt(dist2); 
-
-                            float distFactor = dist > attractors[i].maxDist || dist < attractors[i].minDist ? 0 : dist - attractors[i].minDist;
+                            float distFactor = falloffInvDistWell(xDiff, yDiff, zDiff, attractors[i].minDist, attractors[i].maxDist); 
 
                             particles[p].velocity.x += timestep * particles[p].invMass * xDiff * distFactor * attractors[i].strength;
                             particles[p].velocity.y += timestep * particles[p].invMass * yDiff * distFactor * attractors[i].strength;
@@ -115,11 +88,7 @@ class AttractorSystem {
                             float yDiff = attractors[i].position.y - particles[p].position.y;
                             float zDiff = attractors[i].position.z - particles[p].position.z;
 
-                            float dist2 = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff;
-                            float maxDist2 = attractors[i].maxDist * attractors[i].maxDist; 
-                            float minDist2 = attractors[i].minDist * attractors[i].minDist; 
-
-                            float distFactor = dist2 > maxDist2 || dist2 < minDist2 ? 0 : dist2 - minDist2;
+                            float distFactor = falloffInvDist2Well(xDiff, yDiff, zDiff, attractors[i].minDist, attractors[i].maxDist); 
 
                             particles[p].velocity.x += timestep * particles[p].invMass * xDiff * distFactor * attractors[i].strength;
                             particles[p].velocity.y += timestep * particles[p].invMass * yDiff * distFactor * attractors[i].strength;

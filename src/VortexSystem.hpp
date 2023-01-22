@@ -28,36 +28,35 @@ class VortexSystem {
                     if(!vortices.isInUse(i))
                         continue; 
 
-                    //if(vortices[i].falloff == Falloff::InvDist2){
-                        for(int p = a; p < b; p++){
-                            float xDiff = vortices[i].position.x - particles[p].position.x; 
-                            float yDiff = vortices[i].position.y - particles[p].position.y;
-                            float zDiff = vortices[i].position.z - particles[p].position.z;
+                    for(int p = a; p < b; p++){
+                        float xDiff = vortices[i].position.x - particles[p].position.x; 
+                        float yDiff = vortices[i].position.y - particles[p].position.y;
+                        float zDiff = vortices[i].position.z - particles[p].position.z;
 
-                            float dist2 = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff; 
-                            float dist = sqrt(dist2); 
+                        float distFactor; 
+                        if(vortices[i].falloff == Falloff::Constant)
+                            distFactor = falloffConstant(xDiff, yDiff, zDiff, vortices[i].maxDist); 
+                        else if(vortices[i].falloff == Falloff::InvDist2) 
+                            distFactor = falloffInvDist2(xDiff, yDiff, zDiff, vortices[i].minDist, vortices[i].maxDist); 
+                        else if(vortices[i].falloff == Falloff::InvDist) 
+                            distFactor = falloffInvDist(xDiff, yDiff, zDiff, vortices[i].minDist, vortices[i].maxDist); 
+                        else if(vortices[i].falloff == Falloff::InvDist2Well) 
+                            distFactor = falloffInvDist2Well(xDiff, yDiff, zDiff, vortices[i].minDist, vortices[i].maxDist); 
+                        else if(vortices[i].falloff == Falloff::InvDistWell) 
+                            distFactor = falloffInvDistWell(xDiff, yDiff, zDiff, vortices[i].minDist, vortices[i].maxDist); 
 
-                            float distFactor; 
-                            if(dist > vortices[i].maxDist)
-                                distFactor = 0;
-                            else if(dist < vortices[i].minDist)
-                                distFactor = dist == 0 ? 0 : 1 / (vortices[i].minDist * vortices[i].minDist);
-                            else
-                                distFactor = 1 / (dist2); 
+                        float vx = vortices[i].normal.x * vortices[i].strength;  
+                        float vy = vortices[i].normal.y * vortices[i].strength;
+                        float vz = vortices[i].normal.z * vortices[i].strength;
 
-                            float vx = vortices[i].normal.x * vortices[i].strength;  
-                            float vy = vortices[i].normal.y * vortices[i].strength;
-                            float vz = vortices[i].normal.z * vortices[i].strength;
+                        float cx = vy * zDiff - vz * yDiff; 
+                        float cy = vz * xDiff - vx * zDiff; 
+                        float cz = vx * yDiff - vy * xDiff; 
 
-                            float cx = vy * zDiff - vz * yDiff; 
-	                        float cy = vz * xDiff - vx * zDiff; 
-	                        float cz = vx * yDiff - vy * xDiff; 
-
-                            particles[p].velocity.x += timestep * particles[p].invMass * cx * distFactor;
-                            particles[p].velocity.y += timestep * particles[p].invMass * cy * distFactor;
-                            particles[p].velocity.z += timestep * particles[p].invMass * cz * distFactor;
-                        }
-                    //}
+                        particles[p].velocity.x += timestep * particles[p].invMass * cx * distFactor;
+                        particles[p].velocity.y += timestep * particles[p].invMass * cy * distFactor;
+                        particles[p].velocity.z += timestep * particles[p].invMass * cz * distFactor;
+                    }
                 }
 
             }).wait();
