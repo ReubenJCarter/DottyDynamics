@@ -2,7 +2,7 @@
 
 #include <math.h>
 
-float falloffConstant(float xDiff, float yDiff, float zDiff, float maxDist){
+inline float falloffConstant(float xDiff, float yDiff, float zDiff, float maxDist){
     float dist2 = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff; 
     float dist = sqrt(dist2); 
 
@@ -15,7 +15,7 @@ float falloffConstant(float xDiff, float yDiff, float zDiff, float maxDist){
     return distFactor; 
 }
 
-float falloffInvDist2(float xDiff, float yDiff, float zDiff, float minDist, float maxDist){
+inline float falloffInvDist2(float xDiff, float yDiff, float zDiff, float minDist, float maxDist){
     float dist2 = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff; 
     float dist = sqrt(dist2); 
 
@@ -30,7 +30,7 @@ float falloffInvDist2(float xDiff, float yDiff, float zDiff, float minDist, floa
     return distFactor; 
 }
 
-float falloffInvDist(float xDiff, float yDiff, float zDiff, float minDist, float maxDist){
+inline float falloffInvDist(float xDiff, float yDiff, float zDiff, float minDist, float maxDist){
     float dist2 = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff; 
     float dist = sqrt(dist2); 
 
@@ -45,7 +45,7 @@ float falloffInvDist(float xDiff, float yDiff, float zDiff, float minDist, float
     return distFactor; 
 }
 
-float falloffInvDist2Well(float xDiff, float yDiff, float zDiff, float minDist, float maxDist){
+inline float falloffInvDist2Well(float xDiff, float yDiff, float zDiff, float minDist, float maxDist){
 
     float dist2 = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff;
     float maxDist2 = maxDist * maxDist; 
@@ -56,7 +56,7 @@ float falloffInvDist2Well(float xDiff, float yDiff, float zDiff, float minDist, 
     return distFactor; 
 }
 
-float falloffInvDistWell(float xDiff, float yDiff, float zDiff, float minDist, float maxDist){
+inline float falloffInvDistWell(float xDiff, float yDiff, float zDiff, float minDist, float maxDist){
     float dist2 = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff; 
     float dist = sqrt(dist2); 
 

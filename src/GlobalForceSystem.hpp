@@ -94,7 +94,7 @@ class GlobalForceSystem {
         }
 
         int addGlobalForce(Vec3 position, Vec3 direction, float strength, Vec3 boundSize, 
-                           BoundShapeType boundShape, float boundThickness, Falloff boundFalloff, Mat3 boundInvRotation){
+                           BoundShapeType boundShape, float boundThickness, BoundFalloff boundFalloff, Mat3 boundInvRotation){
             GlobalForce g; 
             g.position = position; 
             g.direction = direction; 
@@ -143,7 +143,7 @@ class GlobalForceSystem {
             globalForces[inx].boundThickness = boundThickness; 
         }
 
-        void setGlobalForceBoundFalloff(int inx, Falloff boundFalloff){
+        void setGlobalForceBoundFalloff(int inx, BoundFalloff boundFalloff){
             globalForces[inx].boundFalloff = boundFalloff; 
         }
 

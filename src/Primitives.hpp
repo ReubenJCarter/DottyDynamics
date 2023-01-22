@@ -6,6 +6,7 @@ enum Falloff{Constant, InvDist, InvDist2, InvDistWell, InvDist2Well };
 enum NoiseType{Simplex, SimplexCurl, Perlin, PerlinCurl, Value, ValueCurl}; 
 enum FieldMode{Force, CorrectionForce}; 
 enum BoundShapeType{Box, Sphere, Infinite}; 
+enum BoundFalloff{Linear, Squared, Cubed}; 
 enum StrangeAttractorType{Aizawa, Arneodo, Dadras, Dequan, Lorenz, LorenzMod2, Thomas }; 
 
 struct WorldParams {
@@ -78,7 +79,7 @@ struct NoiseField {
     Vec3 boundSize; 
     BoundShapeType boundShape;
     float boundThickness; 
-    Falloff boundFalloff; 
+    BoundFalloff boundFalloff; 
     Mat3 boundInvRotation; 
 }; 
 
@@ -89,7 +90,7 @@ struct GlobalForce {
     Vec3 boundSize; 
     BoundShapeType boundShape;
     float boundThickness; 
-    Falloff boundFalloff; 
+    BoundFalloff boundFalloff; 
     Mat3 boundInvRotation; 
 };
 

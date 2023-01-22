@@ -73,7 +73,7 @@ EXPORT int World_getParticlesPoolBound(World* instance){
 
 
 EXPORT int World_addGlobalForce(World* instance, Vec3 position, Vec3 direction, float strength, Vec3 boundSize, BoundShapeType boundShape, 
-                                float boundThickness, Falloff boundFalloff, Mat3 boundInvRotation){
+                                float boundThickness, BoundFalloff boundFalloff, Mat3 boundInvRotation){
     return instance->globalForceSystem.addGlobalForce(position, direction, strength, boundSize, boundShape, boundThickness, boundFalloff, boundInvRotation); 
 }
 
@@ -113,7 +113,7 @@ EXPORT void World_setGlobalForceBoundThickness(World* instance, int inx, float b
     instance->globalForceSystem.setGlobalForceBoundThickness(inx, boundThickness);
 }
 
-EXPORT void World_setGlobalForceBoundFalloff(World* instance, int inx, Falloff boundFalloff){
+EXPORT void World_setGlobalForceBoundFalloff(World* instance, int inx, BoundFalloff boundFalloff){
     instance->globalForceSystem.setGlobalForceBoundFalloff(inx, boundFalloff);
 }
 
@@ -291,7 +291,7 @@ EXPORT void World_setAnchorRodPosition(World* instance, int inx, Vec3 position){
 
 
 EXPORT int World_addNoiseField(World* instance, Vec3 position, NoiseType noiseType, float strength, float noiseScale, FieldMode mode, 
-                          BoundShapeType boundShape, Vec3 boundSize, Falloff boundFalloff, float boundThickness){
+                          BoundShapeType boundShape, Vec3 boundSize, BoundFalloff boundFalloff, float boundThickness){
     return instance->noiseFieldSystem.addNoiseField(position, noiseType, strength, noiseScale, mode, boundShape, boundSize, boundFalloff, boundThickness); 
 }
 
@@ -331,7 +331,7 @@ EXPORT void World_setNoiseFieldBoundSize(World* instance, int inx, Vec3 boundSiz
     instance->noiseFieldSystem.setNoiseFieldBoundSize(inx, boundSize); 
 }
 
-EXPORT void World_setNoiseFieldBounFalloff(World* instance, int inx, Falloff boundFalloff){
+EXPORT void World_setNoiseFieldBounFalloff(World* instance, int inx, BoundFalloff boundFalloff){
     instance->noiseFieldSystem.setNoiseFieldBoundFalloff(inx, boundFalloff); 
 }
 

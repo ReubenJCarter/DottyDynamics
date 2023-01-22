@@ -5,7 +5,7 @@
 #define MAX(a,b) ((a) > (b) ? (a) : (b))
 #define MIN(a,b) ((a) < (b) ? (a) : (b))
 
-inline float getBoxBoundStrength(Vec3 testPoint, Vec3 position, Vec3 boundSize, BoundShapeType boundShape, float boundThickness, Falloff boundFalloff, Mat3 boundInvRotation){
+inline float getBoxBoundStrength(Vec3 testPoint, Vec3 position, Vec3 boundSize, BoundShapeType boundShape, float boundThickness, BoundFalloff boundFalloff, Mat3 boundInvRotation){
     
     //Transform point into correct space for test 
     Vec3 p = testPoint; 
@@ -50,7 +50,7 @@ inline float getBoxBoundStrength(Vec3 testPoint, Vec3 position, Vec3 boundSize, 
     return d; 
 }
 
-inline float getSphereBoundStrength(Vec3 testPoint, Vec3 position, Vec3 boundSize, BoundShapeType boundShape, float boundThickness, Falloff boundFalloff){
+inline float getSphereBoundStrength(Vec3 testPoint, Vec3 position, Vec3 boundSize, BoundShapeType boundShape, float boundThickness, BoundFalloff boundFalloff){
     
     //Transform point into correct space for test 
     Vec3 p = testPoint; 

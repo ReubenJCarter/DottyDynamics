@@ -17,7 +17,7 @@ namespace Dotty {
         public Vector3 boundSize; 
         public BoundShapeType boundShape;
         public float boundThickness; 
-        public Falloff boundFalloff;
+        public BoundFalloff boundFalloff;
 
         void AddInternal() {
             Vector3 position = transform.position; 

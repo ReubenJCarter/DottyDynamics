@@ -239,7 +239,7 @@ namespace Dotty{
         #else
         [DllImport ("Dotty")]   
         #endif
-        private static extern int World_addGlobalForce(IntPtr instance, Vec3 position, Vec3 direction, float strength, Vec3 boundSize, BoundShapeType boundShape, float boundThickness, Falloff boundFalloff, Mat3 boundInvRotation);
+        private static extern int World_addGlobalForce(IntPtr instance, Vec3 position, Vec3 direction, float strength, Vec3 boundSize, BoundShapeType boundShape, float boundThickness, BoundFalloff boundFalloff, Mat3 boundInvRotation);
         
         #if UNITY_IPHONE
         [DllImport ("__Internal")]
@@ -309,7 +309,7 @@ namespace Dotty{
         #else
         [DllImport ("Dotty")]   
         #endif
-        private static extern void World_setGlobalForceBoundFalloff(IntPtr instance, int inx, Falloff boundFalloff);
+        private static extern void World_setGlobalForceBoundFalloff(IntPtr instance, int inx, BoundFalloff boundFalloff);
 
         #if UNITY_IPHONE
         [DllImport ("__Internal")]
@@ -318,7 +318,7 @@ namespace Dotty{
         #endif
         private static extern void World_setGlobalForceBoundInvRotation(IntPtr instance, int inx, Mat3 boundInvRotation);
 
-        public int AddGlobalForce(Vector3 position, Vector3 direction, float strength, Vector3 boundSize, BoundShapeType boundShape, float boundThickness, Falloff boundFalloff, Matrix4x4 boundInvRotation){
+        public int AddGlobalForce(Vector3 position, Vector3 direction, float strength, Vector3 boundSize, BoundShapeType boundShape, float boundThickness, BoundFalloff boundFalloff, Matrix4x4 boundInvRotation){
             Vec3 pos = new Vec3();
             pos.x = position.x; 
             pos.y = position.y; 
@@ -397,7 +397,7 @@ namespace Dotty{
             World_setGlobalForceBoundThickness(ntv, inx, boundThickness); 
         }
 
-        void SetGlobalForceBoundFalloff(int inx, Falloff boundFalloff){
+        void SetGlobalForceBoundFalloff(int inx, BoundFalloff boundFalloff){
             World_setGlobalForceBoundFalloff(ntv, inx, boundFalloff); 
         }
 
@@ -804,7 +804,7 @@ namespace Dotty{
         [DllImport ("Dotty")]   
         #endif
         private static extern int World_addNoiseField(IntPtr instance, Vec3 position, NoiseType noiseType, float strength, float noiseScale, FieldMode mode, 
-                                                      BoundShapeType boundShape, Vec3 boundSize, Falloff boundFalloff, float boundThickness);
+                                                      BoundShapeType boundShape, Vec3 boundSize, BoundFalloff boundFalloff, float boundThickness);
         
         #if UNITY_IPHONE
         [DllImport ("__Internal")]
@@ -874,7 +874,7 @@ namespace Dotty{
         #else
         [DllImport ("Dotty")]   
         #endif
-        private static extern void World_setNoiseFieldBoundFalloff(IntPtr instance, int inx, Falloff boundFalloff);  
+        private static extern void World_setNoiseFieldBoundFalloff(IntPtr instance, int inx, BoundFalloff boundFalloff);  
         
         #if UNITY_IPHONE
         [DllImport ("__Internal")]

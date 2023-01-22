@@ -34,7 +34,7 @@ extern "C" {
     EXPORT int World_getParticlesPoolBound(World* instance);
 
     EXPORT int World_addGlobalForce(World* instance, Vec3 position, Vec3 direction, float strength, Vec3 boundSize, BoundShapeType boundShape, 
-                                    float boundThickness, Falloff boundFalloff, Mat3 boundInvRotation);
+                                    float boundThickness, BoundFalloff boundFalloff, Mat3 boundInvRotation);
     EXPORT GlobalForce* World_getGlobalForcePtr(World* instance, int inx); 
     EXPORT void World_destroyGlobalForce(World* instance, int inx); 
     EXPORT void World_clearGlobalForces(World* instance);
@@ -44,7 +44,7 @@ extern "C" {
     EXPORT void World_setGlobalForceBoundSize(World* instance, int inx, Vec3 boundSize); 
     EXPORT void World_setGlobalForceBoundShape(World* instance, int inx, BoundShapeType boundShape); 
     EXPORT void World_setGlobalForceBoundThickness(World* instance, int inx, float boundThickness); 
-    EXPORT void World_setGlobalForceBoundFalloff(World* instance, int inx, Falloff boundFalloff); 
+    EXPORT void World_setGlobalForceBoundFalloff(World* instance, int inx, BoundFalloff boundFalloff); 
     EXPORT void World_setGlobalForceBoundInvRotation(World* instance, int inx, Mat3 invRotation);
 
     EXPORT int World_addAttrator(World* instance, Vec3 position, float strength, float minDist, float maxDist, Falloff falloff); 
@@ -92,7 +92,7 @@ extern "C" {
     EXPORT void World_setAnchorRodPosition(World* instance, int inx, Vec3 position);
 
     EXPORT int World_addNoiseField(World* instance, Vec3 position, NoiseType noiseType, float strength, float noiseScale, FieldMode mode, 
-                          BoundShapeType boundShape, Vec3 boundSize, Falloff boundFalloff, float boundThickness);
+                          BoundShapeType boundShape, Vec3 boundSize, BoundFalloff boundFalloff, float boundThickness);
     EXPORT void World_destroyNoiseField(World* instance, int inx); 
     EXPORT void World_clearNoiseFields(World* instance);
     EXPORT void World_setNoiseFieldPosition(World* instance, int inx, Vec3 position); 
@@ -102,7 +102,7 @@ extern "C" {
     EXPORT void World_setNoiseFieldMode(World* instance, int inx, FieldMode mode); 
     EXPORT void World_setNoiseFieldBoundShape(World* instance, int inx, BoundShapeType boundShape); 
     EXPORT void World_setNoiseFieldBoundSize(World* instance, int inx, float boundSize);
-    EXPORT void World_setNoiseFieldBoundFalloff(World* instance, int inx, Falloff boundFalloff);  
+    EXPORT void World_setNoiseFieldBoundFalloff(World* instance, int inx, BoundFalloff boundFalloff);  
     EXPORT void World_setNoiseFieldBoundThickness(World* instance, int inx, float thickness); 
     EXPORT void World_setNoiseFieldBoundInvRotation(World* instance, int inx, Mat3 invRotation);
 

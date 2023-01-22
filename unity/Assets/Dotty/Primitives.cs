@@ -11,6 +11,7 @@ namespace Dotty{
     public enum NoiseType{Simplex, SimplexCurl, Perlin, PerlinCurl, Value, ValueCurl}
     public enum FieldMode{Force, CorrectionForce}
     public enum BoundShapeType{Box, Sphere, Infinite}
+    public enum BoundFalloff{Linear, Squared, Cubed}; 
 
     [StructLayout(LayoutKind.Sequential)]
     public struct Vec3{
