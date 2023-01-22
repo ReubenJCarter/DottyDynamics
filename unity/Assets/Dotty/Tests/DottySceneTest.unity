@@ -139,7 +139,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &59831903
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -155,9 +155,9 @@ MonoBehaviour:
   world: {fileID: 849942375}
   direction: {x: 1, y: 0, z: 0}
   strength: 1
-  boundSize: {x: 11.807615, y: 11.748972, z: 12.310468}
+  boundSize: {x: 11.807615, y: 11.748972, z: 13.669592}
   boundShape: 0
-  boundThickness: 0.1
+  boundThickness: 1.26
   boundFalloff: 1
 --- !u!4 &59831904
 Transform:
@@ -166,14 +166,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 59831902}
-  m_LocalRotation: {x: 0, y: 0.22588627, z: 0, w: 0.9741537}
+  m_LocalRotation: {x: 0.2754517, y: 0.21666801, z: -0.0638716, w: 0.9343992}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 9
-  m_LocalEulerAnglesHint: {x: 0, y: 26.11, z: 0}
+  m_LocalEulerAnglesHint: {x: 32.85, y: 26.11, z: 0}
 --- !u!1 &327763712
 GameObject:
   m_ObjectHideFlags: 0

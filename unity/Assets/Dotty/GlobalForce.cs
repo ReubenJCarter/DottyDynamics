@@ -95,16 +95,17 @@ namespace Dotty {
     [CustomEditor(typeof(GlobalForce))]
     public class GlobalForceEditor : Editor {
 
-        private void DrawWireCube(GlobalForce t){
-            Vector3 a = t.transform.TransformPoint( new Vector3(-t.boundSize.x/2, -t.boundSize.y/2, -t.boundSize.z/2) ); 
-            Vector3 b = t.transform.TransformPoint( new Vector3(-t.boundSize.x/2, t.boundSize.y/2, -t.boundSize.z/2) ); 
-            Vector3 c = t.transform.TransformPoint( new Vector3(t.boundSize.x/2, t.boundSize.y/2, -t.boundSize.z/2) ); 
-            Vector3 d = t.transform.TransformPoint( new Vector3(t.boundSize.x/2, -t.boundSize.y/2, -t.boundSize.z/2) ); 
 
-            Vector3 e = t.transform.TransformPoint( new Vector3(-t.boundSize.x/2, -t.boundSize.y/2, t.boundSize.z/2) ); 
-            Vector3 f = t.transform.TransformPoint( new Vector3(-t.boundSize.x/2, t.boundSize.y/2, t.boundSize.z/2) ); 
-            Vector3 g = t.transform.TransformPoint( new Vector3(t.boundSize.x/2, t.boundSize.y/2, t.boundSize.z/2) ); 
-            Vector3 h = t.transform.TransformPoint( new Vector3(t.boundSize.x/2, -t.boundSize.y/2, t.boundSize.z/2) ); 
+        private void DrawWireCube(Transform tran, Vector3 boundSize){
+            Vector3 a = tran.TransformPoint( new Vector3(-boundSize.x/2, -boundSize.y/2, -boundSize.z/2) ); 
+            Vector3 b = tran.TransformPoint( new Vector3(-boundSize.x/2, boundSize.y/2, -boundSize.z/2) ); 
+            Vector3 c = tran.TransformPoint( new Vector3(boundSize.x/2, boundSize.y/2, -boundSize.z/2) ); 
+            Vector3 d = tran.TransformPoint( new Vector3(boundSize.x/2, -boundSize.y/2, -boundSize.z/2) ); 
+
+            Vector3 e = tran.TransformPoint( new Vector3(-boundSize.x/2, -boundSize.y/2, boundSize.z/2) ); 
+            Vector3 f = tran.TransformPoint( new Vector3(-boundSize.x/2, boundSize.y/2, boundSize.z/2) ); 
+            Vector3 g = tran.TransformPoint( new Vector3(boundSize.x/2, boundSize.y/2, boundSize.z/2) ); 
+            Vector3 h = tran.TransformPoint( new Vector3(boundSize.x/2, -boundSize.y/2, boundSize.z/2) ); 
 
             Handles.DrawLine(a, b);
             Handles.DrawLine(b, c);
@@ -155,9 +156,11 @@ namespace Dotty {
             }
             else if(t.boundShape == BoundShapeType.Box){
 
+                Handles.color = Color.red;
+                DrawWireCube(t.transform, t.boundSize - new Vector3(t.boundThickness, t.boundThickness, t.boundThickness) ); 
 
                 Handles.color = Color.white;
-                DrawWireCube(t); 
+                DrawWireCube(t.transform, t.boundSize); 
 
                 float handleSz = 0.03f;
 
