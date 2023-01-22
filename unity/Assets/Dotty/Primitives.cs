@@ -91,4 +91,19 @@ namespace Dotty{
         public float kineticFriction; 
         public bool inverse; 
     } 
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct NoiseFieldNtv{
+        public Vec3 position; 
+        public float noiseScale; 
+        public float strength;
+        public int resolution; 
+        public NoiseType noiseType;  
+        public FieldMode mode; 
+        public Vec3 boundSize; 
+        public BoundShapeType boundShape;
+        public float boundThickness; 
+        public BoundFalloff boundFalloff; 
+        public Mat3 boundInvRotation;
+    }
 }

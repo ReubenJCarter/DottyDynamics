@@ -13,9 +13,9 @@ namespace Dotty{
 
 
         public Vector3 size = new Vector3(1, 1, 1); 
-        public float staticFriction; 
-        public float kineticFriction; 
-        public bool inverse; 
+        public float staticFriction = 0; 
+        public float kineticFriction = 0; 
+        public bool inverse = false; 
 
         void AddInternal() {
             Vector3 position = transform.position; 

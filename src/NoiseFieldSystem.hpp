@@ -5,6 +5,7 @@
 #include "Primitives.hpp"
 #include "DynamicPool.hpp"
 #include "NoiseGenerator.hpp"
+#include "IntersectionTesting.hpp"
 
 class NoiseFieldSystem {
     private:
@@ -113,6 +114,10 @@ class NoiseFieldSystem {
             gen.setType(noiseType); 
 
             return noiseGenerators.add(gen);   
+        }
+
+        NoiseField* getNoiseFieldPtr(int inx){
+            return &(noiseFields[inx]); 
         }
 
         void destroyNoiseField(int inx){

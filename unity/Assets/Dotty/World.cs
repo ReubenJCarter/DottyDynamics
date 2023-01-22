@@ -806,6 +806,14 @@ namespace Dotty{
         #endif
         private static extern int World_addNoiseField(IntPtr instance, Vec3 position, NoiseType noiseType, float strength, float noiseScale, FieldMode mode, 
                                                       Vec3 boundSize, BoundShapeType boundShape, float boundThickness, BoundFalloff boundFalloff, Mat3 boundInvRotation);
+        
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern IntPtr World_getNoiseFieldPtr(IntPtr instance, int inx); 
+
         #if UNITY_IPHONE
         [DllImport ("__Internal")]
         #else
@@ -916,6 +924,11 @@ namespace Dotty{
 
             return World_addNoiseField(ntv, pos, noiseType, strength, noiseScale, mode, sz, boundShape, boundThickness, boundFalloff, ir); 
         }
+
+        unsafe public NoiseFieldNtv* GetNoiseFieldPtr(int inx){
+            IntPtr ptr = World_getNoiseFieldPtr(ntv, inx); 
+            return (NoiseFieldNtv*)ptr.ToPointer(); 
+        } 
 
         public void DestroyNoiseField(int inx){
             World_destroyNoiseField(ntv, inx); 

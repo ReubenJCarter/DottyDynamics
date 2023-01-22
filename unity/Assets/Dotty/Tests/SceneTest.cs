@@ -14,9 +14,6 @@ public class SceneTest : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        world.SetGlobalDamping(1f); 
-        world.SetGravity(0); 
-
         int count = 10000; 
         sphereTransforms = new Transform[count]; 
         for(int j = 0; j < count; j++){

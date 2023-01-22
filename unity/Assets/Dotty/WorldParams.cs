@@ -63,7 +63,7 @@ namespace Dotty{
 
             if(t.hasCollisionFloor){
                 float h = t.collisionFloorHeight; 
-                float s = HandleUtility.GetHandleSize( new Vector3(0, t.collisionFloorHeight, 0) );
+                float s = HandleUtility.GetHandleSize( new Vector3(0, t.collisionFloorHeight, 0) ) * 3;
 
                 Vector3 a =  new Vector3(-s, h, -s); 
                 Vector3 b =  new Vector3(s, h, -s); 

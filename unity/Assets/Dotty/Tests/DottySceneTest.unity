@@ -139,7 +139,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &59831903
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -166,14 +166,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 59831902}
-  m_LocalRotation: {x: 0.2754517, y: 0.21666801, z: -0.0638716, w: 0.9343992}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 9
-  m_LocalEulerAnglesHint: {x: 32.85, y: 26.11, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &327763712
 GameObject:
   m_ObjectHideFlags: 0
@@ -252,6 +252,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc2cc43abc93e0b4684d0635dc90ee6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  world: {fileID: 0}
+  noiseScale: 10
+  noiseType: 1
+  strength: 20
+  mode: 1
+  boundSize: {x: 4.332435, y: 1.73, z: 6.52}
+  boundShape: 2
+  boundThickness: 2.9328067
+  boundFalloff: 0
 --- !u!4 &631679545
 Transform:
   m_ObjectHideFlags: 0
@@ -260,7 +269,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 631679543}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 16.457945, y: -9.150312, z: 42.036285}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -306,7 +315,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 849942374}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0.04, y: -0.15, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -345,7 +354,7 @@ MonoBehaviour:
   globalDamping: 0.561
   gravity: 0
   hasCollisionFloor: 1
-  collisionFloorHeight: 0.08944023
+  collisionFloorHeight: -63.5632
   collisionFloorKineticFriction: 0
   collisionFloorStaticFriction: 0
 --- !u!1 &1273542177
@@ -505,7 +514,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1380741652
 MonoBehaviour:
   m_ObjectHideFlags: 0

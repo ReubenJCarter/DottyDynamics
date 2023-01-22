@@ -295,6 +295,10 @@ EXPORT int World_addNoiseField(World* instance, Vec3 position, NoiseType noiseTy
     return instance->noiseFieldSystem.addNoiseField(position, noiseType, strength, noiseScale, mode, boundSize, boundShape, boundThickness, boundFalloff, boundInvRotation); 
 }
 
+EXPORT NoiseField* World_getNoiseFieldPtr(World* instance, int inx){
+    return instance->noiseFieldSystem.getNoiseFieldPtr(inx); 
+}
+
 EXPORT void World_destroyNoiseField(World* instance, int inx){
     instance->noiseFieldSystem.destroyNoiseField(inx); 
 }

@@ -12,12 +12,12 @@ namespace Dotty {
         
         public World world; 
 
-        public Vector3 direction;
-        public float strength; 
-        public Vector3 boundSize; 
-        public BoundShapeType boundShape;
-        public float boundThickness; 
-        public BoundFalloff boundFalloff;
+        public Vector3 direction = new Vector3(0, 0, 1); 
+        public float strength = 1; 
+        public Vector3 boundSize = new Vector3(1, 1, 1); 
+        public BoundShapeType boundShape = BoundShapeType.Box;
+        public float boundThickness = 0; 
+        public BoundFalloff boundFalloff = BoundFalloff.Linear;
 
         void AddInternal() {
             Vector3 position = transform.position; 
