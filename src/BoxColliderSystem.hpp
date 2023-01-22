@@ -26,19 +26,22 @@ class BoxColliderSystem {
                             continue; 
 
                     for(int p = a; p < b; p++){
-                        
-                        float halfsx = boxColliders[i].size.x/2;
-                        float halfsy = boxColliders[i].size.y/2;
-                        float halfsz = boxColliders[i].size.z/2;
 
+                        //Transform point into correct space for test 
                         Vec3 ppos = particles[p].position;
                         ppos.sub(boxColliders[i].position); 
                         ppos.multm(boxColliders[i].invRotation); 
+
+                        //Test if outside to box  
+                        float halfsx = boxColliders[i].size.x/2;
+                        float halfsy = boxColliders[i].size.y/2;
+                        float halfsz = boxColliders[i].size.z/2;
 
                         if(ppos.x > halfsx || ppos.x < -halfsx || ppos.y > halfsy || ppos.y < -halfsy || ppos.z > halfsz || ppos.z < -halfsz){
                             continue; 
                         }
 
+                        //if the particle is in the box, find the side it is closest to 
 
                     }
                 }

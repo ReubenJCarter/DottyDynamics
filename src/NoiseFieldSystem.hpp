@@ -32,33 +32,34 @@ class NoiseFieldSystem {
 
                     bool curlType = noiseFields[i].noiseType == NoiseType::SimplexCurl || noiseFields[i].noiseType == NoiseType::PerlinCurl || noiseFields[i].noiseType == NoiseType::ValueCurl; 
 
-                    if(noiseFields[i].mode == FieldMode::Force){
-                        for(int p = a; p < b; p++){
+                    for(int p = a; p < b; p++){
 
-                            float boundStrength = 1; 
-                            if(noiseFields[i].boundShape == BoundShapeType::Sphere)
-                                boundStrength = getSphereBoundStrength( 
-                                    particles[p].positionNext, 
-                                    noiseFields[i].position, 
-                                    noiseFields[i].boundSize, 
-                                    noiseFields[i].boundShape, 
-                                    noiseFields[i].boundThickness, 
-                                    noiseFields[i].boundFalloff);
-                            else if(noiseFields[i].boundShape == BoundShapeType::Box)
-                                boundStrength = getBoxBoundStrength( 
-                                    particles[p].positionNext, 
-                                    noiseFields[i].position, 
-                                    noiseFields[i].boundSize, 
-                                    noiseFields[i].boundShape, 
-                                    noiseFields[i].boundThickness, 
-                                    noiseFields[i].boundFalloff, 
-                                    noiseFields[i].boundInvRotation);
+                        float boundStrength = 1; 
+                        if(noiseFields[i].boundShape == BoundShapeType::Sphere){
+                            boundStrength = getSphereBoundStrength( 
+                                particles[p].positionNext, 
+                                noiseFields[i].position, 
+                                noiseFields[i].boundSize, 
+                                noiseFields[i].boundShape, 
+                                noiseFields[i].boundThickness, 
+                                noiseFields[i].boundFalloff);
+                        }
+                        else if(noiseFields[i].boundShape == BoundShapeType::Box){
+                            boundStrength = getBoxBoundStrength( 
+                                particles[p].positionNext, 
+                                noiseFields[i].position, 
+                                noiseFields[i].boundSize, 
+                                noiseFields[i].boundShape, 
+                                noiseFields[i].boundThickness, 
+                                noiseFields[i].boundFalloff, 
+                                noiseFields[i].boundInvRotation);
+                        }
 
-                            Vec3 coord = particles[p].position; 
-                            coord.mults(noiseFields[i].noiseScale); 
-                            
-                            Vec3 n = curlType ? noiseGenerators[i].curl(coord) : noiseGenerators[i].get3(coord);
-
+                        Vec3 coord = particles[p].position; 
+                        coord.mults(noiseFields[i].noiseScale); 
+                        
+                        Vec3 n = curlType ? noiseGenerators[i].curl(coord) : noiseGenerators[i].get3(coord);
+                        if(noiseFields[i].mode == FieldMode::Force){
                             float fX = n.x * noiseFields[i].strength; 
                             float fY = n.y * noiseFields[i].strength; 
                             float fZ = n.z * noiseFields[i].strength; 
@@ -66,35 +67,8 @@ class NoiseFieldSystem {
                             particles[p].velocity.x += timestep * particles[p].invMass * fX * boundStrength;
                             particles[p].velocity.y += timestep * particles[p].invMass * fY * boundStrength;
                             particles[p].velocity.z += timestep * particles[p].invMass * fZ * boundStrength;
-                        }   
-                    }
-                    else if (noiseFields[i].mode == FieldMode::CorrectionForce){
-                        for(int p = a; p < b; p++){
-
-                            float boundStrength = 1; 
-                            if(noiseFields[i].boundShape == BoundShapeType::Sphere)
-                                boundStrength = getSphereBoundStrength( 
-                                    particles[p].positionNext, 
-                                    noiseFields[i].position, 
-                                    noiseFields[i].boundSize, 
-                                    noiseFields[i].boundShape, 
-                                    noiseFields[i].boundThickness, 
-                                    noiseFields[i].boundFalloff);
-                            else if(noiseFields[i].boundShape == BoundShapeType::Box)
-                                boundStrength = getBoxBoundStrength( 
-                                    particles[p].positionNext, 
-                                    noiseFields[i].position, 
-                                    noiseFields[i].boundSize, 
-                                    noiseFields[i].boundShape, 
-                                    noiseFields[i].boundThickness, 
-                                    noiseFields[i].boundFalloff, 
-                                    noiseFields[i].boundInvRotation);
-                                    
-                            Vec3 coord = particles[p].position; 
-                            coord.mults(noiseFields[i].noiseScale); 
-                            
-                            Vec3 n = curlType ? noiseGenerators[i].curl(coord) : noiseGenerators[i].get3(coord);
-                            
+                        }
+                        else if (noiseFields[i].mode == FieldMode::CorrectionForce){
                             float targetVelocityX = n.x * noiseFields[i].strength; 
                             float targetVelocityY = n.y * noiseFields[i].strength; 
                             float targetVelocityZ = n.z * noiseFields[i].strength; 
@@ -110,7 +84,7 @@ class NoiseFieldSystem {
                             particles[p].velocity.y += timestep * particles[p].invMass * correctingForceY * boundStrength;
                             particles[p].velocity.z += timestep * particles[p].invMass * correctingForceZ * boundStrength;
                         }
-                    }
+                    }   
                   
                 }
 

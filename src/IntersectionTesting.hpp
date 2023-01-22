@@ -45,9 +45,13 @@ inline float getBoxBoundStrength(Vec3 testPoint, Vec3 position, Vec3 boundSize, 
     float shortestD = MIN(shortestDZ, temp ); 
 
     //use the shortest dist from the outer wall as the input to an ease curve 
-    float d = shortestD / boundThickness; 
+    float s = shortestD / boundThickness;
+
+    float f = boundFalloff == BoundFalloff::Linear ? s : 
+              boundFalloff == BoundFalloff::Squared ? s * s : 
+              s * s * s;  
     
-    return d; 
+    return f; 
 }
 
 inline float getSphereBoundStrength(Vec3 testPoint, Vec3 position, Vec3 boundSize, BoundShapeType boundShape, float boundThickness, BoundFalloff boundFalloff){
@@ -74,6 +78,10 @@ inline float getSphereBoundStrength(Vec3 testPoint, Vec3 position, Vec3 boundSiz
 
     //use distance from the outer wall to the point in the falloff zone as the input to falloff  
     float s = (boundSize.x - sqrt(d2)) / (boundThickness); 
+
+    float f = boundFalloff == BoundFalloff::Linear ? s : 
+              boundFalloff == BoundFalloff::Squared ? s * s : 
+              s * s * s; 
     
-    return s; 
+    return f; 
 }

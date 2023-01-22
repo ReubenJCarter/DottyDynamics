@@ -28,7 +28,7 @@ public class CurlNoiseTest : MonoBehaviour
             sphereTransforms[j] = go.transform;   
         
         }
-        int curlNoiseId = world.AddNoiseField(Dotty.NoiseType.SimplexCurl, 50f, 10.0f, true); 
+        //int curlNoiseId = world.AddNoiseField(Dotty.NoiseType.SimplexCurl, 50f, 10.0f, true); 
         //world.AddNoiseField(Dotty.World.NoiseType.Simplex, 0.1f, 40.0f, false); 
         //world.AddAttractor(new Vector3(5, 5, 5), 0.1f, 20, 100000, Dotty.World.Falloff.LinearWell); 
 

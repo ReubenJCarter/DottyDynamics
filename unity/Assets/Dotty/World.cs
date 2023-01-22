@@ -239,7 +239,8 @@ namespace Dotty{
         #else
         [DllImport ("Dotty")]   
         #endif
-        private static extern int World_addGlobalForce(IntPtr instance, Vec3 position, Vec3 direction, float strength, Vec3 boundSize, BoundShapeType boundShape, float boundThickness, BoundFalloff boundFalloff, Mat3 boundInvRotation);
+        private static extern int World_addGlobalForce(IntPtr instance, Vec3 position, Vec3 direction, float strength, 
+                                                       Vec3 boundSize, BoundShapeType boundShape, float boundThickness, BoundFalloff boundFalloff, Mat3 boundInvRotation);
         
         #if UNITY_IPHONE
         [DllImport ("__Internal")]
@@ -866,7 +867,7 @@ namespace Dotty{
         #else
         [DllImport ("Dotty")]   
         #endif
-        private static extern void World_setNoiseFieldBoundSize(IntPtr instance, int inx, float boundSize);
+        private static extern void World_setNoiseFieldBoundSize(IntPtr instance, int inx, Vec3 boundSize);
         
         #if UNITY_IPHONE
         [DllImport ("__Internal")]
@@ -882,19 +883,38 @@ namespace Dotty{
         #endif
         private static extern void World_setNoiseFieldBoundThickness(IntPtr instance, int inx, float thickness); 
 
-        public int AddNoiseField(NoiseType noiseType, float strength, float noiseScale, bool isVelocity){
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setNoiseFieldBoundInvRotation(IntPtr instance, int inx, Mat3 invRotation); 
+
+        public int AddNoiseField(Vector3 position, NoiseType noiseType, float strength, float noiseScale, FieldMode mode,
+                                 Vector3 boundSize, BoundShapeType boundShape, float boundThickness, BoundFalloff boundFalloff, Matrix4x4 boundInvRotation){
 
             Vec3 pos = new Vec3();
-            pos.x = 0;  
-            pos.y = 0; 
-            pos.z = 0;
+            pos.x = position.x;  
+            pos.y = position.y; 
+            pos.z = position.z;
 
             Vec3 sz = new Vec3();
-            sz.x = 0; 
-            sz.y = 0; 
-            sz.z = 0;
+            sz.x = boundSize.x; 
+            sz.y = boundSize.y; 
+            sz.z = boundSize.z;
 
-            return World_addNoiseField(ntv, pos, noiseType, strength, noiseScale, FieldMode.Force, sz, BoundShapeType.Box, 0, BoundFalloff.Linear, new Mat3()); 
+            Mat3 ir = new Mat3(); 
+            ir.x0 = boundInvRotation[0, 0]; 
+            ir.y0 = boundInvRotation[1, 0]; 
+            ir.z0 = boundInvRotation[2, 0]; 
+            ir.x1 = boundInvRotation[0, 1]; 
+            ir.y1 = boundInvRotation[1, 1]; 
+            ir.z1 = boundInvRotation[2, 1]; 
+            ir.x2 = boundInvRotation[0, 2]; 
+            ir.y2 = boundInvRotation[1, 2]; 
+            ir.z2 = boundInvRotation[2, 2];
+
+            return World_addNoiseField(ntv, pos, noiseType, strength, noiseScale, mode, sz, boundShape, boundThickness, boundFalloff, ir); 
         }
 
         public void DestroyNoiseField(int inx){
@@ -905,6 +925,65 @@ namespace Dotty{
             World_clearNoiseFields(ntv); 
         }
 
+        public void SetNoiseFieldPosition(int inx, Vector3 position){
+            Vec3 pos = new Vec3();
+            pos.x = position.x; 
+            pos.y = position.y; 
+            pos.z = position.z;
+
+            World_setNoiseFieldPosition(ntv, inx, pos);
+        }
+
+        public void SetNoiseFieldNoiseType(int inx, NoiseType noiseType){
+            World_setNoiseFieldNoiseType(ntv, inx, noiseType);
+        }
+
+        public void SetNoiseFieldStrength(int inx, float strength){
+            World_setNoiseFieldStrength(ntv, inx, strength);
+        }
+
+        public void SetNoiseFieldNoiseScale(int inx, float noiseScale){
+            World_setNoiseFieldNoiseScale(ntv, inx, noiseScale);
+        }
+
+        public void SetNoiseFieldMode(int inx, FieldMode fieldMode){
+            World_setNoiseFieldMode(ntv, inx, fieldMode);
+        }
+
+        public void SetNoiseFieldBoundShape(int inx, BoundShapeType boundShape){
+            World_setNoiseFieldBoundShape(ntv, inx, boundShape); 
+        }
+
+        public void SetNoiseFieldBoundSize(int inx, Vector3 boundSize){
+            Vec3 sz = new Vec3();
+            sz.x = boundSize.x; 
+            sz.y = boundSize.y; 
+            sz.z = boundSize.z;
+
+            World_setNoiseFieldBoundSize(ntv, inx, sz); 
+        }
+
+        public void SetNoiseFieldBoundFalloff(int inx, BoundFalloff boundFalloff){
+            World_setNoiseFieldBoundFalloff(ntv, inx, boundFalloff); 
+        }
+
+        public void SetNoiseFieldBoundThickness(int inx, float boundThickness){
+            World_setNoiseFieldBoundThickness(ntv, inx, boundThickness); 
+        }
+
+        public void SetNoiseFieldBoundInvRotation(int inx, Matrix4x4 boundInvRotation){
+            Mat3 ir = new Mat3(); 
+            ir.x0 = boundInvRotation[0, 0]; 
+            ir.y0 = boundInvRotation[1, 0]; 
+            ir.z0 = boundInvRotation[2, 0]; 
+            ir.x1 = boundInvRotation[0, 1]; 
+            ir.y1 = boundInvRotation[1, 1]; 
+            ir.z1 = boundInvRotation[2, 1]; 
+            ir.x2 = boundInvRotation[0, 2]; 
+            ir.y2 = boundInvRotation[1, 2]; 
+            ir.z2 = boundInvRotation[2, 2];
+            World_setNoiseFieldBoundInvRotation(ntv, inx, ir); 
+        }
 
 
         /*
