@@ -50,7 +50,7 @@ namespace Dotty{
         public Vec3 boundSize; 
         public BoundShapeType boundShape;
         public float boundThickness; 
-        public Falloff boundFalloff; 
+        public BoundFalloff boundFalloff; 
         public Mat3 boundInvRotation; 
     }
 

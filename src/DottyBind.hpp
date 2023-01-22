@@ -33,8 +33,8 @@ extern "C" {
     EXPORT bool* World_getParticlesInUsePtr(World* instance);
     EXPORT int World_getParticlesPoolBound(World* instance);
 
-    EXPORT int World_addGlobalForce(World* instance, Vec3 position, Vec3 direction, float strength, Vec3 boundSize, BoundShapeType boundShape, 
-                                    float boundThickness, BoundFalloff boundFalloff, Mat3 boundInvRotation);
+    EXPORT int World_addGlobalForce(World* instance, Vec3 position, Vec3 direction, float strength, 
+                                    Vec3 boundSize, BoundShapeType boundShape, float boundThickness, BoundFalloff boundFalloff, Mat3 boundInvRotation);
     EXPORT GlobalForce* World_getGlobalForcePtr(World* instance, int inx); 
     EXPORT void World_destroyGlobalForce(World* instance, int inx); 
     EXPORT void World_clearGlobalForces(World* instance);
@@ -92,7 +92,7 @@ extern "C" {
     EXPORT void World_setAnchorRodPosition(World* instance, int inx, Vec3 position);
 
     EXPORT int World_addNoiseField(World* instance, Vec3 position, NoiseType noiseType, float strength, float noiseScale, FieldMode mode, 
-                          BoundShapeType boundShape, Vec3 boundSize, BoundFalloff boundFalloff, float boundThickness);
+                                   Vec3 boundSize, BoundShapeType boundShape, float boundThickness, BoundFalloff boundFalloff, Mat3 boundInvRotation);
     EXPORT void World_destroyNoiseField(World* instance, int inx); 
     EXPORT void World_clearNoiseFields(World* instance);
     EXPORT void World_setNoiseFieldPosition(World* instance, int inx, Vec3 position); 

@@ -291,8 +291,8 @@ EXPORT void World_setAnchorRodPosition(World* instance, int inx, Vec3 position){
 
 
 EXPORT int World_addNoiseField(World* instance, Vec3 position, NoiseType noiseType, float strength, float noiseScale, FieldMode mode, 
-                          BoundShapeType boundShape, Vec3 boundSize, BoundFalloff boundFalloff, float boundThickness){
-    return instance->noiseFieldSystem.addNoiseField(position, noiseType, strength, noiseScale, mode, boundShape, boundSize, boundFalloff, boundThickness); 
+                               Vec3 boundSize, BoundShapeType boundShape, float boundThickness, BoundFalloff boundFalloff, Mat3 boundInvRotation){
+    return instance->noiseFieldSystem.addNoiseField(position, noiseType, strength, noiseScale, mode, boundSize, boundShape, boundThickness, boundFalloff, boundInvRotation); 
 }
 
 EXPORT void World_destroyNoiseField(World* instance, int inx){

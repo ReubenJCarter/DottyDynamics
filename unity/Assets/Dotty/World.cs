@@ -804,8 +804,7 @@ namespace Dotty{
         [DllImport ("Dotty")]   
         #endif
         private static extern int World_addNoiseField(IntPtr instance, Vec3 position, NoiseType noiseType, float strength, float noiseScale, FieldMode mode, 
-                                                      BoundShapeType boundShape, Vec3 boundSize, BoundFalloff boundFalloff, float boundThickness);
-        
+                                                      Vec3 boundSize, BoundShapeType boundShape, float boundThickness, BoundFalloff boundFalloff, Mat3 boundInvRotation);
         #if UNITY_IPHONE
         [DllImport ("__Internal")]
         #else
@@ -895,7 +894,7 @@ namespace Dotty{
             sz.y = 0; 
             sz.z = 0;
 
-            return World_addNoiseField(ntv, pos, noiseType, strength, noiseScale, FieldMode.Force, BoundShapeType.Box, sz, Falloff.Constant, 0); 
+            return World_addNoiseField(ntv, pos, noiseType, strength, noiseScale, FieldMode.Force, sz, BoundShapeType.Box, 0, BoundFalloff.Linear, new Mat3()); 
         }
 
         public void DestroyNoiseField(int inx){

@@ -118,7 +118,7 @@ class NoiseFieldSystem {
         }
 
         int addNoiseField(Vec3 position, NoiseType noiseType, float strength, float noiseScale, FieldMode mode, 
-                          BoundShapeType boundShape, Vec3 boundSize, BoundFalloff boundFalloff, float boundThickness){
+                          Vec3 boundSize, BoundShapeType boundShape, float boundThickness, BoundFalloff boundFalloff, Mat3 boundInvRotation){
             NoiseField n; 
 
             n.position = position; 
@@ -126,6 +126,7 @@ class NoiseFieldSystem {
             n.boundSize = boundSize; 
             n.boundFalloff = boundFalloff; 
             n.boundThickness = boundThickness; 
+            n.boundInvRotation = boundInvRotation; 
 
             n.noiseType = noiseType; 
             n.strength = strength; 
