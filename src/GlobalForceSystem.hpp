@@ -47,14 +47,21 @@ class GlobalForceSystem {
                         
                         for(int p = a; p < b; p++){
 
+                            float boundStrength = getSphereBoundStrength( 
+                                particles[p].positionNext, 
+                                globalForces[i].position, 
+                                globalForces[i].boundSize, 
+                                globalForces[i].boundShape, 
+                                globalForces[i].boundThickness, 
+                                globalForces[i].boundFalloff);
                             
                             float xDir = globalForces[i].direction.x; 
                             float yDir = globalForces[i].direction.y;
                             float zDir = globalForces[i].direction.z; 
 
-                            particles[p].velocity.x += timestep * particles[p].invMass * xDir * globalForces[i].strength;
-                            particles[p].velocity.y += timestep * particles[p].invMass * yDir * globalForces[i].strength;
-                            particles[p].velocity.z += timestep * particles[p].invMass * zDir * globalForces[i].strength;
+                            particles[p].velocity.x += timestep * particles[p].invMass * xDir * globalForces[i].strength * boundStrength;
+                            particles[p].velocity.y += timestep * particles[p].invMass * yDir * globalForces[i].strength * boundStrength;
+                            particles[p].velocity.z += timestep * particles[p].invMass * zDir * globalForces[i].strength * boundStrength;
                         
                         }
 
