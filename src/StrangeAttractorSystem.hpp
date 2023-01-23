@@ -29,108 +29,13 @@ class StrangeAttractorSystem {
                         continue;          
                
 
-                    if(strangeAttractors[i].falloff == Falloff::Constant){
-                        for(int p = a; p < b; p++){
-                            float xDiff = strangeAttractors[i].position.x - particles[p].position.x; 
-                            float yDiff = strangeAttractors[i].position.y - particles[p].position.y;
-                            float zDiff = strangeAttractors[i].position.z - particles[p].position.z;
-
-                            float dist2 = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff; 
-                            float dist = sqrt(dist2); 
-                            float distFactor; 
-                            if(dist > strangeAttractors[i].maxDist)
-                                distFactor = 0;
-                            else
-                                distFactor = 1; 
-
-                            particles[p].velocity.x += timestep * particles[p].invMass * xDiff * distFactor * strangeAttractors[i].strength;
-                            particles[p].velocity.y += timestep * particles[p].invMass * yDiff * distFactor * strangeAttractors[i].strength;
-                            particles[p].velocity.z += timestep * particles[p].invMass * zDiff * distFactor * strangeAttractors[i].strength;
-                        }
-                    }
-                    else if(strangeAttractors[i].falloff == Falloff::InvDist2){
-                        for(int p = a; p < b; p++){
-                            float xDiff = strangeAttractors[i].position.x - particles[p].position.x; 
-                            float yDiff = strangeAttractors[i].position.y - particles[p].position.y;
-                            float zDiff = strangeAttractors[i].position.z - particles[p].position.z;
-
-                            float dist2 = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff; 
-                            float dist = sqrt(dist2); 
-                            float distFactor; 
-                            if(dist > strangeAttractors[i].maxDist)
-                                distFactor = 0;
-                            else if(dist < strangeAttractors[i].minDist)
-                                distFactor = dist == 0 ? 0 : 1 / (strangeAttractors[i].minDist * strangeAttractors[i].minDist * dist);
-                            else
-                                distFactor = 1 / (dist2 * dist); 
-
-                            particles[p].velocity.x += timestep * particles[p].invMass * xDiff * distFactor * strangeAttractors[i].strength;
-                            particles[p].velocity.y += timestep * particles[p].invMass * yDiff * distFactor * strangeAttractors[i].strength;
-                            particles[p].velocity.z += timestep * particles[p].invMass * zDiff * distFactor * strangeAttractors[i].strength;
-                        }
-                    }
-                    else if(strangeAttractors[i].falloff == Falloff::InvDist){
-                        for(int p = a; p < b; p++){
-                            float xDiff = strangeAttractors[i].position.x - particles[p].position.x; 
-                            float yDiff = strangeAttractors[i].position.y - particles[p].position.y;
-                            float zDiff = strangeAttractors[i].position.z - particles[p].position.z;
-
-                            float dist2 = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff; 
-                            float dist = sqrt(dist2); 
-
-                            float distFactor; 
-                            if(dist > strangeAttractors[i].maxDist)
-                                distFactor = 0;
-                            else if(dist < strangeAttractors[i].minDist)
-                                distFactor = dist == 0 ? 0 : 1 / (strangeAttractors[i].minDist * dist);
-                            else
-                                distFactor = 1 / (dist2); 
-
-                            particles[p].velocity.x += timestep * particles[p].invMass * xDiff * distFactor * strangeAttractors[i].strength;
-                            particles[p].velocity.y += timestep * particles[p].invMass * yDiff * distFactor * strangeAttractors[i].strength;
-                            particles[p].velocity.z += timestep * particles[p].invMass * zDiff * distFactor * strangeAttractors[i].strength;
-                        }
-                    }
-                    else if(strangeAttractors[i].falloff == Falloff::InvDistWell){
-                        for(int p = a; p < b; p++){
-                            float xDiff = strangeAttractors[i].position.x - particles[p].position.x; 
-                            float yDiff = strangeAttractors[i].position.y - particles[p].position.y;
-                            float zDiff = strangeAttractors[i].position.z - particles[p].position.z;
-
-                            float dist2 = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff; 
-                            float dist = sqrt(dist2); 
-
-                            float distFactor = dist > strangeAttractors[i].maxDist || dist < strangeAttractors[i].minDist ? 0 : dist - strangeAttractors[i].minDist;
-
-                            particles[p].velocity.x += timestep * particles[p].invMass * xDiff * distFactor * strangeAttractors[i].strength;
-                            particles[p].velocity.y += timestep * particles[p].invMass * yDiff * distFactor * strangeAttractors[i].strength;
-                            particles[p].velocity.z += timestep * particles[p].invMass * zDiff * distFactor * strangeAttractors[i].strength;
-                        }
-                    }
-                    else if(strangeAttractors[i].falloff == Falloff::InvDist2Well){
-                        for(int p = a; p < b; p++){
-                            float xDiff = strangeAttractors[i].position.x - particles[p].position.x; 
-                            float yDiff = strangeAttractors[i].position.y - particles[p].position.y;
-                            float zDiff = strangeAttractors[i].position.z - particles[p].position.z;
-
-                            float dist2 = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff;
-                            float maxDist2 = strangeAttractors[i].maxDist * strangeAttractors[i].maxDist; 
-                            float minDist2 = strangeAttractors[i].minDist * strangeAttractors[i].minDist; 
-
-                            float distFactor = dist2 > maxDist2 || dist2 < minDist2 ? 0 : dist2 - minDist2;
-
-                            particles[p].velocity.x += timestep * particles[p].invMass * xDiff * distFactor * strangeAttractors[i].strength;
-                            particles[p].velocity.y += timestep * particles[p].invMass * yDiff * distFactor * strangeAttractors[i].strength;
-                            particles[p].velocity.z += timestep * particles[p].invMass * zDiff * distFactor * strangeAttractors[i].strength;
-                        }
-                    }
                 
                 }
             }).wait();
 
         }
 
-        int addStrangeAttrator(Vec3 position, Vec3 scale, StrangeAttractorType type, float strength, float minDist, float maxDist, Falloff falloff){
+        int addStrangeAttrator(Vec3 position, float scale, StrangeAttractorType type, float strength, float minDist, float maxDist, Falloff falloff){
             StrangeAttractor a; 
             a.position = position;
             a.scale = scale;  
@@ -158,7 +63,7 @@ class StrangeAttractorSystem {
             strangeAttractors[inx].position = position; 
         }
 
-        void setStrangeAttractorScale(int inx, Vec3 scale){
+        void setStrangeAttractorScale(int inx, float scale){
             strangeAttractors[inx].scale = scale; 
         }
 
@@ -180,5 +85,9 @@ class StrangeAttractorSystem {
 
         void setStrangeAttractorFalloff(int inx, Falloff falloff){
             strangeAttractors[inx].falloff = falloff;
+        }
+
+        void setStrangeAttractorK(int inx, int kinx, float k){
+            strangeAttractors[inx].k[kinx] = k;
         }
 };

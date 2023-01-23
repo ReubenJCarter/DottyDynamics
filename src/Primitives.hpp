@@ -51,13 +51,13 @@ struct Attractor {
 
 struct StrangeAttractor {
     Vec3 position; 
-    Vec3 scale; 
+    float scale; 
     StrangeAttractorType type; 
     float strength;
     float minDist; 
     float maxDist;
     Falloff falloff;  
-    float param[10]; 
+    float k[10]; 
 }; 
 
 struct Vortex {

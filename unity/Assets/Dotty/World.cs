@@ -540,6 +540,16 @@ namespace Dotty{
 
         /*
         *
+        *STRANGE ATTRACTOR
+        *
+        */
+
+        
+
+
+
+        /*
+        *
         *VORTEX
         *
         */

@@ -57,17 +57,18 @@ extern "C" {
     EXPORT void World_setAttractorMaxDist(World* instance, int inx, float maxDist);
     EXPORT void World_setAttractorFalloff(World* instance, int inx, Falloff falloff);
 
-    EXPORT int World_addStrangeAttrator(World* instance, Vec3 position, Vec3 scale, StrangeAttractorType type, float strength, float minDist, float maxDist, Falloff falloff); 
+    EXPORT int World_addStrangeAttrator(World* instance, Vec3 position, float scale, StrangeAttractorType type, float strength, float minDist, float maxDist, Falloff falloff); 
     EXPORT StrangeAttractor* World_getStrangeAttractorPtr(World* instance, int inx);
     EXPORT void World_destroyStrangeAttractor(World* instance, int inx); 
     EXPORT void World_clearStrangeAttractors(World* instance);
     EXPORT void World_setStrangeAttractorPosition(World* instance, int inx, Vec3 position);
-    EXPORT void World_setStrangeAttractorScale(World* instance, int inx, Vec3 scale);
+    EXPORT void World_setStrangeAttractorScale(World* instance, int inx, float scale);
     EXPORT void World_setStrangeAttractorType(World* instance, int inx, StrangeAttractorType type);
     EXPORT void World_setStrangeAttractorStrength(World* instance, int inx, float strength);
     EXPORT void World_setStrangeAttractorMinDist(World* instance, int inx, float minDist); 
     EXPORT void World_setStrangeAttractorMaxDist(World* instance, int inx, float maxDist);
     EXPORT void World_setStrangeAttractorFalloff(World* instance, int inx, Falloff falloff);
+    EXPORT void World_setStrangeAttractorK(World* instance, int inx, int kinx, float k);
 
     EXPORT int World_addVortex(World* instance, Vec3 position, Vec3 normal, float strength, float minDist, float maxDist, Falloff falloff); 
     EXPORT Vortex* World_getVortexPtr(World* instance, int inx);
