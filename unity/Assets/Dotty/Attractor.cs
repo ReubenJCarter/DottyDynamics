@@ -93,8 +93,9 @@ namespace Dotty {
             DrawWireSphere(t.transform.position, t.minDistance); 
 
             Handles.color = Color.white;
+
             Vector3 normal = t.transform.rotation * Vector3.up;
-            float s = t.strength*5; 
+            float s = 2 * HandleUtility.GetHandleSize( t.transform.position ); 
 
             Handles.DrawDottedLine(t.transform.position, t.transform.position + new Vector3(s, 0, 0), 4);
             Handles.DrawDottedLine(t.transform.position, t.transform.position + new Vector3(-s, 0, 0), 4);

@@ -357,6 +357,63 @@ MonoBehaviour:
   collisionFloorHeight: -63.5632
   collisionFloorKineticFriction: 0
   collisionFloorStaticFriction: 0
+--- !u!1 &1247303245
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1247303247}
+  - component: {fileID: 1247303246}
+  m_Layer: 0
+  m_Name: StrangeAttractor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1247303246
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1247303245}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0bd402638c3ec6b4187542aaba8bd154, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  world: {fileID: 849942375}
+  scale: 1
+  type: 0
+  strength: 0.02
+  minDistance: 0.1
+  maxDistance: 1000
+  falloff: 0
+  a: 0.9
+  b: 5
+  c: 9.9
+  d: 1
+  e: 0
+  f: 0
+--- !u!4 &1247303247
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1247303245}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3.64, y: 4.74, z: 2.06}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 11
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1273542177
 GameObject:
   m_ObjectHideFlags: 0
@@ -563,7 +620,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1461354657
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -549,7 +549,8 @@ namespace Dotty{
         #else
         [DllImport ("Dotty")]
         #endif
-        private static extern int World_addStrangeAttrator(IntPtr instance, Vec3 position, float scale, StrangeAttractorType type, float strength, float minDist, float maxDist, Falloff falloff); 
+        private static extern int World_addStrangeAttractor(IntPtr instance, Vec3 position, float scale, StrangeAttractorType type, float strength, float minDist, float maxDist, 
+                                                           Falloff falloff, float a, float b, float c, float d, float e, float f); 
         
         #if UNITY_IPHONE
         [DllImport ("__Internal")]
@@ -626,15 +627,16 @@ namespace Dotty{
         #else
         [DllImport ("Dotty")]
         #endif
-        private static extern void World_setStrangeAttractorK(IntPtr instance, int inx, int kinx, float k);
+        private static extern void World_setStrangeAttractorCoeffs(IntPtr instance, int inx, float a, float b, float c, float d, float e, float f);
 
-        public int AddStrangeAttractor(Vector3 position, float scale, StrangeAttractorType type, float strength, float minDist, float maxDist, Falloff falloff){
+        public int AddStrangeAttractor(Vector3 position, float scale, StrangeAttractorType type, float strength, float minDist, float maxDist, Falloff falloff,
+                                       float a, float b, float c, float d, float e, float f){
             Vec3 pos = new Vec3();
             pos.x = position.x; 
             pos.y = position.y; 
             pos.z = position.z;
             
-            return World_addStrangeAttrator(ntv, pos, scale, type, strength, minDist, maxDist, falloff); 
+            return World_addStrangeAttractor(ntv, pos, scale, type, strength, minDist, maxDist, falloff, a, b, c, d, e, f); 
         }
 
         unsafe public StrangeAttractorNtv* GetStrangeAttractorPtr(int inx){
@@ -682,6 +684,12 @@ namespace Dotty{
         public void SetStrangeAttractorFalloff(int inx, Falloff falloff){
             World_setStrangeAttractorFalloff(ntv, inx, falloff);
         }
+
+        public void setStrangeAttractorCoeffs(int inx, float a, float b, float c, float d, float e, float f){
+            World_setStrangeAttractorCoeffs(ntv, inx, a, b, c, d, e, f); 
+        }
+
+
 
         /*
         *

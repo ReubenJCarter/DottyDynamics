@@ -109,7 +109,7 @@ namespace Dotty{
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public unsafe struct StrangeAttractorNtv {
+    public struct StrangeAttractorNtv {
         public Vec3 position; 
         public float scale; 
         public StrangeAttractorType type; 
@@ -117,6 +117,11 @@ namespace Dotty{
         public float minDist; 
         public float maxDist;
         public Falloff falloff;  
-        public fixed float k[10]; 
+        public float a;
+        public float b;
+        public float c;
+        public float d;
+        public float e;
+        public float f;
     }
 }

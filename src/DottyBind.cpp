@@ -161,8 +161,9 @@ EXPORT void World_setAttractorFalloff(World* instance, int inx, Falloff falloff)
 
 
 
-EXPORT int World_addStrangeAttrator(World* instance, Vec3 position, float scale, StrangeAttractorType type, float strength, float minDist, float maxDist, Falloff falloff){
-    return instance->strangeAttractorSystem.addStrangeAttrator(position, scale, type, strength, minDist, maxDist, falloff); 
+EXPORT int World_addStrangeAttractor(World* instance, Vec3 position, float scale, StrangeAttractorType type, float strength, float minDist, float maxDist, Falloff falloff, 
+                                    float a, float b, float c, float d, float e, float f){
+    return instance->strangeAttractorSystem.addStrangeAttractor(position, scale, type, strength, minDist, maxDist, falloff, a, b, c, d, e, f); 
 }
 
 EXPORT StrangeAttractor* World_getStrangeAttractorPtr(World* instance, int inx){
@@ -205,8 +206,8 @@ EXPORT void World_setStrangeAttractorFalloff(World* instance, int inx, Falloff f
     instance->strangeAttractorSystem.setStrangeAttractorFalloff(inx, falloff); 
 }
 
-EXPORT void World_setStrangeAttractorK(World* instance, int inx, int kinx, float k){
-    instance->strangeAttractorSystem.setStrangeAttractorK(inx, kinx, k); 
+EXPORT void World_setStrangeAttractorCoeffs(World* instance, int inx, float a, float b, float c, float d, float e, float f){
+    instance->strangeAttractorSystem.setStrangeAttractorCoeffs(inx, a, b, c, d, e, f); 
 }
 
 

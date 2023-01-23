@@ -57,7 +57,12 @@ struct StrangeAttractor {
     float minDist; 
     float maxDist;
     Falloff falloff;  
-    float k[10]; 
+    float a;
+    float b;
+    float c;
+    float d;
+    float e;
+    float f;
 }; 
 
 struct Vortex {
