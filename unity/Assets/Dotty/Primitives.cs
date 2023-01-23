@@ -12,6 +12,7 @@ namespace Dotty{
     public enum FieldMode{Force, CorrectionForce};
     public enum BoundShapeType{Box, Sphere, Infinite};
     public enum BoundFalloff{Linear, Squared, Cubed}; 
+    public enum StrangeAttractorType{Aizawa, Arneodo, Dadras, Dequan, Lorenz, LorenzMod2, Thomas };
 
     [StructLayout(LayoutKind.Sequential)]
     public struct Vec3{
@@ -105,5 +106,17 @@ namespace Dotty{
         public float boundThickness; 
         public BoundFalloff boundFalloff; 
         public Mat3 boundInvRotation;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public unsafe struct StrangeAttractorNtv {
+        public Vec3 position; 
+        public float scale; 
+        public StrangeAttractorType type; 
+        public float strength;
+        public float minDist; 
+        public float maxDist;
+        public Falloff falloff;  
+        public fixed float k[10]; 
     }
 }

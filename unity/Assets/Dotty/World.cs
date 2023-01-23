@@ -544,9 +544,144 @@ namespace Dotty{
         *
         */
 
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]
+        #endif
+        private static extern int World_addStrangeAttrator(IntPtr instance, Vec3 position, float scale, StrangeAttractorType type, float strength, float minDist, float maxDist, Falloff falloff); 
         
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]
+        #endif
+        private static extern IntPtr World_getStrangeAttractorPtr(IntPtr instance, int inx);
+        
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]
+        #endif
+        private static extern void World_destroyStrangeAttractor(IntPtr instance, int inx); 
+        
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]
+        #endif
+        private static extern void World_clearStrangeAttractors(IntPtr instance);
+        
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]
+        #endif
+        private static extern void World_setStrangeAttractorPosition(IntPtr instance, int inx, Vec3 position);
+        
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]
+        #endif
+        private static extern void World_setStrangeAttractorScale(IntPtr instance, int inx, float scale);
+        
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]
+        #endif
+        private static extern void World_setStrangeAttractorType(IntPtr instance, int inx, StrangeAttractorType type);
+        
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]
+        #endif
+        private static extern void World_setStrangeAttractorStrength(IntPtr instance, int inx, float strength);
+        
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]
+        #endif
+        private static extern void World_setStrangeAttractorMinDist(IntPtr instance, int inx, float minDist); 
+        
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]
+        #endif
+        private static extern void World_setStrangeAttractorMaxDist(IntPtr instance, int inx, float maxDist);
+        
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]
+        #endif
+        private static extern void World_setStrangeAttractorFalloff(IntPtr instance, int inx, Falloff falloff);
+        
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]
+        #endif
+        private static extern void World_setStrangeAttractorK(IntPtr instance, int inx, int kinx, float k);
 
+        public int AddStrangeAttractor(Vector3 position, float scale, StrangeAttractorType type, float strength, float minDist, float maxDist, Falloff falloff){
+            Vec3 pos = new Vec3();
+            pos.x = position.x; 
+            pos.y = position.y; 
+            pos.z = position.z;
+            
+            return World_addStrangeAttrator(ntv, pos, scale, type, strength, minDist, maxDist, falloff); 
+        }
 
+        unsafe public StrangeAttractorNtv* GetStrangeAttractorPtr(int inx){
+            IntPtr ptr = World_getStrangeAttractorPtr(ntv, inx); 
+            return (StrangeAttractorNtv*)ptr.ToPointer(); 
+        }
+
+        public void DestroyStrangeAttractor(int inx){
+            World_destroyStrangeAttractor(ntv, inx); 
+        }
+
+        public void ClearStrangeAttractors(){
+            World_clearStrangeAttractors(ntv); 
+        }
+
+        public void SetStrangeAttractorPosition(int inx, Vector3 position){
+            Vec3 pos = new Vec3();
+            pos.x = position.x; 
+            pos.y = position.y; 
+            pos.z = position.z;
+            
+            World_setStrangeAttractorPosition(ntv, inx, pos); 
+        }
+
+        public void SetStrangeAttractorScale(int inx, float scale){
+            World_setStrangeAttractorScale(ntv, inx, scale);
+        }
+
+        public void SetStrangeAttractorType(int inx, StrangeAttractorType type){
+            World_setStrangeAttractorType(ntv, inx, type); 
+        }
+
+        public void SetStrangeAttractorStrength(int inx, float strength){
+            World_setStrangeAttractorStrength(ntv, inx, strength); 
+        }
+
+        public void SetStrangeAttractorMinDist(int inx, float minDist){
+            World_setStrangeAttractorMinDist(ntv, inx, minDist);
+        }
+
+        public void SetStrangeAttractorMaxDist(int inx, float maxDist){
+            World_setStrangeAttractorMaxDist(ntv, inx, maxDist);
+        }
+
+        public void SetStrangeAttractorFalloff(int inx, Falloff falloff){
+            World_setStrangeAttractorFalloff(ntv, inx, falloff);
+        }
 
         /*
         *
