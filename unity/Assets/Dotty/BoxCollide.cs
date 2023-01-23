@@ -12,7 +12,7 @@ namespace Dotty{
         public World world; 
 
 
-        public Vector3 size = new Vector3(1, 1, 1); 
+        public Vector3 size = new Vector3(0.5f, 0.5f, 0.5f); 
         public float staticFriction = 0; 
         public float kineticFriction = 0; 
         public bool inverse = false; 

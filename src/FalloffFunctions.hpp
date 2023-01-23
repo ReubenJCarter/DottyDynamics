@@ -64,3 +64,45 @@ inline float falloffInvDistWell(float xDiff, float yDiff, float zDiff, float min
 
     return distFactor; 
 }
+
+inline float falloffLinearRange(float xDiff, float yDiff, float zDiff, float minDist, float maxDist){
+    float dist2 = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff; 
+    float dist = sqrt(dist2); 
+
+    if(dist < minDist)
+        return 1.0f; 
+    else if (dist > maxDist)
+        return 0.0f; 
+
+    float distFactor = (maxDist - dist) / (maxDist - minDist);
+
+    return distFactor; 
+}
+
+inline float falloffSquaredRange(float xDiff, float yDiff, float zDiff, float minDist, float maxDist){
+    float dist2 = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff; 
+    float dist = sqrt(dist2); 
+
+    if(dist < minDist)
+        return 1.0f; 
+    else if (dist > maxDist)
+        return 0.0f; 
+
+    float distFactor = (maxDist - dist) / (maxDist - minDist);
+
+    return distFactor * distFactor; 
+}
+
+inline float falloffCubedRange(float xDiff, float yDiff, float zDiff, float minDist, float maxDist){
+    float dist2 = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff; 
+    float dist = sqrt(dist2); 
+
+    if(dist < minDist)
+        return 1.0f; 
+    else if (dist > maxDist)
+        return 0.0f; 
+
+    float distFactor = (maxDist - dist) / (maxDist - minDist);
+
+    return distFactor * distFactor * distFactor; 
+}

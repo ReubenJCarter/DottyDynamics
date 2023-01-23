@@ -563,7 +563,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1461354657
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -579,7 +579,7 @@ MonoBehaviour:
   world: {fileID: 849942375}
   strength: 1
   minDistance: 11.958663
-  maxDistance: 172.50967
+  maxDistance: 96.42753
   falloff: 4
 --- !u!4 &1461354658
 Transform:

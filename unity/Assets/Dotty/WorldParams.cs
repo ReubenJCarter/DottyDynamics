@@ -17,7 +17,7 @@ namespace Dotty{
 
         [Header("Global Environment")]
         [Range(0.0f, 1.0f)]
-        public float globalDamping = 0.01f;
+        public float globalDamping = 0.2f;
         public float gravity = 9.81f ; 
 
         [Header("Floor Boundry")]

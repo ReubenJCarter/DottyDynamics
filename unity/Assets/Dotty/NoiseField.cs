@@ -11,15 +11,15 @@ namespace Dotty{
         
         public World world; 
 
-        public float noiseScale; 
-        public NoiseType noiseType; 
-        public float strength; 
-        public FieldMode mode; 
+        public float noiseScale = 10; 
+        public NoiseType noiseType = NoiseType.SimplexCurl; 
+        public float strength = 10; 
+        public FieldMode mode = FieldMode.CorrectionForce; 
 
         public Vector3 boundSize = new Vector3(1, 1, 1); 
-        public BoundShapeType boundShape;
-        public float boundThickness; 
-        public BoundFalloff boundFalloff;
+        public BoundShapeType boundShape = BoundShapeType.Infinite;
+        public float boundThickness = 0; 
+        public BoundFalloff boundFalloff = BoundFalloff.Linear;
 
         void AddInternal() {
             Vector3 position = transform.position; 

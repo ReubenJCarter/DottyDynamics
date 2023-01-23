@@ -2,7 +2,7 @@
 
 #include "thirdparty/VecMath/VecMath.hpp"
 
-enum Falloff{Constant, InvDist, InvDist2, InvDistWell, InvDist2Well }; 
+enum Falloff{Constant, InvDist, InvDist2, InvDistWell, InvDist2Well, LinearRange, SquaredRange, CubedRange }; 
 enum NoiseType{Simplex, SimplexCurl, Perlin, PerlinCurl, Value, ValueCurl}; 
 enum FieldMode{Force, CorrectionForce}; 
 enum BoundShapeType{Box, Sphere, Infinite}; 

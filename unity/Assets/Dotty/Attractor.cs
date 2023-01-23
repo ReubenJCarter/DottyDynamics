@@ -65,13 +65,20 @@ namespace Dotty {
 
     [CustomEditor(typeof(Attractor))]
     public class AttractorEditor : Editor {
+
+        void DrawWireSphere(Vector3 center, float radius) {
+            Handles.DrawWireDisc(center, new Vector3(1, 0, 0), radius); 
+            Handles.DrawWireDisc(center, new Vector3(0, 1, 0), radius); 
+            Handles.DrawWireDisc(center, new Vector3(0, 0, 1), radius); 
+        }
+
         public void OnSceneGUI() {
             var t = target as Attractor;
 
 
             EditorGUI.BeginChangeCheck();
 
-            Handles.color = Color.red;
+            Handles.color = Color.white;
             float maxDistance = Handles.RadiusHandle(Quaternion.identity, t.transform.position, t.maxDistance);
 
             if (EditorGUI.EndChangeCheck()) {
@@ -82,13 +89,8 @@ namespace Dotty {
 
             EditorGUI.BeginChangeCheck();
             
-            Handles.color = Color.blue;
-            float minDistance = Handles.RadiusHandle(Quaternion.identity, t.transform.position, t.minDistance);
-
-            if (EditorGUI.EndChangeCheck()) {
-                Undo.RecordObject(target, "Changed Min Distance");
-                t.minDistance = minDistance;
-            }
+            Handles.color = Color.red;
+            DrawWireSphere(t.transform.position, t.minDistance); 
 
             Handles.color = Color.white;
             Vector3 normal = t.transform.rotation * Vector3.up;

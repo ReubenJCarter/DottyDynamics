@@ -7,10 +7,10 @@ using System;
 
 namespace Dotty{
 
-    public enum Falloff{Constant, InvDist, InvDist2, InvDistWell, InvDist2Well}
-    public enum NoiseType{Simplex, SimplexCurl, Perlin, PerlinCurl, Value, ValueCurl}
-    public enum FieldMode{Force, CorrectionForce}
-    public enum BoundShapeType{Box, Sphere, Infinite}
+    public enum Falloff{Constant, InvDist, InvDist2, InvDistWell, InvDist2Well, LinearRange, SquaredRange, CubedRange};
+    public enum NoiseType{Simplex, SimplexCurl, Perlin, PerlinCurl, Value, ValueCurl};
+    public enum FieldMode{Force, CorrectionForce};
+    public enum BoundShapeType{Box, Sphere, Infinite};
     public enum BoundFalloff{Linear, Squared, Cubed}; 
 
     [StructLayout(LayoutKind.Sequential)]

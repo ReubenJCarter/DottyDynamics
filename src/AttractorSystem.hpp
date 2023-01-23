@@ -95,6 +95,45 @@ class AttractorSystem {
                             particles[p].velocity.z += timestep * particles[p].invMass * zDiff * distFactor * attractors[i].strength;
                         }
                     }
+                    else if(attractors[i].falloff == Falloff::LinearRange){
+                        for(int p = a; p < b; p++){
+                            float xDiff = attractors[i].position.x - particles[p].position.x; 
+                            float yDiff = attractors[i].position.y - particles[p].position.y;
+                            float zDiff = attractors[i].position.z - particles[p].position.z;
+
+                            float distFactor = falloffLinearRange(xDiff, yDiff, zDiff, attractors[i].minDist, attractors[i].maxDist); 
+
+                            particles[p].velocity.x += timestep * particles[p].invMass * xDiff * distFactor * attractors[i].strength;
+                            particles[p].velocity.y += timestep * particles[p].invMass * yDiff * distFactor * attractors[i].strength;
+                            particles[p].velocity.z += timestep * particles[p].invMass * zDiff * distFactor * attractors[i].strength;
+                        }
+                    }
+                    else if(attractors[i].falloff == Falloff::SquaredRange){
+                        for(int p = a; p < b; p++){
+                            float xDiff = attractors[i].position.x - particles[p].position.x; 
+                            float yDiff = attractors[i].position.y - particles[p].position.y;
+                            float zDiff = attractors[i].position.z - particles[p].position.z;
+
+                            float distFactor = falloffSquaredRange(xDiff, yDiff, zDiff, attractors[i].minDist, attractors[i].maxDist); 
+
+                            particles[p].velocity.x += timestep * particles[p].invMass * xDiff * distFactor * attractors[i].strength;
+                            particles[p].velocity.y += timestep * particles[p].invMass * yDiff * distFactor * attractors[i].strength;
+                            particles[p].velocity.z += timestep * particles[p].invMass * zDiff * distFactor * attractors[i].strength;
+                        }
+                    }
+                    else if(attractors[i].falloff == Falloff::CubedRange){
+                        for(int p = a; p < b; p++){
+                            float xDiff = attractors[i].position.x - particles[p].position.x; 
+                            float yDiff = attractors[i].position.y - particles[p].position.y;
+                            float zDiff = attractors[i].position.z - particles[p].position.z;
+
+                            float distFactor = falloffCubedRange(xDiff, yDiff, zDiff, attractors[i].minDist, attractors[i].maxDist); 
+
+                            particles[p].velocity.x += timestep * particles[p].invMass * xDiff * distFactor * attractors[i].strength;
+                            particles[p].velocity.y += timestep * particles[p].invMass * yDiff * distFactor * attractors[i].strength;
+                            particles[p].velocity.z += timestep * particles[p].invMass * zDiff * distFactor * attractors[i].strength;
+                        }
+                    }
                 
                 }
             }).wait();
