@@ -354,7 +354,7 @@ MonoBehaviour:
   globalDamping: 0.561
   gravity: 0
   hasCollisionFloor: 1
-  collisionFloorHeight: -63.5632
+  collisionFloorHeight: -0.87789536
   collisionFloorKineticFriction: 0
   collisionFloorStaticFriction: 0
 --- !u!1 &1247303245
@@ -373,7 +373,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1247303246
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -387,9 +387,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   world: {fileID: 849942375}
-  scale: 1
+  scale: 4
   type: 0
-  strength: 0.02
+  strength: 0.01
   minDistance: 0.1
   maxDistance: 1000
   falloff: 0
@@ -695,7 +695,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1710937142}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.45, y: -0.98, z: 1.06}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

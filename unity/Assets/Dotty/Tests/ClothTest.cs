@@ -22,6 +22,7 @@ public class ClothTest : MonoBehaviour
     void CreateCloth(){
         world.SetGravity(9.81f); 
         world.SetGlobalDamping(1.0f); 
+        world.SetSubsteps(4); 
 
         float width = 20; 
         float height = 10;

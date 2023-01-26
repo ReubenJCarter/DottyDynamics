@@ -1,18 +1,9 @@
-if not defined DevEnvDir (
-    call "C:\Program Files (x86)\Microsoft Visual Studio\2022\BuildTools\VC\Auxiliary\Build\vcvarsall.bat" x64
-)
 
 echo "Building..." 
 
 if not exist "build" mkdir "build"
 if not exist "build\obj" mkdir "build\obj"
 
-cl /std:c++17 /LD /O2 /Febuild\Dotty.dll /Fobuild\obj\Dotty.o src/DottyBind.cpp 
-
-if not exist "build\Unity" mkdir "build\Unity"
-if not exist "build\Unity\Dotty" mkdir "build\Unity\Dotty"
-
-copy "build\Dotty.dll" "build\Unity\Dotty"
-
-copy "build\Dotty.dll" "unity\Assets\Dotty\"
+call ndk-build.cmd NDK_APP_LIBS_OUT=build/ NDK_OUT=build/
+copy "build\Dotty.so" "unity\Assets\Dotty\"
 
