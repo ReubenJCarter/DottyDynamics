@@ -1,7 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor; 
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace Dotty {
     public class GlobalForce : MonoBehaviour
@@ -92,6 +95,7 @@ namespace Dotty {
         }
     }
 
+    #if UNITY_EDITOR
     [CustomEditor(typeof(GlobalForce))]
     public class GlobalForceEditor : Editor {
 
@@ -241,4 +245,5 @@ namespace Dotty {
             }
         }
     }
+    #endif
 }

@@ -1,7 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor; 
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace Dotty{
     public class SphereCollide : MonoBehaviour {
@@ -62,6 +65,7 @@ namespace Dotty{
         }
     }
 
+    #if UNITY_EDITOR
     [CustomEditor(typeof(SphereCollide))]
     public class SphereCollideEditor : Editor {
         public void OnSceneGUI() {
@@ -78,4 +82,5 @@ namespace Dotty{
             }
         }
     }
+    #endif
 }

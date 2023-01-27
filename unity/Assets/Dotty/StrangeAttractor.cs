@@ -1,7 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor; 
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace Dotty {
     public class StrangeAttractor : MonoBehaviour
@@ -81,7 +84,7 @@ namespace Dotty {
         }
     }
 
-    
+    #if UNITY_EDITOR
     [CustomEditor(typeof(StrangeAttractor))]
     public class StrangeAttractorEditor : Editor {
 
@@ -126,4 +129,5 @@ namespace Dotty {
             Handles.DrawDottedLine(t.transform.position, t.transform.position + new Vector3(0, 0, -s), 4);
         }
     }
+    #endif
 }

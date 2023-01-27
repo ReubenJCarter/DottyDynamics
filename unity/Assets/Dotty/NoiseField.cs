@@ -1,7 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor; 
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace Dotty{
     public class NoiseField : MonoBehaviour {
@@ -90,7 +93,7 @@ namespace Dotty{
         }
     }
 
-    
+    #if UNITY_EDITOR
     [CustomEditor(typeof(NoiseField))]
     public class NoiseFieldEditor : Editor {
 
@@ -240,4 +243,5 @@ namespace Dotty{
             }
         }
     }
+    #endif
 }

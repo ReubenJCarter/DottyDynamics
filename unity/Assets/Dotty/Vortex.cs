@@ -1,7 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor; 
+
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace Dotty{
     public class Vortex : MonoBehaviour {
@@ -69,6 +72,7 @@ namespace Dotty{
         }
     }
 
+    #if UNITY_EDITOR
     [CustomEditor(typeof(Vortex))]
     public class VortexEditor : Editor {
         public void OnSceneGUI() {
@@ -107,4 +111,5 @@ namespace Dotty{
             }
         }
     }
+    #endif
 }
