@@ -5,10 +5,11 @@ if not defined DevEnvDir (
 echo "Building..." 
 
 if not exist "build" mkdir "build"
-if not exist "build\obj" mkdir "build\obj"
+if not exist "build\win" mkdir "build\win"
+if not exist "build\win\obj" mkdir "build\win\obj"
 
-cl /std:c++17 /LD /O2 /Febuild\Dotty.dll /Fobuild\obj\Dotty.o src/DottyBind.cpp 
-cl /std:c++17 /O2 /Febuild\WorldTest.exe /Fobuild\obj\WorldTest.o test/WorldTest.cpp 
+cl /std:c++17 /LD /O2 /Febuild\win\Dotty.dll /Fobuild\win\obj\Dotty.o src/DottyBind.cpp 
+cl /std:c++17 /O2 /Febuild\win\WorldTest.exe /Fobuild\win\obj\WorldTest.o test/WorldTest.cpp 
 
-copy "build\Dotty.dll" "unity\Assets\Dotty\Plugins\Windows\"
+copy "build\win\Dotty.dll" "unity\Assets\Dotty\Plugins\Windows\"
 
