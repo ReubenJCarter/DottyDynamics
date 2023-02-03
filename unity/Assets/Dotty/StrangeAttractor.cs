@@ -25,12 +25,12 @@ namespace Dotty {
         public Falloff falloff = Falloff.InvDist2; 
 
 
-        public float a; 
-        public float b; 
-        public float c; 
-        public float d; 
-        public float e; 
-        public float f; 
+        float a; 
+        float b; 
+        float c; 
+        float d; 
+        float e; 
+        float f; 
 
         void AddInternal() {
             Vector3 position = transform.position; 

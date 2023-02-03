@@ -239,7 +239,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &631679544
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -389,9 +389,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   world: {fileID: 849942375}
-  scale: 4
-  type: 0
-  strength: 0.01
+  scale: 3.64
+  type: 4
+  strength: 1
+  targetSpeed: 0.02
+  fieldMode: 1
   minDistance: 0.1
   maxDistance: 1000
   falloff: 0
