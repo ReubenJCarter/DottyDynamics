@@ -86,8 +86,10 @@ class World {
                 //Update forces 
                 globalForceSystem.updateGlobalForces(threadPool, params, particles); 
                 attractorSystem.updateAttractors(threadPool, params, particles); 
-                strangeAttractorSystem.updateStrangeAttractors(threadPool, params, particles); 
                 vortexSystem.updateVortices(threadPool, params, particles); 
+
+                //Update fields
+                strangeAttractorSystem.updateStrangeAttractors(threadPool, params, particles); 
                 noiseFieldSystem.updateNoiseFieldsForces(threadPool, params, particles); 
 
                 //Apply velocities and gravity 

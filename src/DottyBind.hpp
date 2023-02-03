@@ -66,8 +66,8 @@ extern "C" {
     EXPORT void World_setAttractorMaxDist(World* instance, int inx, float maxDist);
     EXPORT void World_setAttractorFalloff(World* instance, int inx, Falloff falloff);
 
-    EXPORT int World_addStrangeAttractor(World* instance, Vec3 position, float scale, StrangeAttractorType type, float strength, float minDist, float maxDist, Falloff falloff, 
-                                        float a, float b, float c, float d, float e, float f); 
+    EXPORT int World_addStrangeAttractor(World* instance, Vec3 position, float scale, StrangeAttractorType type, float strength, float targetSpeed, FieldMode fieldMode, 
+                                         float minDist, float maxDist, Falloff falloff, float a, float b, float c, float d, float e, float f); 
     EXPORT StrangeAttractor* World_getStrangeAttractorPtr(World* instance, int inx);
     EXPORT void World_destroyStrangeAttractor(World* instance, int inx); 
     EXPORT void World_clearStrangeAttractors(World* instance);
@@ -75,6 +75,8 @@ extern "C" {
     EXPORT void World_setStrangeAttractorScale(World* instance, int inx, float scale);
     EXPORT void World_setStrangeAttractorType(World* instance, int inx, StrangeAttractorType type);
     EXPORT void World_setStrangeAttractorStrength(World* instance, int inx, float strength);
+    EXPORT void World_setStrangeAttractorTargetSpeed(World* instance, int inx, float targetSpeed); 
+    EXPORT void World_setStrangeAttractorFieldMode(World* instance, int inx, FieldMode fieldMode);
     EXPORT void World_setStrangeAttractorMinDist(World* instance, int inx, float minDist); 
     EXPORT void World_setStrangeAttractorMaxDist(World* instance, int inx, float maxDist);
     EXPORT void World_setStrangeAttractorFalloff(World* instance, int inx, Falloff falloff);
@@ -102,7 +104,7 @@ extern "C" {
     EXPORT void World_setAnchorRodLength(World* instance, int inx, float length);
     EXPORT void World_setAnchorRodPosition(World* instance, int inx, Vec3 position);
 
-    EXPORT int World_addNoiseField(World* instance, Vec3 position, NoiseType noiseType, float strength, float noiseScale, FieldMode mode, 
+    EXPORT int World_addNoiseField(World* instance, Vec3 position, NoiseType noiseType, float strength, float targetSpeed, int bakeResolution, float noiseScale, FieldMode mode, 
                                    Vec3 boundSize, BoundShapeType boundShape, float boundThickness, BoundFalloff boundFalloff, Mat3 boundInvRotation);
     EXPORT NoiseField* World_getNoiseFieldPtr(World* instance, int inx); 
     EXPORT void World_destroyNoiseField(World* instance, int inx); 
@@ -110,6 +112,8 @@ extern "C" {
     EXPORT void World_setNoiseFieldPosition(World* instance, int inx, Vec3 position); 
     EXPORT void World_setNoiseFieldNoiseType(World* instance, int inx, NoiseType noiseType); 
     EXPORT void World_setNoiseFieldStrength(World* instance, int inx, float strength); 
+    EXPORT void World_setNoiseFieldTargetSpeed(World* instance, int inx, float targetSpeed); 
+    EXPORT void World_setNoiseFieldBakeResolution(World* instance, int inx, int resolution);
     EXPORT void World_setNoiseFieldNoiseScale(World* instance, int inx, float noiseScale); 
     EXPORT void World_setNoiseFieldMode(World* instance, int inx, FieldMode mode); 
     EXPORT void World_setNoiseFieldBoundShape(World* instance, int inx, BoundShapeType boundShape); 

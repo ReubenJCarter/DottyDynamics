@@ -161,9 +161,9 @@ EXPORT void World_setAttractorFalloff(World* instance, int inx, Falloff falloff)
 
 
 
-EXPORT int World_addStrangeAttractor(World* instance, Vec3 position, float scale, StrangeAttractorType type, float strength, float minDist, float maxDist, Falloff falloff, 
-                                    float a, float b, float c, float d, float e, float f){
-    return instance->strangeAttractorSystem.addStrangeAttractor(position, scale, type, strength, minDist, maxDist, falloff, a, b, c, d, e, f); 
+EXPORT int World_addStrangeAttractor(World* instance, Vec3 position, float scale, StrangeAttractorType type, float strength, float targetSpeed, FieldMode fieldMode, 
+                                     float minDist, float maxDist, Falloff falloff, float a, float b, float c, float d, float e, float f){
+    return instance->strangeAttractorSystem.addStrangeAttractor(position, scale, type, strength, targetSpeed, fieldMode, minDist, maxDist, falloff, a, b, c, d, e, f); 
 }
 
 EXPORT StrangeAttractor* World_getStrangeAttractorPtr(World* instance, int inx){
@@ -192,6 +192,14 @@ EXPORT void World_setStrangeAttractorType(World* instance, int inx, StrangeAttra
 
 EXPORT void World_setStrangeAttractorStrength(World* instance, int inx, float strength){
     instance->strangeAttractorSystem.setStrangeAttractorStrength(inx, strength);
+}
+
+EXPORT void World_setStrangeAttractorTargetSpeed(World* instance, int inx, float targetSpeed){
+    instance->strangeAttractorSystem.setStrangeAttractorTargetSpeed(inx, targetSpeed); 
+}
+
+EXPORT void World_setStrangeAttractorFieldMode(World* instance, int inx, FieldMode fieldMode){
+    instance->strangeAttractorSystem.setStrangeAttractorFieldMode(inx, fieldMode);
 }
 
 EXPORT void World_setStrangeAttractorMinDist(World* instance, int inx, float minDist){
@@ -295,9 +303,9 @@ EXPORT void World_setAnchorRodPosition(World* instance, int inx, Vec3 position){
 
 
 
-EXPORT int World_addNoiseField(World* instance, Vec3 position, NoiseType noiseType, float strength, float noiseScale, FieldMode mode, 
+EXPORT int World_addNoiseField(World* instance, Vec3 position, NoiseType noiseType, float strength, float targetSpeed, int bakeResolution, float noiseScale, FieldMode mode, 
                                Vec3 boundSize, BoundShapeType boundShape, float boundThickness, BoundFalloff boundFalloff, Mat3 boundInvRotation){
-    return instance->noiseFieldSystem.addNoiseField(position, noiseType, strength, noiseScale, mode, boundSize, boundShape, boundThickness, boundFalloff, boundInvRotation); 
+    return instance->noiseFieldSystem.addNoiseField(position, noiseType, strength, targetSpeed, bakeResolution, noiseScale, mode, boundSize, boundShape, boundThickness, boundFalloff, boundInvRotation); 
 }
 
 EXPORT NoiseField* World_getNoiseFieldPtr(World* instance, int inx){
@@ -322,6 +330,14 @@ EXPORT void World_setNoiseFieldNoiseType(World* instance, int inx, NoiseType noi
 
 EXPORT void World_setNoiseFieldStrength(World* instance, int inx, float strength){
     instance->noiseFieldSystem.setNoiseFieldStrength(inx, strength); 
+}
+
+EXPORT void World_setNoiseFieldTargetSpeed(World* instance, int inx, float targetSpeed){
+    instance->noiseFieldSystem.setNoiseFieldTargetSpeed(inx, targetSpeed); 
+}
+
+EXPORT void World_setNoiseFieldBakeResolution(World* instance, int inx, int resolution){
+    instance->noiseFieldSystem.setNoiseFieldBakeResolution(inx, resolution); 
 }
 
 EXPORT void World_setNoiseFieldNoiseScale(World* instance, int inx, float noiseScale){

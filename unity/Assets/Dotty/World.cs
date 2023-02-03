@@ -549,8 +549,8 @@ namespace Dotty{
         #else
         [DllImport ("Dotty")]
         #endif
-        private static extern int World_addStrangeAttractor(IntPtr instance, Vec3 position, float scale, StrangeAttractorType type, float strength, float minDist, float maxDist, 
-                                                           Falloff falloff, float a, float b, float c, float d, float e, float f); 
+        private static extern int World_addStrangeAttractor(IntPtr instance, Vec3 position, float scale, StrangeAttractorType type, float strength, float targetSpeed, FieldMode fieldMode,
+                                                            float minDist, float maxDist, Falloff falloff, float a, float b, float c, float d, float e, float f); 
         
         #if UNITY_IPHONE
         [DllImport ("__Internal")]
@@ -600,6 +600,20 @@ namespace Dotty{
         [DllImport ("Dotty")]
         #endif
         private static extern void World_setStrangeAttractorStrength(IntPtr instance, int inx, float strength);
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]
+        #endif
+        private static extern void World_setStrangeAttractorTargetSpeed(IntPtr instance, int inx, float targetSpeed);
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]
+        #endif
+        private static extern void World_setStrangeAttractorFieldMode(IntPtr instance, int inx, FieldMode fieldMode);
         
         #if UNITY_IPHONE
         [DllImport ("__Internal")]
@@ -629,14 +643,14 @@ namespace Dotty{
         #endif
         private static extern void World_setStrangeAttractorCoeffs(IntPtr instance, int inx, float a, float b, float c, float d, float e, float f);
 
-        public int AddStrangeAttractor(Vector3 position, float scale, StrangeAttractorType type, float strength, float minDist, float maxDist, Falloff falloff,
-                                       float a, float b, float c, float d, float e, float f){
+        public int AddStrangeAttractor(Vector3 position, float scale, StrangeAttractorType type, float strength, float targetSpeed, FieldMode fieldMode, 
+                                       float minDist, float maxDist, Falloff falloff, float a, float b, float c, float d, float e, float f){
             Vec3 pos = new Vec3();
             pos.x = position.x; 
             pos.y = position.y; 
             pos.z = position.z;
             
-            return World_addStrangeAttractor(ntv, pos, scale, type, strength, minDist, maxDist, falloff, a, b, c, d, e, f); 
+            return World_addStrangeAttractor(ntv, pos, scale, type, strength, targetSpeed, fieldMode, minDist, maxDist, falloff, a, b, c, d, e, f); 
         }
 
         unsafe public StrangeAttractorNtv* GetStrangeAttractorPtr(int inx){
@@ -671,6 +685,14 @@ namespace Dotty{
 
         public void SetStrangeAttractorStrength(int inx, float strength){
             World_setStrangeAttractorStrength(ntv, inx, strength); 
+        }
+
+        public void SetStrangeAttractorTargetSpeed(int inx, float targetSpeed){
+            World_setStrangeAttractorTargetSpeed(ntv, inx, targetSpeed); 
+        }
+
+        public void SetStrangeAttractorFieldMode(int inx, FieldMode fieldMode){
+            World_setStrangeAttractorFieldMode(ntv, inx, fieldMode); 
         }
 
         public void SetStrangeAttractorMinDist(int inx, float minDist){
@@ -957,7 +979,7 @@ namespace Dotty{
         #else
         [DllImport ("Dotty")]   
         #endif
-        private static extern int World_addNoiseField(IntPtr instance, Vec3 position, NoiseType noiseType, float strength, float noiseScale, FieldMode mode, 
+        private static extern int World_addNoiseField(IntPtr instance, Vec3 position, NoiseType noiseType, float strength, float targetSpeed, int bakeResolution, float noiseScale, FieldMode mode, 
                                                       Vec3 boundSize, BoundShapeType boundShape, float boundThickness, BoundFalloff boundFalloff, Mat3 boundInvRotation);
         
         #if UNITY_IPHONE
@@ -1001,6 +1023,20 @@ namespace Dotty{
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setNoiseFieldStrength(IntPtr instance, int inx, float strength); 
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setNoiseFieldTargetSpeed(IntPtr instance, int inx, float targetSpeed); 
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setNoiseFieldBakeResolution(IntPtr instance, int inx, int resolution); 
         
         #if UNITY_IPHONE
         [DllImport ("__Internal")]
@@ -1051,7 +1087,7 @@ namespace Dotty{
         #endif
         private static extern void World_setNoiseFieldBoundInvRotation(IntPtr instance, int inx, Mat3 invRotation); 
 
-        public int AddNoiseField(Vector3 position, NoiseType noiseType, float strength, float noiseScale, FieldMode mode,
+        public int AddNoiseField(Vector3 position, NoiseType noiseType, float strength, float targetSpeed, int bakeResolution, float noiseScale, FieldMode mode,
                                  Vector3 boundSize, BoundShapeType boundShape, float boundThickness, BoundFalloff boundFalloff, Matrix4x4 boundInvRotation){
 
             Vec3 pos = new Vec3();
@@ -1075,7 +1111,7 @@ namespace Dotty{
             ir.y2 = boundInvRotation[1, 2]; 
             ir.z2 = boundInvRotation[2, 2];
 
-            return World_addNoiseField(ntv, pos, noiseType, strength, noiseScale, mode, sz, boundShape, boundThickness, boundFalloff, ir); 
+            return World_addNoiseField(ntv, pos, noiseType, strength, targetSpeed, bakeResolution, noiseScale, mode, sz, boundShape, boundThickness, boundFalloff, ir); 
         }
 
         unsafe public NoiseFieldNtv* GetNoiseFieldPtr(int inx){
@@ -1106,6 +1142,14 @@ namespace Dotty{
 
         public void SetNoiseFieldStrength(int inx, float strength){
             World_setNoiseFieldStrength(ntv, inx, strength);
+        }
+
+        public void SetNoiseFieldTargetSpeed(int inx, float targetSpeed){
+            World_setNoiseFieldTargetSpeed(ntv, inx, targetSpeed);
+        }
+
+        public void SetNoiseFieldBakeResolution(int inx, int resolution){
+            World_setNoiseFieldBakeResolution(ntv, inx, resolution);
         }
 
         public void SetNoiseFieldNoiseScale(int inx, float noiseScale){

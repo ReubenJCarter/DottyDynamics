@@ -6,6 +6,7 @@
 #include "DynamicPool.hpp"
 #include "NoiseGenerator.hpp"
 #include "IntersectionTesting.hpp"
+#include "Vec3Field3.hpp"
 
 class NoiseFieldSystem {
     private:
@@ -31,11 +32,11 @@ class NoiseFieldSystem {
                     if(!noiseFields.isInUse(i))
                         continue; 
 
-                    bool curlType = noiseFields[i].noiseType == NoiseType::SimplexCurl || noiseFields[i].noiseType == NoiseType::PerlinCurl || noiseFields[i].noiseType == NoiseType::ValueCurl; 
+                    bool isCurlType = noiseFields[i].noiseType == NoiseType::SimplexCurl || noiseFields[i].noiseType == NoiseType::PerlinCurl || noiseFields[i].noiseType == NoiseType::ValueCurl; 
 
                     for(int p = a; p < b; p++){
 
-                        float boundStrength = 1; 
+                        float boundStrength; 
                         if(noiseFields[i].boundShape == BoundShapeType::Sphere){
                             boundStrength = getSphereBoundStrength( 
                                 particles[p].positionNext, 
@@ -55,11 +56,15 @@ class NoiseFieldSystem {
                                 noiseFields[i].boundFalloff, 
                                 noiseFields[i].boundInvRotation);
                         }
+                        else{
+                            boundStrength = 1;
+                        }
 
                         Vec3 coord = particles[p].position; 
                         coord.mults(noiseFields[i].noiseScale); 
                         
-                        Vec3 n = curlType ? noiseGenerators[i].curl(coord) : noiseGenerators[i].get3(coord);
+                        Vec3 n = isCurlType ? noiseGenerators[i].curl(coord) : noiseGenerators[i].get3(coord);
+
                         if(noiseFields[i].mode == FieldMode::Force){
                             float fX = n.x * noiseFields[i].strength; 
                             float fY = n.y * noiseFields[i].strength; 
@@ -70,13 +75,13 @@ class NoiseFieldSystem {
                             particles[p].velocity.z += timestep * particles[p].invMass * fZ * boundStrength;
                         }
                         else if (noiseFields[i].mode == FieldMode::CorrectionForce){
-                            float targetVelocityX = n.x * noiseFields[i].strength; 
-                            float targetVelocityY = n.y * noiseFields[i].strength; 
-                            float targetVelocityZ = n.z * noiseFields[i].strength; 
+                            float targetVelocityX = n.x * noiseFields[i].targetSpeed;
+                            float targetVelocityY = n.y * noiseFields[i].targetSpeed; 
+                            float targetVelocityZ = n.z * noiseFields[i].targetSpeed; 
                             float verrX = targetVelocityX - particles[p].velocity.x; 
                             float verrY = targetVelocityY - particles[p].velocity.y; 
                             float verrZ = targetVelocityZ - particles[p].velocity.z;
-                            float kp =  1;
+                            float kp =  noiseFields[i].strength;
                             float correctingForceX = verrX * kp; 
                             float correctingForceY = verrY * kp;
                             float correctingForceZ = verrZ * kp;
@@ -92,7 +97,7 @@ class NoiseFieldSystem {
             }).wait();
         }
 
-        int addNoiseField(Vec3 position, NoiseType noiseType, float strength, float noiseScale, FieldMode mode, 
+        int addNoiseField(Vec3 position, NoiseType noiseType, float strength, float targetSpeed, int bakeResolution, float noiseScale, FieldMode mode, 
                           Vec3 boundSize, BoundShapeType boundShape, float boundThickness, BoundFalloff boundFalloff, Mat3 boundInvRotation){
             NoiseField n; 
 
@@ -104,7 +109,11 @@ class NoiseFieldSystem {
             n.boundInvRotation = boundInvRotation; 
 
             n.noiseType = noiseType; 
-            n.strength = strength; 
+            n.strength = strength;
+            n.targetSpeed = targetSpeed;  
+            
+            n.bakeResolution = bakeResolution; 
+            
             n.noiseScale = noiseScale;
             n.mode = mode; 
 
@@ -142,6 +151,14 @@ class NoiseFieldSystem {
 
         void setNoiseFieldStrength(int inx, float strength){
             noiseFields[inx].strength = strength; 
+        }
+
+        void setNoiseFieldTargetSpeed(int inx, float targetSpeed){
+            noiseFields[inx].targetSpeed = targetSpeed; 
+        }
+
+        void setNoiseFieldBakeResolution(int inx, int resolution){
+            noiseFields[inx].bakeResolution = resolution; 
         }
 
         void setNoiseFieldNoiseScale(int inx, float noiseScale){

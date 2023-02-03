@@ -98,7 +98,8 @@ namespace Dotty{
         public Vec3 position; 
         public float noiseScale; 
         public float strength;
-        public int resolution; 
+        public float targetSpeed; 
+        public int bakeResolution; 
         public NoiseType noiseType;  
         public FieldMode mode; 
         public Vec3 boundSize; 
@@ -114,6 +115,8 @@ namespace Dotty{
         public float scale; 
         public StrangeAttractorType type; 
         public float strength;
+        public float targetSpeed; 
+        public FieldMode fieldMode; 
         public float minDist; 
         public float maxDist;
         public Falloff falloff;  

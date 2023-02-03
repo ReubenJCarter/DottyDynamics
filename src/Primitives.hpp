@@ -54,6 +54,8 @@ struct StrangeAttractor {
     float scale; 
     StrangeAttractorType type; 
     float strength;
+    float targetSpeed; 
+    FieldMode fieldMode; 
     float minDist; 
     float maxDist;
     Falloff falloff;  
@@ -78,7 +80,8 @@ struct NoiseField {
     Vec3 position; 
     float noiseScale; 
     float strength;
-    int resolution; 
+    float targetSpeed; 
+    int bakeResolution; 
     NoiseType noiseType;  
     FieldMode mode; 
     Vec3 boundSize; 

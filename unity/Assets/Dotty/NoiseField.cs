@@ -16,7 +16,8 @@ namespace Dotty{
 
         public float noiseScale = 10; 
         public NoiseType noiseType = NoiseType.SimplexCurl; 
-        public float strength = 10; 
+        public float strength = 1; 
+        public float targetSpeed = 1; 
         public FieldMode mode = FieldMode.CorrectionForce; 
 
         public Vector3 boundSize = new Vector3(1, 1, 1); 
@@ -24,10 +25,12 @@ namespace Dotty{
         public float boundThickness = 0; 
         public BoundFalloff boundFalloff = BoundFalloff.Linear;
 
+        public int bakeResolution = 128; 
+
         void AddInternal() {
             Vector3 position = transform.position; 
             Matrix4x4 invRot = Matrix4x4.Rotate(transform.rotation).inverse;
-            internalId = world.AddNoiseField(position, noiseType, strength, noiseScale, mode, boundSize, boundShape, boundThickness, boundFalloff, invRot); 
+            internalId = world.AddNoiseField(position, noiseType, strength, targetSpeed, bakeResolution, noiseScale, mode, boundSize, boundShape, boundThickness, boundFalloff, invRot); 
             unsafe {
                 ptr = world.GetNoiseFieldPtr(internalId); 
             }
@@ -82,6 +85,7 @@ namespace Dotty{
                 (*ptr).position.z = position.z; 
                 (*ptr).noiseScale = noiseScale; 
                 (*ptr).strength = strength;
+                (*ptr).targetSpeed = targetSpeed; 
                 (*ptr).noiseType = noiseType;
                 (*ptr).mode = mode;
                 (*ptr).boundSize = sz; 
@@ -89,6 +93,7 @@ namespace Dotty{
                 (*ptr).boundThickness = boundThickness; 
                 (*ptr).boundFalloff = boundFalloff; 
                 (*ptr).boundInvRotation = ir; 
+                (*ptr).bakeResolution = bakeResolution; 
             } 
         }
     }
