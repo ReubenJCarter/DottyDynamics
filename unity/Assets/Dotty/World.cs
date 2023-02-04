@@ -1473,5 +1473,186 @@ namespace Dotty{
         public void SetBoxColliderInverse(int inx, bool inverse){
             World_setBoxColliderInverse(ntv, inx, inverse);
         }
+
+
+        
+        /*
+        *
+        *DAMPER
+        *
+        */
+
+         #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern int World_addDamper(IntPtr instance, Vec3 position, float strength, 
+                                                       Vec3 boundSize, BoundShapeType boundShape, float boundThickness, BoundFalloff boundFalloff, Mat3 boundInvRotation);
+        
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern IntPtr World_getDamperPtr(IntPtr instance, int inx); 
+        
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_destroyDamper(IntPtr instance, int inx); 
+        
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_clearDampers(IntPtr instance);
+        
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setDamperPosition(IntPtr instance, int inx, Vec3 position); 
+        
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setDamperDirection(IntPtr instance, int inx, Vec3 direction); 
+        
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setDamperStrength(IntPtr instance, int inx, float strength); 
+        
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setDamperBoundSize(IntPtr instance, int inx, Vec3 boundSize); 
+        
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setDamperBoundShape(IntPtr instance, int inx, BoundShapeType boundShape); 
+        
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setDamperBoundThickness(IntPtr instance, int inx, float boundThickness); 
+        
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setDamperBoundFalloff(IntPtr instance, int inx, BoundFalloff boundFalloff);
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setDamperBoundInvRotation(IntPtr instance, int inx, Mat3 boundInvRotation);
+
+        public int AddDamper(Vector3 position, float strength, Vector3 boundSize, BoundShapeType boundShape, float boundThickness, BoundFalloff boundFalloff, Matrix4x4 boundInvRotation){
+            Vec3 pos = new Vec3();
+            pos.x = position.x; 
+            pos.y = position.y; 
+            pos.z = position.z;
+            
+            Vec3 sz = new Vec3();
+            sz.x = boundSize.x; 
+            sz.y = boundSize.y; 
+            sz.z = boundSize.z;
+
+            Mat3 ir = new Mat3(); 
+            ir.x0 = boundInvRotation[0, 0]; 
+            ir.y0 = boundInvRotation[1, 0]; 
+            ir.z0 = boundInvRotation[2, 0]; 
+            ir.x1 = boundInvRotation[0, 1]; 
+            ir.y1 = boundInvRotation[1, 1]; 
+            ir.z1 = boundInvRotation[2, 1]; 
+            ir.x2 = boundInvRotation[0, 2]; 
+            ir.y2 = boundInvRotation[1, 2]; 
+            ir.z2 = boundInvRotation[2, 2]; 
+            
+            return World_addDamper(ntv, pos, strength, sz, boundShape, boundThickness, boundFalloff, ir);
+        }
+
+        unsafe public DamperNtv* GetDamperPtr(int inx){
+            IntPtr ptr = World_getDamperPtr(ntv, inx); 
+            return (DamperNtv*)ptr.ToPointer(); 
+        } 
+
+        public void DestroyDamper(int inx){
+            World_destroyDamper(ntv, inx); 
+        }
+
+        public void ClearDampers(){
+            World_clearDampers(ntv); 
+        }
+
+        void SetDamperPosition(int inx, Vector3 position){
+            Vec3 pos = new Vec3();
+            pos.x = position.x; 
+            pos.y = position.y; 
+            pos.z = position.z;
+            World_setDamperPosition(ntv, inx, pos); 
+        }
+
+        void SetDamperStrength(int inx, float strength){
+            World_setDamperStrength(ntv, inx, strength); 
+        }
+
+        void SetDamperBoundSize(int inx, Vector3 boundSize){
+            Vec3 sz = new Vec3();
+            sz.x = boundSize.x; 
+            sz.y = boundSize.y; 
+            sz.z = boundSize.z;
+            World_setDamperBoundSize(ntv, inx, sz); 
+        }
+
+        void SetDamperBoundShape(int inx, BoundShapeType boundShape){
+            World_setDamperBoundShape(ntv, inx, boundShape); 
+        }
+
+        void SetDamperBoundThickness(int inx, float boundThickness){
+            World_setDamperBoundThickness(ntv, inx, boundThickness); 
+        }
+
+        void SetDamperBoundFalloff(int inx, BoundFalloff boundFalloff){
+            World_setDamperBoundFalloff(ntv, inx, boundFalloff); 
+        }
+
+        void SetDamperBoundInvRotation(int inx, Matrix4x4 boundInvRotation){
+
+            Mat3 ir = new Mat3(); 
+            ir.x0 = boundInvRotation[0, 0]; 
+            ir.y0 = boundInvRotation[1, 0]; 
+            ir.z0 = boundInvRotation[2, 0]; 
+            ir.x1 = boundInvRotation[0, 1]; 
+            ir.y1 = boundInvRotation[1, 1]; 
+            ir.z1 = boundInvRotation[2, 1]; 
+            ir.x2 = boundInvRotation[0, 2]; 
+            ir.y2 = boundInvRotation[1, 2]; 
+            ir.z2 = boundInvRotation[2, 2];
+
+            World_setDamperBoundInvRotation(ntv, inx, ir); 
+        }
+
     }
+
 }

@@ -127,4 +127,15 @@ namespace Dotty{
         public float e;
         public float f;
     }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct DamperNtv {
+        public Vec3 position; 
+        public float strength; 
+        public Vec3 boundSize; 
+        public BoundShapeType boundShape;
+        public float boundThickness; 
+        public BoundFalloff boundFalloff; 
+        public Mat3 boundInvRotation; 
+    }
 }
