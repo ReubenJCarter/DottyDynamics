@@ -397,12 +397,6 @@ MonoBehaviour:
   minDistance: 0.1
   maxDistance: 1000
   falloff: 0
-  a: 0.9
-  b: 5
-  c: 9.9
-  d: 1
-  e: 0
-  f: 0
 --- !u!4 &1247303247
 Transform:
   m_ObjectHideFlags: 0

@@ -14,6 +14,7 @@
 #include "NoiseFieldSystem.hpp"
 #include "BoxColliderSystem.hpp"
 #include "SphereColliderSystem.hpp"
+#include "DamperSystem.hpp"
 #include "RodSystem.hpp"
 
 class World {
@@ -52,6 +53,7 @@ class World {
         NoiseFieldSystem noiseFieldSystem; 
         BoxColliderSystem boxColliderSystem;
         SphereColliderSystem sphereColliderSystem; 
+        DamperSystem damperSystem; 
         RodSystem rodSystem; 
 
         World(){
@@ -83,6 +85,10 @@ class World {
             
                 unsigned int maxParticleCount = particles.getBound();
                 
+                //update gravity
+                for(int i = 0; i < maxParticleCount; i++)
+                    particles[i].velocity.y -= deltaT * gravity; 
+
                 //Update forces 
                 globalForceSystem.updateGlobalForces(threadPool, params, particles); 
                 attractorSystem.updateAttractors(threadPool, params, particles); 
@@ -92,10 +98,11 @@ class World {
                 strangeAttractorSystem.updateStrangeAttractors(threadPool, params, particles); 
                 noiseFieldSystem.updateNoiseFieldsForces(threadPool, params, particles); 
 
-                //Apply velocities and gravity 
+                //update dampers
+                damperSystem.updateDampers(threadPool, params, particles); 
+
+                //Apply velocities  
                 for(int i = 0; i < maxParticleCount; i++){
-                    particles[i].velocity.y -= deltaT * gravity; 
-                    
                     particles[i].velocity.x -= particles[i].velocity.x * globalDamping * deltaT; 
                     particles[i].velocity.y -= particles[i].velocity.y * globalDamping * deltaT; 
                     particles[i].velocity.z -= particles[i].velocity.z * globalDamping * deltaT;

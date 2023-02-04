@@ -447,3 +447,50 @@ EXPORT void World_setBoxColliderStaticFriction(World* instance, int inx, float s
 EXPORT void World_setBoxColliderInverse(World* instance, int inx, bool inverse){
     instance->boxColliderSystem.setBoxColliderInverse(inx, inverse); 
 }
+
+
+
+EXPORT int World_addDamper(World* instance, Vec3 position, float strength, 
+                                    Vec3 boundSize, BoundShapeType boundShape, float boundThickness, BoundFalloff boundFalloff, Mat3 boundInvRotation){
+    instance->damperSystem.addDamper(position, strength, boundSize, boundShape, boundThickness, boundFalloff, boundInvRotation); 
+}
+
+EXPORT Damper* World_getDamperPtr(World* instance, int inx){
+    return instance->damperSystem.getDamperPtr(inx); 
+}
+
+EXPORT void World_destroyDamper(World* instance, int inx){
+    instance->damperSystem.destroyDamper(inx); 
+} 
+
+EXPORT void World_clearDampers(World* instance){
+    instance->damperSystem.clearDampers(); 
+}
+
+EXPORT void World_setDamperPosition(World* instance, int inx, Vec3 position){
+    instance->damperSystem.setDamperPosition(inx, position); 
+}
+
+EXPORT void World_setDamperStrength(World* instance, int inx, float strength){
+    instance->damperSystem.setDamperStrength(inx, strength); 
+}
+
+EXPORT void World_setDamperBoundSize(World* instance, int inx, Vec3 boundSize){
+    instance->damperSystem.setDamperBoundSize(inx, boundSize); 
+}
+
+EXPORT void World_setDamperBoundShape(World* instance, int inx, BoundShapeType boundShape){
+    instance->damperSystem.setDamperBoundShape(inx, boundShape); 
+}
+
+EXPORT void World_setDamperBoundThickness(World* instance, int inx, float boundThickness){
+    instance->damperSystem.setDamperBoundThickness(inx, boundThickness); 
+} 
+
+EXPORT void World_setDamperBoundFalloff(World* instance, int inx, BoundFalloff boundFalloff){
+    instance->damperSystem.setDamperBoundFalloff(inx, boundFalloff); 
+}
+
+EXPORT void World_setDamperBoundInvRotation(World* instance, int inx, Mat3 invRotation){
+    instance->damperSystem.setDamperBoundInvRotation(inx, invRotation); 
+}

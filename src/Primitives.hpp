@@ -118,3 +118,13 @@ struct SphereCollider {
     float kineticFriction; 
     bool inverse;
 }; 
+
+struct Damper {
+    Vec3 position; 
+    float strength; 
+    Vec3 boundSize; 
+    BoundShapeType boundShape;
+    float boundThickness; 
+    BoundFalloff boundFalloff; 
+    Mat3 boundInvRotation; 
+};

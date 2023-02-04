@@ -142,4 +142,17 @@ extern "C" {
     EXPORT void World_setBoxColliderKineticFriction(World* instance, int inx, float kineticFriction);
     EXPORT void World_setBoxColliderStaticFriction(World* instance, int inx, float staticFriction);
     EXPORT void World_setBoxColliderInverse(World* instance, int inx, bool inverse);
+
+    EXPORT int World_addDamper(World* instance, Vec3 position, float strength, 
+                                    Vec3 boundSize, BoundShapeType boundShape, float boundThickness, BoundFalloff boundFalloff, Mat3 boundInvRotation);
+    EXPORT Damper* World_getDamperPtr(World* instance, int inx); 
+    EXPORT void World_destroyDamper(World* instance, int inx); 
+    EXPORT void World_clearDampers(World* instance);
+    EXPORT void World_setDamperPosition(World* instance, int inx, Vec3 position); 
+    EXPORT void World_setDamperStrength(World* instance, int inx, float strength); 
+    EXPORT void World_setDamperBoundSize(World* instance, int inx, Vec3 boundSize); 
+    EXPORT void World_setDamperBoundShape(World* instance, int inx, BoundShapeType boundShape); 
+    EXPORT void World_setDamperBoundThickness(World* instance, int inx, float boundThickness); 
+    EXPORT void World_setDamperBoundFalloff(World* instance, int inx, BoundFalloff boundFalloff); 
+    EXPORT void World_setDamperBoundInvRotation(World* instance, int inx, Mat3 invRotation);
 }
