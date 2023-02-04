@@ -452,7 +452,7 @@ EXPORT void World_setBoxColliderInverse(World* instance, int inx, bool inverse){
 
 EXPORT int World_addDamper(World* instance, Vec3 position, float strength, 
                                     Vec3 boundSize, BoundShapeType boundShape, float boundThickness, BoundFalloff boundFalloff, Mat3 boundInvRotation){
-    instance->damperSystem.addDamper(position, strength, boundSize, boundShape, boundThickness, boundFalloff, boundInvRotation); 
+    return instance->damperSystem.addDamper(position, strength, boundSize, boundShape, boundThickness, boundFalloff, boundInvRotation); 
 }
 
 EXPORT Damper* World_getDamperPtr(World* instance, int inx){
