@@ -99,7 +99,6 @@ namespace Dotty{
         public float noiseScale; 
         public float strength;
         public float targetSpeed; 
-        public int bakeResolution; 
         public NoiseType noiseType;  
         public FieldMode mode; 
         public Vec3 boundSize; 
@@ -107,6 +106,8 @@ namespace Dotty{
         public float boundThickness; 
         public BoundFalloff boundFalloff; 
         public Mat3 boundInvRotation;
+        public int bakeResolution; 
+        public bool useBake; 
     }
 
     [StructLayout(LayoutKind.Sequential)]

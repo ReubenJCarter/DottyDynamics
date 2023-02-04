@@ -336,10 +336,6 @@ EXPORT void World_setNoiseFieldTargetSpeed(World* instance, int inx, float targe
     instance->noiseFieldSystem.setNoiseFieldTargetSpeed(inx, targetSpeed); 
 }
 
-EXPORT void World_setNoiseFieldBakeResolution(World* instance, int inx, int resolution){
-    instance->noiseFieldSystem.setNoiseFieldBakeResolution(inx, resolution); 
-}
-
 EXPORT void World_setNoiseFieldNoiseScale(World* instance, int inx, float noiseScale){
     instance->noiseFieldSystem.setNoiseFieldNoiseScale(inx, noiseScale); 
 }
@@ -366,6 +362,14 @@ EXPORT void World_setNoiseFieldBounThickness(World* instance, int inx, float thi
 
 EXPORT void World_setNoiseFieldBoundInvRotation(World* instance, int inx, Mat3 invRotation){
     instance->noiseFieldSystem.setNoiseFieldBoundInvRotation(inx, invRotation);
+}
+
+EXPORT void World_setNoiseFieldBakeResolution(World* instance, int inx, int resolution){
+    instance->noiseFieldSystem.setNoiseFieldBakeResolution(inx, resolution); 
+}
+
+EXPORT void World_setNoiseFieldUseBake(World* instance, int inx, bool useBake){
+    instance->noiseFieldSystem.setNoiseFieldUseBake(inx, useBake); 
 }
 
 

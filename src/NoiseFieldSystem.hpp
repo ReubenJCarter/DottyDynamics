@@ -12,11 +12,54 @@ class NoiseFieldSystem {
     private:
         DynamicPool<NoiseField> noiseFields;   
         DynamicPool<NoiseGenerator> noiseGenerators;   
+        DynamicPool<Vec3Field3> bakes; 
+        DynamicPool<bool> bakeDirty; 
 
     public: 
         NoiseFieldSystem(){
             noiseFields.setPoolSize(50); 
             noiseGenerators.setPoolSize(50); 
+            bakes.setPoolSize(50); 
+            bakeDirty.setPoolSize(50); 
+        }
+
+        void bakeNoise(int inx){
+            bool isCurlType = noiseFields[inx].noiseType == NoiseType::SimplexCurl || 
+                              noiseFields[inx].noiseType == NoiseType::PerlinCurl || 
+                              noiseFields[inx].noiseType == NoiseType::ValueCurl; 
+
+            NoiseField& noiseField = noiseFields[inx];
+            NoiseGenerator& noiseGen = noiseGenerators[inx]; 
+            Vec3Field3& bake = bakes[inx];
+
+            int resolution = noiseField.bakeResolution; 
+            
+            bake.allocate(resolution, resolution, resolution); 
+            
+            if(isCurlType){
+                for(int k = 0; k < resolution; k++){
+                    for(int j = 0; j < resolution; j++){
+                        for(int i = 0; i < resolution; i++){
+                            Vec3 coord(i, j, k); 
+                            coord.mults(noiseField.noiseScale); 
+                            Vec3 n = noiseGen.curl(coord);
+                            bake.setValue(i, j, k, n);
+                        }
+                    }
+                }
+            }
+            else {
+                for(int k = 0; k < resolution; k++){
+                    for(int j = 0; j < resolution; j++){
+                        for(int i = 0; i < resolution; i++){
+                            Vec3 coord(i, j, k); 
+                            coord.mults(noiseField.noiseScale); 
+                            Vec3 n = noiseGen.get3(coord);
+                            bake.setValue(i, j, k, n);
+                        }
+                    }
+                }
+            }
         }
 
         void updateNoiseFieldsForces(BS::thread_pool& threadPool, WorldParams& params, DynamicPool<Particle>& particles){
@@ -32,6 +75,11 @@ class NoiseFieldSystem {
                     if(!noiseFields.isInUse(i))
                         continue; 
 
+                    if(bakeDirty[i]){
+                        bakeNoise(i); 
+                        bakeDirty[i] = false; 
+                    }
+                    
                     bool isCurlType = noiseFields[i].noiseType == NoiseType::SimplexCurl || noiseFields[i].noiseType == NoiseType::PerlinCurl || noiseFields[i].noiseType == NoiseType::ValueCurl; 
 
                     for(int p = a; p < b; p++){
@@ -63,7 +111,8 @@ class NoiseFieldSystem {
                         Vec3 coord = particles[p].position; 
                         coord.mults(noiseFields[i].noiseScale); 
                         
-                        Vec3 n = isCurlType ? noiseGenerators[i].curl(coord) : noiseGenerators[i].get3(coord);
+                        Vec3 n = noiseFields[i].useBake ? bakes[i].getValue(coord.x, coord.y, coord.z) : 
+                                             isCurlType ? noiseGenerators[i].curl(coord) : noiseGenerators[i].get3(coord);
 
                         if(noiseFields[i].mode == FieldMode::Force){
                             float fX = n.x * noiseFields[i].strength; 
@@ -91,7 +140,7 @@ class NoiseFieldSystem {
                             particles[p].velocity.z += timestep * particles[p].invMass * correctingForceZ * boundStrength;
                         }
                     }   
-                  
+                    
                 }
 
             }).wait();
@@ -118,6 +167,12 @@ class NoiseFieldSystem {
             n.mode = mode; 
 
             noiseFields.add(n);
+
+            Vec3Field3 bakeField; 
+            bakes.add(bakeField); 
+
+            bool u = true; 
+            bakeDirty.add(u);
 
             NoiseGenerator gen; 
             gen.setType(noiseType); 
@@ -157,10 +212,6 @@ class NoiseFieldSystem {
             noiseFields[inx].targetSpeed = targetSpeed; 
         }
 
-        void setNoiseFieldBakeResolution(int inx, int resolution){
-            noiseFields[inx].bakeResolution = resolution; 
-        }
-
         void setNoiseFieldNoiseScale(int inx, float noiseScale){
             noiseFields[inx].noiseScale = noiseScale; 
         }
@@ -187,5 +238,13 @@ class NoiseFieldSystem {
 
         void setNoiseFieldBoundInvRotation(int inx, Mat3 invRotation){
             noiseFields[inx].boundInvRotation = invRotation; 
+        }
+
+        void setNoiseFieldBakeResolution(int inx, int resolution){
+            noiseFields[inx].bakeResolution = resolution; 
+        }
+
+        void setNoiseFieldUseBake(int inx, bool useBake){
+            noiseFields[inx].useBake = useBake; 
         }
 };

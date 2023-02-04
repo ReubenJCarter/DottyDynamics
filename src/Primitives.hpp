@@ -80,8 +80,7 @@ struct NoiseField {
     Vec3 position; 
     float noiseScale; 
     float strength;
-    float targetSpeed; 
-    int bakeResolution; 
+    float targetSpeed;  
     NoiseType noiseType;  
     FieldMode mode; 
     Vec3 boundSize; 
@@ -89,6 +88,8 @@ struct NoiseField {
     float boundThickness; 
     BoundFalloff boundFalloff; 
     Mat3 boundInvRotation; 
+    int bakeResolution;
+    bool useBake;
 }; 
 
 struct GlobalForce {
@@ -127,4 +128,5 @@ struct Damper {
     float boundThickness; 
     BoundFalloff boundFalloff; 
     Mat3 boundInvRotation; 
+    bool useBake;
 };

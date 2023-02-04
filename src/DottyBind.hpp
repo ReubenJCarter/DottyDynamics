@@ -113,7 +113,6 @@ extern "C" {
     EXPORT void World_setNoiseFieldNoiseType(World* instance, int inx, NoiseType noiseType); 
     EXPORT void World_setNoiseFieldStrength(World* instance, int inx, float strength); 
     EXPORT void World_setNoiseFieldTargetSpeed(World* instance, int inx, float targetSpeed); 
-    EXPORT void World_setNoiseFieldBakeResolution(World* instance, int inx, int resolution);
     EXPORT void World_setNoiseFieldNoiseScale(World* instance, int inx, float noiseScale); 
     EXPORT void World_setNoiseFieldMode(World* instance, int inx, FieldMode mode); 
     EXPORT void World_setNoiseFieldBoundShape(World* instance, int inx, BoundShapeType boundShape); 
@@ -121,6 +120,8 @@ extern "C" {
     EXPORT void World_setNoiseFieldBoundFalloff(World* instance, int inx, BoundFalloff boundFalloff);  
     EXPORT void World_setNoiseFieldBoundThickness(World* instance, int inx, float thickness); 
     EXPORT void World_setNoiseFieldBoundInvRotation(World* instance, int inx, Mat3 invRotation);
+    EXPORT void World_setNoiseFieldBakeResolution(World* instance, int inx, int resolution);
+    EXPORT void World_setNoiseFieldUseBake(World* instance, int inx, bool useBake);
 
     EXPORT int World_addSphereCollider(World* instance, Vec3 position, float radius, float kineticFriction, float staticFriction, bool inverse);
     EXPORT SphereCollider* World_getSphereColliderPtr(World* instance, int inx); 

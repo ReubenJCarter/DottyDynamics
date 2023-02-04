@@ -33,6 +33,9 @@ class Vec3Field3{
 
             if(sx > 0 && sy > 0 && sz > 0)
                 data = new Vec3[sx * sy * sz]; 
+
+            for(int i = 0; i < sz * sysx; i++)
+                data[i] = other.data[i]; 
         }
     
         Vec3Field3& operator=(const Vec3Field3& other){
@@ -46,9 +49,14 @@ class Vec3Field3{
 
             if(sx > 0 && sy > 0 && sz > 0)
                 data = new Vec3[sx * sy * sz]; 
+
+            for(int i = 0; i < sz * sysx; i++)
+                data[i] = other.data[i];
+
+            return *this;  
         }
 
-        inline void setSize(int x, int y, int z){
+        inline void allocate(int x, int y, int z){
 
             if(sx > 0 && sy > 0 && sz > 0)
                 delete[] data;
@@ -62,15 +70,15 @@ class Vec3Field3{
                 data = new Vec3[sx * sy * sz]; 
         }
 
-        inline int getWidth(){
+        inline int getSizeX(){
             return sx; 
         }
 
-        inline int getHeight(){
+        inline int getSizeY(){
             return sy; 
         }
 
-        inline int getDepth(){
+        inline int getSizeZ(){
             return sz; 
         }
 
