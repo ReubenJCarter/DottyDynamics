@@ -23,7 +23,7 @@ class NoiseFieldSystem {
             bakeDirty.setPoolSize(50); 
         }
 
-        void bakeNoise(int inx){
+        void bakeNoise(BS::thread_pool& threadPool, int inx){
             bool isCurlType = noiseFields[inx].noiseType == NoiseType::SimplexCurl || 
                               noiseFields[inx].noiseType == NoiseType::PerlinCurl || 
                               noiseFields[inx].noiseType == NoiseType::ValueCurl; 
@@ -36,21 +36,30 @@ class NoiseFieldSystem {
             
             bake.allocate(resolution, resolution, resolution); 
 
-            for(int k = 0; k < resolution; k++){
-                for(int j = 0; j < resolution; j++){
-                    for(int i = 0; i < resolution; i++){
-                        Vec3 coord(i, j, k); 
-                        Vec3 n = isCurlType ? noiseGen.curl(coord) : noiseGen.get3(coord);
-                        bake.setValue(i, j, k, n);
+            threadPool.parallelize_loop(resolution, [this, resolution, &bake, &noiseGen, isCurlType](const int a, const int b){
+                for(int k = a; k < b; k++){
+                    for(int j = 0; j < resolution; j++){
+                        for(int i = 0; i < resolution; i++){
+                            Vec3 coord(i, j, k); 
+                            Vec3 n0 = isCurlType ? noiseGen.curl(coord) : noiseGen.get3(coord);
+                            bake.setValue(i, j, k, n0);
+                        }
                     }
                 }
-            }
+            }).wait(); 
         
         }
 
         void updateNoiseFieldsForces(BS::thread_pool& threadPool, WorldParams& params, DynamicPool<Particle>& particles){
             unsigned int noiseFieldsCount = noiseFields.getBound(); 
             unsigned int pcount = particles.getBound();
+
+            for(int i = 0; i < noiseFieldsCount; i++){
+                if(bakeDirty[i] && noiseFields[i].useBake){
+                    bakeNoise(threadPool, i); 
+                    bakeDirty[i] = false; 
+                }
+            }
 
             threadPool.parallelize_loop(pcount, [this, noiseFieldsCount, &particles, &params](const int a, const int b){
                 
@@ -61,10 +70,7 @@ class NoiseFieldSystem {
                     if(!noiseFields.isInUse(i))
                         continue; 
 
-                    if(bakeDirty[i] && noiseFields[i].useBake){
-                        bakeNoise(i); 
-                        bakeDirty[i] = false; 
-                    }
+                    
                     
                     bool isCurlType = noiseFields[i].noiseType == NoiseType::SimplexCurl || noiseFields[i].noiseType == NoiseType::PerlinCurl || noiseFields[i].noiseType == NoiseType::ValueCurl; 
 
@@ -102,9 +108,27 @@ class NoiseFieldSystem {
                             
                             coord.mults(noiseFields[i].noiseScale);
 
-                            int X = coord.x; 
-                            int Y = coord.y; 
-                            int Z = coord.z; 
+                            int res = noiseFields[i].bakeResolution; 
+                            int X = (int)coord.x; 
+                            int Y = (int)coord.y; 
+                            int Z = (int)coord.z; 
+                            /*
+                            if(X < 0) 
+                                X = 0; 
+                            if(X >= res) 
+                                X = res-1;    
+
+                            if(Y < 0) 
+                                Y = 0; 
+                            if(Y >= res) 
+                                Y = res-1; 
+                            
+                            if(Z < 0) 
+                                Z = 0; 
+                            if(Z >= res) 
+                                Z = res-1; 
+                            */
+                            
                             X = abs(X) % noiseFields[i].bakeResolution; 
                             Y = abs(Y) % noiseFields[i].bakeResolution; 
                             Z = abs(Z) % noiseFields[i].bakeResolution;

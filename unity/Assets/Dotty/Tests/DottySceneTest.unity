@@ -306,7 +306,7 @@ MonoBehaviour:
   noiseScale: 10
   noiseType: 1
   strength: 2
-  targetSpeed: 1
+  targetSpeed: 55.57
   mode: 1
   boundSize: {x: 4.332435, y: 1.73, z: 6.52}
   boundShape: 2

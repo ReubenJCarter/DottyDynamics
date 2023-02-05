@@ -95,6 +95,7 @@ namespace Dotty{
                 (*ptr).boundFalloff = boundFalloff; 
                 (*ptr).boundInvRotation = ir; 
                 (*ptr).bakeResolution = bakeResolution; 
+                (*ptr).useBake = useBake; 
             } 
         }
     }
