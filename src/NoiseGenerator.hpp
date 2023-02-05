@@ -67,7 +67,7 @@ class NoiseGenerator {
 
         Vec3 curl(Vec3& s){
             
-            const float eps = 0.0001;
+            const float eps = 0.001;
 
             float x = s.x; 
             float y = s.y; 
