@@ -190,7 +190,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &313842853
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -289,7 +289,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &631679544
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -302,10 +302,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc2cc43abc93e0b4684d0635dc90ee6f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  world: {fileID: 0}
+  world: {fileID: 849942375}
   noiseScale: 10
   noiseType: 1
-  strength: 20
+  strength: 2
   targetSpeed: 1
   mode: 1
   boundSize: {x: 4.332435, y: 1.73, z: 6.52}
@@ -313,6 +313,7 @@ MonoBehaviour:
   boundThickness: 2.9328067
   boundFalloff: 0
   bakeResolution: 128
+  useBake: 0
 --- !u!4 &631679545
 Transform:
   m_ObjectHideFlags: 0
@@ -404,7 +405,7 @@ MonoBehaviour:
   timestep: 0.0166666
   substeps: 1
   globalDamping: 0.561
-  gravity: 1
+  gravity: 0
   hasCollisionFloor: 1
   collisionFloorHeight: -0.87789536
   collisionFloorKineticFriction: 0

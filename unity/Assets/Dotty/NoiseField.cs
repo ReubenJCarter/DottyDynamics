@@ -26,11 +26,12 @@ namespace Dotty{
         public BoundFalloff boundFalloff = BoundFalloff.Linear;
 
         public int bakeResolution = 128; 
+        public bool useBake = false; 
 
         void AddInternal() {
             Vector3 position = transform.position; 
             Matrix4x4 invRot = Matrix4x4.Rotate(transform.rotation).inverse;
-            internalId = world.AddNoiseField(position, noiseType, strength, targetSpeed, bakeResolution, noiseScale, mode, boundSize, boundShape, boundThickness, boundFalloff, invRot); 
+            internalId = world.AddNoiseField(position, noiseType, strength, targetSpeed, noiseScale, mode, boundSize, boundShape, boundThickness, boundFalloff, invRot, bakeResolution, useBake); 
             unsafe {
                 ptr = world.GetNoiseFieldPtr(internalId); 
             }

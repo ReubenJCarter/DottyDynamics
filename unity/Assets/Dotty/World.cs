@@ -979,8 +979,8 @@ namespace Dotty{
         #else
         [DllImport ("Dotty")]   
         #endif
-        private static extern int World_addNoiseField(IntPtr instance, Vec3 position, NoiseType noiseType, float strength, float targetSpeed, int bakeResolution, float noiseScale, FieldMode mode, 
-                                                      Vec3 boundSize, BoundShapeType boundShape, float boundThickness, BoundFalloff boundFalloff, Mat3 boundInvRotation);
+        private static extern int World_addNoiseField(IntPtr instance, Vec3 position, NoiseType noiseType, float strength, float targetSpeed, float noiseScale, FieldMode mode, 
+                                                      Vec3 boundSize, BoundShapeType boundShape, float boundThickness, BoundFalloff boundFalloff, Mat3 boundInvRotation, int bakeResolution, bool useBake);
         
         #if UNITY_IPHONE
         [DllImport ("__Internal")]
@@ -1030,13 +1030,6 @@ namespace Dotty{
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setNoiseFieldTargetSpeed(IntPtr instance, int inx, float targetSpeed); 
-
-        #if UNITY_IPHONE
-        [DllImport ("__Internal")]
-        #else
-        [DllImport ("Dotty")]   
-        #endif
-        private static extern void World_setNoiseFieldBakeResolution(IntPtr instance, int inx, int resolution); 
         
         #if UNITY_IPHONE
         [DllImport ("__Internal")]
@@ -1087,8 +1080,22 @@ namespace Dotty{
         #endif
         private static extern void World_setNoiseFieldBoundInvRotation(IntPtr instance, int inx, Mat3 invRotation); 
 
-        public int AddNoiseField(Vector3 position, NoiseType noiseType, float strength, float targetSpeed, int bakeResolution, float noiseScale, FieldMode mode,
-                                 Vector3 boundSize, BoundShapeType boundShape, float boundThickness, BoundFalloff boundFalloff, Matrix4x4 boundInvRotation){
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setNoiseFieldBakeResolution(IntPtr instance, int inx, int resolution); 
+
+        #if UNITY_IPHONE
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setNoiseFieldUseBake(IntPtr instance, int inx, bool useBake); 
+
+        public int AddNoiseField(Vector3 position, NoiseType noiseType, float strength, float targetSpeed, float noiseScale, FieldMode mode,
+                                 Vector3 boundSize, BoundShapeType boundShape, float boundThickness, BoundFalloff boundFalloff, Matrix4x4 boundInvRotation, int bakeResolution, bool useBake){
 
             Vec3 pos = new Vec3();
             pos.x = position.x;  
@@ -1111,7 +1118,7 @@ namespace Dotty{
             ir.y2 = boundInvRotation[1, 2]; 
             ir.z2 = boundInvRotation[2, 2];
 
-            return World_addNoiseField(ntv, pos, noiseType, strength, targetSpeed, bakeResolution, noiseScale, mode, sz, boundShape, boundThickness, boundFalloff, ir); 
+            return World_addNoiseField(ntv, pos, noiseType, strength, targetSpeed, noiseScale, mode, sz, boundShape, boundThickness, boundFalloff, ir, bakeResolution, useBake ); 
         }
 
         unsafe public NoiseFieldNtv* GetNoiseFieldPtr(int inx){
@@ -1146,10 +1153,6 @@ namespace Dotty{
 
         public void SetNoiseFieldTargetSpeed(int inx, float targetSpeed){
             World_setNoiseFieldTargetSpeed(ntv, inx, targetSpeed);
-        }
-
-        public void SetNoiseFieldBakeResolution(int inx, int resolution){
-            World_setNoiseFieldBakeResolution(ntv, inx, resolution);
         }
 
         public void SetNoiseFieldNoiseScale(int inx, float noiseScale){
@@ -1194,6 +1197,15 @@ namespace Dotty{
             ir.z2 = boundInvRotation[2, 2];
             World_setNoiseFieldBoundInvRotation(ntv, inx, ir); 
         }
+
+        public void SetNoiseFieldBakeResolution(int inx, int resolution){
+            World_setNoiseFieldBakeResolution(ntv, inx, resolution);
+        }
+
+        public void SetNoiseFieldUseBake(int inx, bool useBake){
+            World_setNoiseFieldUseBake(ntv, inx, useBake);
+        }
+
 
 
         /*
