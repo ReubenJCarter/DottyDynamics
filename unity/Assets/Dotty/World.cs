@@ -195,7 +195,7 @@ namespace Dotty{
             return World_addParticle(ntv, initialPositionInternal, initialVelocityInternal, invMass); 
         }
 
-        void DestroyParticle(int inx){
+        public void DestroyParticle(int inx){
             World_destroyParticle(ntv, inx);
         }
 
@@ -224,6 +224,11 @@ namespace Dotty{
             int count = World_getParticlesPoolBound(ntv); 
             NativeArray<bool> arr = NativeArrayUnsafeUtility.ConvertExistingDataToNativeArray<bool>(ptr.ToPointer(), count, Allocator.None);
             return arr; 
+        }
+
+        unsafe public bool* GetParticlesInUsePtr(){
+            IntPtr ptr = World_getParticlesInUsePtr(ntv); 
+            return (bool*)ptr.ToPointer(); 
         }
 
 
