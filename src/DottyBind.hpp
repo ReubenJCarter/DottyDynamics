@@ -116,7 +116,7 @@ extern "C" {
     EXPORT void World_setNoiseFieldNoiseScale(World* instance, int inx, float noiseScale); 
     EXPORT void World_setNoiseFieldMode(World* instance, int inx, FieldMode mode); 
     EXPORT void World_setNoiseFieldBoundShape(World* instance, int inx, BoundShapeType boundShape); 
-    EXPORT void World_setNoiseFieldBoundSize(World* instance, int inx, float boundSize);
+    EXPORT void World_setNoiseFieldBoundSize(World* instance, int inx, Vec3 boundSize);
     EXPORT void World_setNoiseFieldBoundFalloff(World* instance, int inx, BoundFalloff boundFalloff);  
     EXPORT void World_setNoiseFieldBoundThickness(World* instance, int inx, float thickness); 
     EXPORT void World_setNoiseFieldBoundInvRotation(World* instance, int inx, Mat3 invRotation);
