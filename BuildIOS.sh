@@ -6,4 +6,5 @@ mkdir -p ./build/ios
 
 `xcrun --sdk iphoneos --find ar` r ./build/ios/libDotty.a ./build/ios/libDotty.o
 
+mkdir -p ./unity/Assets/Dotty/Plugins/IOS
 cp ./build/ios/libDotty.a ./unity/Assets/Dotty/Plugins/IOS
