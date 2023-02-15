@@ -341,7 +341,7 @@ EXPORT void World_setNoiseFieldNoiseScale(World* instance, int inx, float noiseS
     instance->noiseFieldSystem.setNoiseFieldNoiseScale(inx, noiseScale); 
 }
 
-EXPORT void World_setNoiseMode(World* instance, int inx, FieldMode mode){
+EXPORT void World_setNoiseFieldMode(World* instance, int inx, FieldMode mode){
     instance->noiseFieldSystem.setNoiseFieldMode(inx, mode); 
 }
 
@@ -353,11 +353,11 @@ EXPORT void World_setNoiseFieldBoundSize(World* instance, int inx, Vec3 boundSiz
     instance->noiseFieldSystem.setNoiseFieldBoundSize(inx, boundSize); 
 }
 
-EXPORT void World_setNoiseFieldBounFalloff(World* instance, int inx, BoundFalloff boundFalloff){
+EXPORT void World_setNoiseFieldBoundFalloff(World* instance, int inx, BoundFalloff boundFalloff){
     instance->noiseFieldSystem.setNoiseFieldBoundFalloff(inx, boundFalloff); 
 }
 
-EXPORT void World_setNoiseFieldBounThickness(World* instance, int inx, float thickness){
+EXPORT void World_setNoiseFieldBoundThickness(World* instance, int inx, float thickness){
     instance->noiseFieldSystem.setNoiseFieldBoundThickness(inx, thickness); 
 }
 

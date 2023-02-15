@@ -11,21 +11,21 @@ namespace Dotty{
     public class World: MonoBehaviour{
 
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern IntPtr createWorld();
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void freeWorld(IntPtr world);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
@@ -59,49 +59,49 @@ namespace Dotty{
         *
         */
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern IntPtr World_getWorldParamsPtr(IntPtr world); 
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setGravity(IntPtr world, float gravity);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setTimestep(IntPtr world, float timestep);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setSubsteps(IntPtr instance, float substeps); 
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setGlobalDamping(IntPtr world, float globalDamping);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setHasCollisionFloor(IntPtr instance, bool hasCollisionBound);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
@@ -145,35 +145,35 @@ namespace Dotty{
         *
         */
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern int World_addParticle(IntPtr world, Vec3 initialPosition, Vec3 initialVelocity, float invMass);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_destroyParticle(IntPtr instance, int inx);
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern IntPtr World_getParticlesPtr(IntPtr world);
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern IntPtr World_getParticlesInUsePtr(IntPtr world);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
@@ -239,7 +239,7 @@ namespace Dotty{
         *
         */
 
-         #if UNITY_IPHONE
+         #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
@@ -247,77 +247,77 @@ namespace Dotty{
         private static extern int World_addGlobalForce(IntPtr instance, Vec3 position, Vec3 direction, float strength, 
                                                        Vec3 boundSize, BoundShapeType boundShape, float boundThickness, BoundFalloff boundFalloff, Mat3 boundInvRotation);
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern IntPtr World_getGlobalForcePtr(IntPtr instance, int inx); 
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_destroyGlobalForce(IntPtr instance, int inx); 
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_clearGlobalForces(IntPtr instance);
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setGlobalForcePosition(IntPtr instance, int inx, Vec3 position); 
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setGlobalForceDirection(IntPtr instance, int inx, Vec3 direction); 
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setGlobalForceStrength(IntPtr instance, int inx, float strength); 
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setGlobalForceBoundSize(IntPtr instance, int inx, Vec3 boundSize); 
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setGlobalForceBoundShape(IntPtr instance, int inx, BoundShapeType boundShape); 
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setGlobalForceBoundThickness(IntPtr instance, int inx, float boundThickness); 
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setGlobalForceBoundFalloff(IntPtr instance, int inx, BoundFalloff boundFalloff);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
@@ -431,63 +431,63 @@ namespace Dotty{
         *
         */
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern int World_addAttrator(IntPtr instance, Vec3 position, float strength, float minDist, float maxDist, Falloff falloff);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern IntPtr World_getAttractorPtr(IntPtr instance, int inx);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_destroyAttractor(IntPtr instance, int inx);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_clearAttractors(IntPtr instance);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setAttractorPosition(IntPtr instance, int inx, Vec3 position);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setAttractorStrength(IntPtr instance, int inx, float strength);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setAttractorMinDist(IntPtr instance, int inx, float minDist);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setAttractorMaxDist(IntPtr instance, int inx, float maxDist);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
@@ -549,7 +549,7 @@ namespace Dotty{
         *
         */
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]
@@ -557,91 +557,91 @@ namespace Dotty{
         private static extern int World_addStrangeAttractor(IntPtr instance, Vec3 position, float scale, StrangeAttractorType type, float strength, float targetSpeed, FieldMode fieldMode,
                                                             float minDist, float maxDist, Falloff falloff, float a, float b, float c, float d, float e, float f); 
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]
         #endif
         private static extern IntPtr World_getStrangeAttractorPtr(IntPtr instance, int inx);
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]
         #endif
         private static extern void World_destroyStrangeAttractor(IntPtr instance, int inx); 
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]
         #endif
         private static extern void World_clearStrangeAttractors(IntPtr instance);
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]
         #endif
         private static extern void World_setStrangeAttractorPosition(IntPtr instance, int inx, Vec3 position);
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]
         #endif
         private static extern void World_setStrangeAttractorScale(IntPtr instance, int inx, float scale);
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]
         #endif
         private static extern void World_setStrangeAttractorType(IntPtr instance, int inx, StrangeAttractorType type);
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]
         #endif
         private static extern void World_setStrangeAttractorStrength(IntPtr instance, int inx, float strength);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]
         #endif
         private static extern void World_setStrangeAttractorTargetSpeed(IntPtr instance, int inx, float targetSpeed);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]
         #endif
         private static extern void World_setStrangeAttractorFieldMode(IntPtr instance, int inx, FieldMode fieldMode);
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]
         #endif
         private static extern void World_setStrangeAttractorMinDist(IntPtr instance, int inx, float minDist); 
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]
         #endif
         private static extern void World_setStrangeAttractorMaxDist(IntPtr instance, int inx, float maxDist);
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]
         #endif
         private static extern void World_setStrangeAttractorFalloff(IntPtr instance, int inx, Falloff falloff);
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]
@@ -724,70 +724,70 @@ namespace Dotty{
         *
         */
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]
         #endif
         private static extern int World_addVortex(IntPtr instance, Vec3 position, Vec3 normal, float strength, float minDist, float maxDist, Falloff falloff);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern IntPtr World_getVortexPtr(IntPtr instance, int inx);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_destroyVortex(IntPtr instance, int inx);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_clearVortices(IntPtr instance);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setVortexPosition(IntPtr instance, int inx, Vec3 position);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setVortexNormal(IntPtr instance, int inx, Vec3 normal);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setVortexStrength(IntPtr instance, int inx, float strength);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setVortexMinDist(IntPtr instance, int inx, float minDist);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setVortexMaxDist(IntPtr instance, int inx, float maxDist);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
@@ -862,63 +862,63 @@ namespace Dotty{
         *
         */
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern int World_addRod(IntPtr instance, int a, int b, float length, float stiffness);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_destroyRod(IntPtr instance, int inx);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setRodStiffness(IntPtr instance, int inx, float stiffness);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setRodLength(IntPtr instance, int inx, float length);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern int World_addAnchorRod(IntPtr instance, int a, Vec3 position, float length, float stiffness);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_destroyAnchorRod(IntPtr instance, int inx);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setAnchorRodStiffness(IntPtr instance, int inx, float stiffness);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setAnchorRodLength(IntPtr instance, int inx, float length);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
@@ -979,7 +979,7 @@ namespace Dotty{
         *
         */
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
@@ -987,112 +987,112 @@ namespace Dotty{
         private static extern int World_addNoiseField(IntPtr instance, Vec3 position, NoiseType noiseType, float strength, float targetSpeed, float noiseScale, FieldMode mode, 
                                                       Vec3 boundSize, BoundShapeType boundShape, float boundThickness, BoundFalloff boundFalloff, Mat3 boundInvRotation, int bakeResolution, bool useBake);
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern IntPtr World_getNoiseFieldPtr(IntPtr instance, int inx); 
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_destroyNoiseField(IntPtr instance, int inx); 
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_clearNoiseFields(IntPtr instance);
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setNoiseFieldPosition(IntPtr instance, int inx, Vec3 position); 
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setNoiseFieldNoiseType(IntPtr instance, int inx, NoiseType noiseType); 
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setNoiseFieldStrength(IntPtr instance, int inx, float strength); 
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setNoiseFieldTargetSpeed(IntPtr instance, int inx, float targetSpeed); 
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setNoiseFieldNoiseScale(IntPtr instance, int inx, float noiseScale); 
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setNoiseFieldMode(IntPtr instance, int inx, FieldMode mode); 
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setNoiseFieldBoundShape(IntPtr instance, int inx, BoundShapeType boundShape); 
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setNoiseFieldBoundSize(IntPtr instance, int inx, Vec3 boundSize);
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setNoiseFieldBoundFalloff(IntPtr instance, int inx, BoundFalloff boundFalloff);  
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setNoiseFieldBoundThickness(IntPtr instance, int inx, float thickness); 
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setNoiseFieldBoundInvRotation(IntPtr instance, int inx, Mat3 invRotation); 
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setNoiseFieldBakeResolution(IntPtr instance, int inx, int resolution); 
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
@@ -1219,63 +1219,63 @@ namespace Dotty{
         *
         */
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern int World_addSphereCollider(IntPtr instance, Vec3 position, float radius, float kineticFriction, float staticFriction, bool inverse);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern IntPtr World_getSphereColliderPtr(IntPtr instance, int inx); 
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_destroySphereCollider(IntPtr instance, int inx);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_clearSphereColliders(IntPtr instance);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setSphereColliderPosition(IntPtr instance, int inx, Vec3 position);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setSphereColliderRadius(IntPtr instance, int inx, float radius);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setSphereColliderKineticFriction(IntPtr instance, int inx, float kineticFriction); 
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setSphereColliderStaticFriction(IntPtr instance, int inx, float staticFriction); 
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
@@ -1337,70 +1337,70 @@ namespace Dotty{
         *
         */
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern int World_addBoxCollider(IntPtr instance, Vec3 position, Mat3 invRotation, Vec3 size, float kineticFriction, float staticFriction, bool inverse);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern IntPtr World_getBoxColliderPtr(IntPtr instance, int inx);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_destroyBoxCollider(IntPtr instance, int inx);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_clearBoxColliders(IntPtr instance);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setBoxColliderPosition(IntPtr instance, int inx, Vec3 position);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setBoxColliderInvRotation(IntPtr instance, int inx, Mat3 invRotation);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setBoxColliderSize(IntPtr instance, int inx, Vec3 size);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setBoxColliderKineticFriction(IntPtr instance, int inx, float kineticFriction);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setBoxColliderStaticFriction(IntPtr instance, int inx, float staticFriction);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
@@ -1499,7 +1499,7 @@ namespace Dotty{
         *
         */
 
-         #if UNITY_IPHONE
+         #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
@@ -1507,77 +1507,70 @@ namespace Dotty{
         private static extern int World_addDamper(IntPtr instance, Vec3 position, float strength, 
                                                        Vec3 boundSize, BoundShapeType boundShape, float boundThickness, BoundFalloff boundFalloff, Mat3 boundInvRotation);
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern IntPtr World_getDamperPtr(IntPtr instance, int inx); 
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_destroyDamper(IntPtr instance, int inx); 
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_clearDampers(IntPtr instance);
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setDamperPosition(IntPtr instance, int inx, Vec3 position); 
         
-        #if UNITY_IPHONE
-        [DllImport ("__Internal")]
-        #else
-        [DllImport ("Dotty")]   
-        #endif
-        private static extern void World_setDamperDirection(IntPtr instance, int inx, Vec3 direction); 
-        
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setDamperStrength(IntPtr instance, int inx, float strength); 
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setDamperBoundSize(IntPtr instance, int inx, Vec3 boundSize); 
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setDamperBoundShape(IntPtr instance, int inx, BoundShapeType boundShape); 
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setDamperBoundThickness(IntPtr instance, int inx, float boundThickness); 
         
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_setDamperBoundFalloff(IntPtr instance, int inx, BoundFalloff boundFalloff);
 
-        #if UNITY_IPHONE
+        #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
         [DllImport ("Dotty")]   
