@@ -41,6 +41,10 @@ extern "C" {
     EXPORT Particle* World_getParticlesPtr(World* instance);
     EXPORT bool* World_getParticlesInUsePtr(World* instance);
     EXPORT int World_getParticlesPoolBound(World* instance);
+    EXPORT void World_resetParticlePosition(World* instance, int inx, Vec3 position); 
+    EXPORT void World_addParticleForce(World* instance, int inx, Vec3 force); 
+    EXPORT void World_addParticleImpulse(World* instance, int inx, Vec3 impulse); 
+    EXPORT void World_addParticlePositionDelta(World* instance, int inx, Vec3 delta); 
 
     EXPORT int World_addGlobalForce(World* instance, Vec3 position, Vec3 direction, float strength, 
                                     Vec3 boundSize, BoundShapeType boundShape, float boundThickness, BoundFalloff boundFalloff, Mat3 boundInvRotation);

@@ -289,7 +289,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &631679544
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -664,12 +664,12 @@ GameObject:
   - component: {fileID: 1461354658}
   - component: {fileID: 1461354657}
   m_Layer: 0
-  m_Name: Attractor1
+  m_Name: Well
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1461354657
 MonoBehaviour:
   m_ObjectHideFlags: 0

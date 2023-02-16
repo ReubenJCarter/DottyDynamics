@@ -15,14 +15,12 @@ class DamperSystem {
             dampers.setPoolSize(1000); 
         }
 
-        void updateDampers(BS::thread_pool& threadPool, WorldParams& params, DynamicPool<Particle>& particles){
+        void updateDampers(BS::thread_pool& threadPool, float timestep, WorldParams& params, DynamicPool<Particle>& particles){
 
             unsigned int maxDampersCount = dampers.getBound(); 
             unsigned int pcount = particles.getBound();
 
-            threadPool.parallelize_loop(pcount, [this, maxDampersCount, &particles, &params](const int a, const int b){
-
-                float timestep = params.timestep; 
+            threadPool.parallelize_loop(pcount, [this, maxDampersCount, timestep, &particles](const int a, const int b){
                 
                 for(int i = 0; i < maxDampersCount; i++){
 

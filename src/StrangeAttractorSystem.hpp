@@ -131,14 +131,12 @@ class StrangeAttractorSystem {
             strangeAttractors.setPoolSize(1000); 
         }
 
-        void updateStrangeAttractors(BS::thread_pool& threadPool, WorldParams& params, DynamicPool<Particle>& particles){
+        void updateStrangeAttractors(BS::thread_pool& threadPool, float timestep, WorldParams& params, DynamicPool<Particle>& particles){
 
             unsigned int maxAttractorCount = strangeAttractors.getBound(); 
             unsigned int pcount = particles.getBound();
 
-            threadPool.parallelize_loop(pcount, [this, maxAttractorCount, &particles, &params](const int a, const int b){
-
-                float timestep = params.timestep; 
+            threadPool.parallelize_loop(pcount, [this, maxAttractorCount, timestep, &particles](const int a, const int b){
                 
                 for(int i = 0; i < maxAttractorCount; i++){
 

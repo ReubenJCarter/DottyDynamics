@@ -19,7 +19,7 @@ class BoxColliderSystem {
             unsigned int maxColliderCount = boxColliders.getBound(); 
             unsigned int pcount = particles.getBound();
 
-            threadPool.parallelize_loop(pcount, [this, maxColliderCount, &particles, &params](const int a, const int b){
+            threadPool.parallelize_loop(pcount, [this, maxColliderCount, &particles](const int a, const int b){
                 
                 for(int i = 0; i < maxColliderCount; i++){
 

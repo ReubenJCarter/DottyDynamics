@@ -180,6 +180,34 @@ namespace Dotty{
         #endif
         private static extern int World_getParticlesPoolBound(IntPtr world);
 
+        #if UNITY_IOS && !UNITY_EDITOR
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_resetParticlePosition(IntPtr instance, int inx, Vec3 position); 
+
+        #if UNITY_IOS && !UNITY_EDITOR
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_addParticleForce(IntPtr instance, int inx, Vec3 force); 
+
+        #if UNITY_IOS && !UNITY_EDITOR
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_addParticleImpulse(IntPtr instance, int inx, Vec3 impulse); 
+
+        #if UNITY_IOS && !UNITY_EDITOR
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_addParticlePositionDelta(IntPtr instance, int inx, Vec3 delta);
+
         public int AddParticle(Vector3 initialPosition, Vector3 initialVelocity, float invMass){
 
             Vec3 initialPositionInternal = new Vec3();
@@ -231,6 +259,37 @@ namespace Dotty{
             return (bool*)ptr.ToPointer(); 
         }
 
+        public void ResetParticlePosition(int inx, Vector3 position){
+            Vec3 pos = new Vec3();
+            pos.x = position.x; 
+            pos.y = position.y; 
+            pos.z = position.z;
+            World_resetParticlePosition(ntv, inx, pos); 
+        }
+
+        public void AddParticleForce(int inx, Vector3 force){
+            Vec3 f = new Vec3();
+            f.x = force.x; 
+            f.y = force.y; 
+            f.z = force.z;
+            World_addParticleForce(ntv, inx, f); 
+        } 
+
+        public void AddParticleImpulse(int inx, Vector3 impulse){
+            Vec3 i = new Vec3();
+            i.x = impulse.x; 
+            i.y = impulse.y; 
+            i.z = impulse.z;
+            World_addParticleImpulse(ntv, inx, i); 
+        } 
+
+        public void AddParticlePositionDelta(int inx, Vector3 delta){
+            Vec3 i = new Vec3();
+            i.x = delta.x; 
+            i.y = delta.y; 
+            i.z = delta.z;
+            World_addParticlePositionDelta(ntv, inx, i); 
+        } 
 
 
         /*

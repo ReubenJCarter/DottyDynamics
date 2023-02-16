@@ -70,6 +70,22 @@ EXPORT int World_getParticlesPoolBound(World* instance){
     return instance->getParticlesPoolBounds(); 
 }
 
+EXPORT void World_resetParticlePosition(World* instance, int inx, Vec3 position){
+    instance->resetParticlePosition(inx, position); 
+}
+
+EXPORT void World_addParticleForce(World* instance, int inx, Vec3 force){
+    instance->addParticleForce(inx, force);
+}
+
+EXPORT void World_addParticleImpulse(World* instance, int inx, Vec3 impulse){
+    instance->addParticleImpulse(inx, impulse);
+}
+
+EXPORT void World_addParticlePositionDelta(World* instance, int inx, Vec3 delta){
+    instance->addParticlePositionDelta(inx, delta);
+}
+
 
 
 EXPORT int World_addGlobalForce(World* instance, Vec3 position, Vec3 direction, float strength, Vec3 boundSize, BoundShapeType boundShape, 

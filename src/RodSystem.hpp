@@ -101,12 +101,6 @@ class RodSystem {
                     particles[i].positionNext.y += 1.5f * deltaY;
                     particles[i].positionNext.z += 1.5f * deltaZ;
                 }
-
-                particleDeltaCount[i] = 0;
-                particleDeltas[i].x = 0;
-                particleDeltas[i].y = 0;
-                particleDeltas[i].z = 0;
-                
             }
         }
 

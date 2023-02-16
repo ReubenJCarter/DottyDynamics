@@ -14,15 +14,13 @@ class VortexSystem {
             vortices.setPoolSize(1000); 
         }
 
-        void updateVortices(BS::thread_pool& threadPool, WorldParams& params, DynamicPool<Particle>& particles){
+        void updateVortices(BS::thread_pool& threadPool, float timestep, WorldParams& params, DynamicPool<Particle>& particles){
 
             unsigned int maxVorticesCount = vortices.getBound(); 
             unsigned int pcount = particles.getBound();
 
-            threadPool.parallelize_loop(pcount, [this, maxVorticesCount, &particles, &params](const int a, const int b){
-                
-                float timestep = params.timestep; 
-                
+            threadPool.parallelize_loop(pcount, [this, maxVorticesCount, timestep, &particles](const int a, const int b){
+                                
                 for(int i = 0; i < maxVorticesCount; i++){
 
                     if(!vortices.isInUse(i))

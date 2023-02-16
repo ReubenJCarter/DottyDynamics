@@ -23,8 +23,11 @@ class World {
 
         BS::thread_pool threadPool;
 
+        float deltaT;
+        float invDeltaT;
+
         DynamicPool<Particle> particles;
-        DynamicPool<Vec3> particleDaltas; 
+        DynamicPool<Vec3> particleDeltas; 
         DynamicPool<int> particleDeltaCount; 
 
         void updateCollisionBounds(){
@@ -66,9 +69,12 @@ class World {
             params.collisionFloorKineticFriction = 0; 
             params.collisionFloorHeight = 0; 
             params.hasCollisionFloor = false;
+
+            deltaT = params.timestep / params.substeps; 
+            invDeltaT = 1.0f / deltaT; 
             
             particles.setPoolSize(100000); 
-            particleDaltas.setPoolSize(100000); 
+            particleDeltas.setPoolSize(100000); 
             particleDeltaCount.setPoolSize(100000); 
         }
 
@@ -78,8 +84,8 @@ class World {
             float gravity = params.gravity; 
             float globalDamping = params.globalDamping; 
 
-            float deltaT = timestep / substeps; 
-            float invDeltaT = 1.0f / deltaT; 
+            deltaT = params.timestep / params.substeps; 
+            invDeltaT = 1.0f / deltaT;
 
             for(int s = 0; s < substeps; s++){
             
@@ -90,16 +96,16 @@ class World {
                     particles[i].velocity.y -= deltaT * gravity; 
 
                 //Update forces 
-                globalForceSystem.updateGlobalForces(threadPool, params, particles); 
-                attractorSystem.updateAttractors(threadPool, params, particles); 
-                vortexSystem.updateVortices(threadPool, params, particles); 
+                globalForceSystem.updateGlobalForces(threadPool, deltaT, params, particles); 
+                attractorSystem.updateAttractors(threadPool, deltaT, params, particles); 
+                vortexSystem.updateVortices(threadPool, deltaT, params, particles); 
 
                 //Update fields
-                strangeAttractorSystem.updateStrangeAttractors(threadPool, params, particles); 
-                noiseFieldSystem.updateNoiseFieldsForces(threadPool, params, particles); 
+                strangeAttractorSystem.updateStrangeAttractors(threadPool, deltaT, params, particles); 
+                noiseFieldSystem.updateNoiseFieldsForces(threadPool, deltaT, params, particles); 
 
                 //update dampers
-                damperSystem.updateDampers(threadPool, params, particles); 
+                damperSystem.updateDampers(threadPool, deltaT, params, particles); 
 
                 //Apply velocities  
                 for(int i = 0; i < maxParticleCount; i++){
@@ -110,6 +116,7 @@ class World {
                     particles[i].positionNext.x = particles[i].position.x + deltaT * particles[i].velocity.x; 
                     particles[i].positionNext.y = particles[i].position.y + deltaT * particles[i].velocity.y;
                     particles[i].positionNext.z = particles[i].position.z + deltaT * particles[i].velocity.z;
+
                 } 
 
                 //Apply pre stabalization for collision constraints (any unsatisfied constraints from the previous timestep dont propogate through )
@@ -120,7 +127,7 @@ class World {
                 sphereColliderSystem.updateSphereColliders(threadPool, params, particles); 
 
                 //update rods 
-                rodSystem.updateRods(threadPool, params, particles, particleDaltas, particleDeltaCount); 
+                rodSystem.updateRods(threadPool, params, particles, particleDeltas, particleDeltaCount); 
 
                 //Apply New Position
                 for(int i = 0; i < maxParticleCount; i++){
@@ -132,6 +139,11 @@ class World {
                     particles[i].position.x = particles[i].positionNext.x;
                     particles[i].position.y = particles[i].positionNext.y;
                     particles[i].position.z = particles[i].positionNext.z;
+
+                    particleDeltaCount[i] = 0;
+                    particleDeltas[i].x = 0;
+                    particleDeltas[i].y = 0;
+                    particleDeltas[i].z = 0;
                 } 
             }  
         }
@@ -146,10 +158,14 @@ class World {
 
         void setTimestep(float t){
             params.timestep = t; 
+            deltaT = params.timestep / params.substeps; 
+            invDeltaT = 1.0f / deltaT; 
         }
 
         void setSubsteps(float s){
             params.substeps = s; 
+            deltaT = params.timestep / params.substeps; 
+            invDeltaT = 1.0f / deltaT; 
         }
 
         void setGlobalDamping(float d){
@@ -175,7 +191,7 @@ class World {
             p.invMass = invMass; 
 
             Vec3 zero = Vec3(0, 0, 0); 
-            particleDaltas.add(zero);
+            particleDeltas.add(zero);
 
             int zeroInt = 0; 
             particleDeltaCount.add(zeroInt);
@@ -185,7 +201,7 @@ class World {
 
         void destroyParticle(int inx){
             particles.remove(inx); 
-            particleDaltas.remove(inx);
+            particleDeltas.remove(inx);
             particleDeltaCount.remove(inx);
         }
 
@@ -200,5 +216,28 @@ class World {
         int getParticlesPoolBounds(){
             return particles.getBound(); 
         }
-      
+
+        void resetParticlePosition(int inx, Vec3 position){
+            particles[inx].position = position; 
+            particles[inx].positionNext = position; 
+        }
+
+        void addParticleForce(int inx, Vec3 force){
+            float t = params.timestep / params.substeps; 
+            particles[inx].velocity.x += force.x * particles[inx].invMass * t; 
+            particles[inx].velocity.y += force.y * particles[inx].invMass * t; 
+            particles[inx].velocity.z += force.z * particles[inx].invMass * t; 
+        }
+
+        void addParticleImpulse(int inx, Vec3 impulse){
+            particles[inx].velocity.x += impulse.x * particles[inx].invMass ; 
+            particles[inx].velocity.y += impulse.y * particles[inx].invMass ; 
+            particles[inx].velocity.z += impulse.z * particles[inx].invMass ; 
+        }
+
+        void addParticlePositionDelta(int inx, Vec3 delta){
+            particleDeltas[inx].x += delta.x; 
+            particleDeltas[inx].y += delta.y; 
+            particleDeltas[inx].z += delta.z; 
+        }
 }; 

@@ -50,7 +50,7 @@ class NoiseFieldSystem {
         
         }
 
-        void updateNoiseFieldsForces(BS::thread_pool& threadPool, WorldParams& params, DynamicPool<Particle>& particles){
+        void updateNoiseFieldsForces(BS::thread_pool& threadPool, float timestep, WorldParams& params, DynamicPool<Particle>& particles){
             unsigned int noiseFieldsCount = noiseFields.getBound(); 
             unsigned int pcount = particles.getBound();
 
@@ -61,10 +61,8 @@ class NoiseFieldSystem {
                 }
             }
 
-            threadPool.parallelize_loop(pcount, [this, noiseFieldsCount, &particles, &params](const int a, const int b){
+            threadPool.parallelize_loop(pcount, [this, noiseFieldsCount, timestep, &particles](const int a, const int b){
                 
-                float timestep = params.timestep; 
-
                 for(int i = 0; i < noiseFieldsCount; i++){
 
                     if(!noiseFields.isInUse(i))
