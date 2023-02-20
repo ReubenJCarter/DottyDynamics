@@ -29,10 +29,14 @@ class RodSystem {
                 float dz = (particles[rods[i].a].positionNext.z - particles[rods[i].b].positionNext.z);
 
                 float diffLen2 = dx * dx + dy * dy + dz * dz;
-                float diffLen = diffLen2 == 0 ? 1 : sqrt(diffLen2);
+                float diffLen = sqrt(diffLen2);
                 float rodDiffLen = diffLen - rods[i].length;
 
-                float factor = (rods[i].stiffness * rodDiffLen) / (diffLen * (invMassA + invMassB));
+                float demon = diffLen * (invMassA + invMassB); 
+                if(demon == 0)
+                    continue;
+
+                float factor = (rods[i].stiffness * rodDiffLen) / demon;
 
                 dx *= factor;
                 dy *= factor;
