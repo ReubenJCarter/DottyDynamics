@@ -14,13 +14,15 @@ int main(){
 
     PerfTimer perfTimer; 
 
-    int particleCount = 10000; 
+    int particleCount = 100; 
 
     world.setGravity(0); 
     
     for(int i = 0; i < particleCount; i++){
-        world.addParticle(Vec3(i + randf(), i + randf(),  i + randf()), Vec3(0, 0, 0), 1); 
+        world.addParticle(Vec3(i, i,  i ), Vec3(0, 0, 0), 1); 
     }
+
+    world.attractorSystem.addAttrator(Vec3(0, 0, 0), 100, 0, 1000, Falloff::InvDist2); 
 
     for(int i = 0; i < particleCount-1; i++){
         world.rodSystem.addRod(i, i+1, 1.73, 1); 
@@ -42,7 +44,7 @@ int main(){
     perfTimer.lap();
 
     Particle* p = world.getParticlesPtr(); 
-    for(int i = 0; i < particleCount-1; i++){
+    for(int i = 0; i < particleCount; i++){
         std::cout << "posx:" << p[i].position.x << ", " << "posy:" << p[i].position.y << ", " << "posz:" << p[i].position.z << "\n"; 
     }
     double time = perfTimer.times[0]; 

@@ -22,7 +22,7 @@ inline float falloffInvDist2(float xDiff, float yDiff, float zDiff, float minDis
     float distFactor; 
     if(dist > maxDist)
         distFactor = 0;
-    else if(dist < minDist)
+    else if(dist <= minDist)
         distFactor = dist == 0 ? 0 : 1 / (minDist * minDist * dist);
     else
         distFactor = 1 / (dist2 * dist);
@@ -37,7 +37,7 @@ inline float falloffInvDist(float xDiff, float yDiff, float zDiff, float minDist
     float distFactor; 
     if(dist > maxDist)
         distFactor = 0;
-    else if(dist < minDist)
+    else if(dist <= minDist)
         distFactor = dist == 0 ? 0 : 1 / (minDist * dist);
     else
         distFactor = 1 / (dist2); 
@@ -69,7 +69,7 @@ inline float falloffLinearRange(float xDiff, float yDiff, float zDiff, float min
     float dist2 = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff; 
     float dist = sqrt(dist2); 
 
-    if(dist < minDist)
+    if(dist <= minDist)
         return 1.0f; 
     else if (dist > maxDist)
         return 0.0f; 
@@ -83,7 +83,7 @@ inline float falloffSquaredRange(float xDiff, float yDiff, float zDiff, float mi
     float dist2 = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff; 
     float dist = sqrt(dist2); 
 
-    if(dist < minDist)
+    if(dist <= minDist)
         return 1.0f; 
     else if (dist > maxDist)
         return 0.0f; 
@@ -97,7 +97,7 @@ inline float falloffCubedRange(float xDiff, float yDiff, float zDiff, float minD
     float dist2 = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff; 
     float dist = sqrt(dist2); 
 
-    if(dist < minDist)
+    if(dist <= minDist)
         return 1.0f; 
     else if (dist > maxDist)
         return 0.0f; 
