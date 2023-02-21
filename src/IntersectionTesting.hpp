@@ -24,7 +24,7 @@ inline float getBoxBoundStrength(Vec3 testPoint, Vec3 position, Vec3 boundSize, 
     float halfsxSubF = halfsx - boundThickness; 
     float halfsySubF = halfsy - boundThickness; 
     float halfszSubF = halfsz - boundThickness; 
-    if(p.x < halfsxSubF && p.x > -halfsxSubF && p.y < halfsySubF && p.y > -halfsySubF && p.z < halfszSubF && p.z > -halfszSubF){
+    if(p.x <= halfsxSubF && p.x >= -halfsxSubF && p.y <= halfsySubF && p.y >= -halfsySubF && p.z <= halfszSubF && p.z >= -halfszSubF){
         return 1.0f; 
     }
 
@@ -71,7 +71,7 @@ inline float getSphereBoundStrength(Vec3 testPoint, Vec3 position, Vec3 boundSiz
     float innerR = boundSize.x - boundThickness; 
     float innerR2 = innerR * innerR; 
 
-    if(d2 < innerR2){
+    if(d2 <= innerR2){
         return 1.0f; 
     }
 
