@@ -1031,6 +1031,55 @@ namespace Dotty{
         }
 
 
+        /*
+        *
+        *Angle Constraint
+        *
+        */
+
+        #if UNITY_IOS && !UNITY_EDITOR
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern int World_addAngleConstraint(IntPtr instance, int a, int b, int c, float angle, float stiffness);
+
+        #if UNITY_IOS && !UNITY_EDITOR
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_destroyAngleConstraint(IntPtr instance, int inx);
+
+        #if UNITY_IOS && !UNITY_EDITOR
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setAngleConstraintStiffness(IntPtr instance, int inx, float stiffness);
+
+        #if UNITY_IOS && !UNITY_EDITOR
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setAngleConstraintAngle(IntPtr instance, int inx, float angle);
+
+        public int AddAngleConstraint(int a, int b, int c, float angle, float stiffness){
+            return World_addAngleConstraint(ntv, a, b, length, stiffness); 
+        }
+
+        public void DestroyAngleConstraint(int inx){
+            World_destroyAngleConstraint(ntv, inx); 
+        }
+
+        public void SetAngleConstraintAngle(int inx, float angle){
+            World_setAngleConstraintAngle(ntv, inx, length); 
+        }
+
+        public void SetAngleConstraintStiffness(int inx, float stiffness){
+            World_setAngleConstraintStiffness(ntv, inx, stiffness); 
+        }
 
         /*
         *

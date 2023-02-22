@@ -16,6 +16,7 @@
 #include "SphereColliderSystem.hpp"
 #include "DamperSystem.hpp"
 #include "RodSystem.hpp"
+#include "AngleConstraintSystem.hpp"
 
 class World {
     private:
@@ -58,6 +59,7 @@ class World {
         SphereColliderSystem sphereColliderSystem; 
         DamperSystem damperSystem; 
         RodSystem rodSystem; 
+        AngleConstraintSystem angleConstraintSystem;
 
         World(){
             params.timestep = 0.016666; 
@@ -129,6 +131,34 @@ class World {
                 //update rods 
                 rodSystem.updateRods(threadPool, params, particles, particleDeltas, particleDeltaCount); 
 
+                //update angle constraints
+                angleConstraintSystem.updateAngleConstraints(threadPool, params, particles, particleDeltas, particleDeltaCount); 
+
+                //apply deltas                 
+                for (int i = 0; i < maxParticleCount; i++){
+
+                    int deltaCount = particleDeltaCount[i];
+                    float deltaX = particleDeltas[i].x;
+                    float deltaY = particleDeltas[i].y;
+                    float deltaZ = particleDeltas[i].z;
+
+                    if (deltaCount > 0){
+                        
+                        deltaX /= deltaCount;
+                        deltaY /= deltaCount;
+                        deltaZ /= deltaCount;
+
+                        particles[i].positionNext.x += 1.5f * deltaX;
+                        particles[i].positionNext.y += 1.5f * deltaY;
+                        particles[i].positionNext.z += 1.5f * deltaZ;
+                    }
+
+                    particleDeltaCount[i] = 0;
+                    particleDeltas[i].x = 0;
+                    particleDeltas[i].y = 0;
+                    particleDeltas[i].z = 0;
+                }
+
                 //Apply New Position
                 for(int i = 0; i < maxParticleCount; i++){
 
@@ -140,10 +170,6 @@ class World {
                     particles[i].position.y = particles[i].positionNext.y;
                     particles[i].position.z = particles[i].positionNext.z;
 
-                    particleDeltaCount[i] = 0;
-                    particleDeltas[i].x = 0;
-                    particleDeltas[i].y = 0;
-                    particleDeltas[i].z = 0;
                 } 
             }  
         }

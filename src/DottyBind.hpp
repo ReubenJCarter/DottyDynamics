@@ -108,6 +108,11 @@ extern "C" {
     EXPORT void World_setAnchorRodLength(World* instance, int inx, float length);
     EXPORT void World_setAnchorRodPosition(World* instance, int inx, Vec3 position);
 
+    EXPORT int World_addAngleConstraint(World* instance, int a, int b, int c, float angle, float stiffness);
+    EXPORT void World_destroyAngleConstraint(World* instance, int inx);
+    EXPORT void World_setAngleConstraintStiffness(World* instance, int inx, float stiffness);
+    EXPORT void World_setAngleConstraintAngle(World* instance, int inx, float angle);
+
     EXPORT int World_addNoiseField(World* instance, Vec3 position, NoiseType noiseType, float strength, float targetSpeed, float noiseScale, FieldMode mode, 
                                    Vec3 boundSize, BoundShapeType boundShape, float boundThickness, BoundFalloff boundFalloff, Mat3 boundInvRotation, int bakeResolution, bool useBake);
     EXPORT NoiseField* World_getNoiseFieldPtr(World* instance, int inx); 

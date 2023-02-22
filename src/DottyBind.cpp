@@ -319,6 +319,24 @@ EXPORT void World_setAnchorRodPosition(World* instance, int inx, Vec3 position){
 
 
 
+EXPORT int World_addAngleConstraint(World* instance, int a, int b, int c, float angle, float stiffness){
+    return instance->angleConstraintSystem.addAngleConstraint(a, b, c, angle, stiffness); 
+}
+
+EXPORT void World_destroyAngleConstraint(World* instance, int inx){
+    instance->angleConstraintSystem.destroyAngleConstraint(inx);
+}
+
+EXPORT void World_setAngleConstraintStiffness(World* instance, int inx, float stiffness){
+    instance->angleConstraintSystem.setAngleConstraintStiffness(inx, stiffness); 
+}
+
+EXPORT void World_setAngleConstraintAngle(World* instance, int inx, float angle){
+    instance->angleConstraintSystem.setAngleConstraintAngle(inx, angle); 
+}
+
+
+
 EXPORT int World_addNoiseField(World* instance, Vec3 position, NoiseType noiseType, float strength, float targetSpeed, float noiseScale, FieldMode mode, 
                                Vec3 boundSize, BoundShapeType boundShape, float boundThickness, BoundFalloff boundFalloff, Mat3 boundInvRotation, int bakeResolution, bool useBake){
     return instance->noiseFieldSystem.addNoiseField(position, noiseType, strength, targetSpeed, noiseScale, mode, 

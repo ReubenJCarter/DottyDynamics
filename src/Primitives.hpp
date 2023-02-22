@@ -41,6 +41,14 @@ struct AnchorRod {
     float stiffness;
 }; 
 
+struct AngleConstraint {
+    int a; 
+    int b; 
+    int c; 
+    float angle;  
+    float stiffness;
+}; 
+
 struct Attractor {
     Vec3 position; 
     float strength;

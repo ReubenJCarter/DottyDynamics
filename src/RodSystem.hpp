@@ -86,26 +86,7 @@ class RodSystem {
             }
 
 
-            unsigned int maxParticleCount = particles.getBound();
             
-            for (int i = 0; i < maxParticleCount; i++){
-
-                int deltaCount = particleDeltaCount[i];
-                float deltaX = particleDeltas[i].x;
-                float deltaY = particleDeltas[i].y;
-                float deltaZ = particleDeltas[i].z;
-
-                if (deltaCount > 0){
-                    
-                    deltaX /= deltaCount;
-                    deltaY /= deltaCount;
-                    deltaZ /= deltaCount;
-
-                    particles[i].positionNext.x += 1.5f * deltaX;
-                    particles[i].positionNext.y += 1.5f * deltaY;
-                    particles[i].positionNext.z += 1.5f * deltaZ;
-                }
-            }
         }
 
 
