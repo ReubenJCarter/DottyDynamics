@@ -208,6 +208,20 @@ namespace Dotty{
         #endif
         private static extern void World_addParticlePositionDelta(IntPtr instance, int inx, Vec3 delta);
 
+        #if UNITY_IOS && !UNITY_EDITOR
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setParticleLayerEnabled(IntPtr instance, int inx, int layer, bool enabled); 
+
+        #if UNITY_IOS && !UNITY_EDITOR
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_zeroParticleLayerMask(IntPtr instance, int inx); 
+
         public int AddParticle(Vector3 initialPosition, Vector3 initialVelocity, float invMass){
 
             Vec3 initialPositionInternal = new Vec3();
@@ -290,6 +304,15 @@ namespace Dotty{
             i.z = delta.z;
             World_addParticlePositionDelta(ntv, inx, i); 
         } 
+
+        public void SetParticleLayerEnabled(int inx, int layer, bool enabled){
+            World_setParticleLayerEnabled(ntv, inx, layer, enabled); 
+        }
+
+        public void ZeroParticleLayerMask(int inx){
+            World_zeroParticleLayerMask(ntv, inx); 
+        }
+
 
 
         /*

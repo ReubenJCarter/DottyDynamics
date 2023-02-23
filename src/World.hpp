@@ -3,6 +3,7 @@
 #include <limits>
 #include "thirdparty/thread-pool-3.3.0/BS_thread_pool.hpp"
 #include "thirdparty/VecMath/VecMath.hpp"
+#include "Util.hpp"
 #include "Primitives.hpp"
 #include "DynamicPool.hpp"
 #include "NoiseGenerator.hpp"
@@ -30,6 +31,7 @@ class World {
         DynamicPool<Particle> particles;
         DynamicPool<Vec3> particleDeltas; 
         DynamicPool<int> particleDeltaCount; 
+        DynamicPool<uint32_t> particleLayerMask; 
 
         void updateCollisionBounds(){
             
@@ -78,6 +80,7 @@ class World {
             particles.setPoolSize(100000); 
             particleDeltas.setPoolSize(100000); 
             particleDeltaCount.setPoolSize(100000); 
+            particleLayerMask.setPoolSize(100000); 
         }
 
         void update(){
@@ -222,6 +225,9 @@ class World {
             int zeroInt = 0; 
             particleDeltaCount.add(zeroInt);
 
+            uint32_t allOnes = 0xFFFFFFFF; 
+            particleLayerMask.add(allOnes); 
+
             return particles.add(p); 
         }
 
@@ -229,6 +235,7 @@ class World {
             particles.remove(inx); 
             particleDeltas.remove(inx);
             particleDeltaCount.remove(inx);
+            particleLayerMask.remove(inx); 
         }
 
         Particle* getParticlesPtr(){
@@ -265,5 +272,13 @@ class World {
             particleDeltas[inx].x += delta.x; 
             particleDeltas[inx].y += delta.y; 
             particleDeltas[inx].z += delta.z; 
+        }
+
+        void setParticleLayerEnabled(int inx, int layer, bool enabled){
+            particleLayerMask[inx] = setBitVal<uint32_t>(particleLayerMask[inx], layer, enabled);  
+        }
+
+        void zeroParticleLayerMask(int inx){
+            particleLayerMask[inx] = 0;
         }
 }; 

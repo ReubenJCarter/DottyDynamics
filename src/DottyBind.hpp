@@ -45,6 +45,8 @@ extern "C" {
     EXPORT void World_addParticleForce(World* instance, int inx, Vec3 force); 
     EXPORT void World_addParticleImpulse(World* instance, int inx, Vec3 impulse); 
     EXPORT void World_addParticlePositionDelta(World* instance, int inx, Vec3 delta); 
+    EXPORT void World_setParticleLayerEnabled(World* instance, int inx, int layer, bool enabled); 
+    EXPORT void World_zeroParticleLayerMask(World* instance, int inx); 
 
     EXPORT int World_addGlobalForce(World* instance, Vec3 position, Vec3 direction, float strength, 
                                     Vec3 boundSize, BoundShapeType boundShape, float boundThickness, BoundFalloff boundFalloff, Mat3 boundInvRotation);

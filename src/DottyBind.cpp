@@ -86,6 +86,14 @@ EXPORT void World_addParticlePositionDelta(World* instance, int inx, Vec3 delta)
     instance->addParticlePositionDelta(inx, delta);
 }
 
+EXPORT void World_setParticleLayerEnabled(World* instance, int inx, int layer, bool enabled){
+    instance->setParticleLayerEnabled(inx, layer, enabled); 
+}
+
+EXPORT void World_zeroParticleLayerMask(World* instance, int inx){
+    instance->zeroParticleLayerMask(inx); 
+}
+
 
 
 EXPORT int World_addGlobalForce(World* instance, Vec3 position, Vec3 direction, float strength, Vec3 boundSize, BoundShapeType boundShape, 
