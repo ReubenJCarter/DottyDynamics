@@ -2,6 +2,7 @@
 
 #include "thirdparty/thread-pool-3.3.0/BS_thread_pool.hpp"
 #include "thirdparty/VecMath/VecMath.hpp"
+#include "Util.hpp"
 #include "Primitives.hpp"
 #include "DynamicPool.hpp"
 #include "FalloffFunctions.hpp"
@@ -159,6 +160,14 @@ class AttractorSystem {
 
         void clearAttractors(){
             attractors.clear(); 
+        }
+
+        void setAttractorLayerEnabled(int inx, int layer, bool enabled){
+            attractors[inx].layerMask = setBitVal(attractors[inx].layerMask, layer, enabled); 
+        }
+
+        void zeroAttractorLayerMask(int inx){
+            attractors[inx].layerMask = 0; 
         }
 
         void setAttractorPosition(int inx, Vec3 position){

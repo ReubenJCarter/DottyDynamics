@@ -53,6 +53,8 @@ extern "C" {
     EXPORT GlobalForce* World_getGlobalForcePtr(World* instance, int inx); 
     EXPORT void World_destroyGlobalForce(World* instance, int inx); 
     EXPORT void World_clearGlobalForces(World* instance);
+    EXPORT void World_setGlobalForceLayerEnabled(World* instance, int inx, int layer, bool enabled); 
+    EXPORT void World_zeroGlobalForceLayerMask(World* instance, int inx); 
     EXPORT void World_setGlobalForcePosition(World* instance, int inx, Vec3 position); 
     EXPORT void World_setGlobalForceDirection(World* instance, int inx, Vec3 direction); 
     EXPORT void World_setGlobalForceStrength(World* instance, int inx, float strength); 
@@ -66,6 +68,8 @@ extern "C" {
     EXPORT Attractor* World_getAttractorPtr(World* instance, int inx);
     EXPORT void World_destroyAttractor(World* instance, int inx); 
     EXPORT void World_clearAttractors(World* instance);
+    EXPORT void World_setAttractorLayerEnabled(World* instance, int inx, int layer, bool enabled); 
+    EXPORT void World_zeroAttractorLayerMask(World* instance, int inx); 
     EXPORT void World_setAttractorPosition(World* instance, int inx, Vec3 position);
     EXPORT void World_setAttractorStrength(World* instance, int inx, float strength);
     EXPORT void World_setAttractorMinDist(World* instance, int inx, float minDist); 
@@ -77,6 +81,8 @@ extern "C" {
     EXPORT StrangeAttractor* World_getStrangeAttractorPtr(World* instance, int inx);
     EXPORT void World_destroyStrangeAttractor(World* instance, int inx); 
     EXPORT void World_clearStrangeAttractors(World* instance);
+    EXPORT void World_setStrangeAttractorLayerEnabled(World* instance, int inx, int layer, bool enabled); 
+    EXPORT void World_zeroStrangeAttractorLayerMask(World* instance, int inx); 
     EXPORT void World_setStrangeAttractorPosition(World* instance, int inx, Vec3 position);
     EXPORT void World_setStrangeAttractorScale(World* instance, int inx, float scale);
     EXPORT void World_setStrangeAttractorType(World* instance, int inx, StrangeAttractorType type);
@@ -92,6 +98,8 @@ extern "C" {
     EXPORT Vortex* World_getVortexPtr(World* instance, int inx);
     EXPORT void World_destroyVortex(World* instance, int inx); 
     EXPORT void World_clearVortices(World* instance);
+    EXPORT void World_setVortexLayerEnabled(World* instance, int inx, int layer, bool enabled); 
+    EXPORT void World_zeroVortexLayerMask(World* instance, int inx); 
     EXPORT void World_setVortexPosition(World* instance, int inx, Vec3 position);
     EXPORT void World_setVortexNormal(World* instance, int inx, Vec3 normal);
     EXPORT void World_setVortexStrength(World* instance, int inx, float strength);
@@ -120,6 +128,8 @@ extern "C" {
     EXPORT NoiseField* World_getNoiseFieldPtr(World* instance, int inx); 
     EXPORT void World_destroyNoiseField(World* instance, int inx); 
     EXPORT void World_clearNoiseFields(World* instance);
+    EXPORT void World_setNoiseFieldLayerEnabled(World* instance, int inx, int layer, bool enabled); 
+    EXPORT void World_zeroNoiseFieldLayerMask(World* instance, int inx); 
     EXPORT void World_setNoiseFieldPosition(World* instance, int inx, Vec3 position); 
     EXPORT void World_setNoiseFieldNoiseType(World* instance, int inx, NoiseType noiseType); 
     EXPORT void World_setNoiseFieldStrength(World* instance, int inx, float strength); 
@@ -138,6 +148,8 @@ extern "C" {
     EXPORT SphereCollider* World_getSphereColliderPtr(World* instance, int inx); 
     EXPORT void World_destroySphereCollider(World* instance, int inx);
     EXPORT void World_clearSphereColliders(World* instance);
+    EXPORT void World_setSphereColliderLayerEnabled(World* instance, int inx, int layer, bool enabled); 
+    EXPORT void World_zeroSphereColliderLayerMask(World* instance, int inx); 
     EXPORT void World_setSphereColliderPosition(World* instance, int inx, Vec3 position);
     EXPORT void World_setSphereColliderRadius(World* instance, int inx, float radius);
     EXPORT void World_setSphereColliderKineticFriction(World* instance, int inx, float kineticFriction); 
@@ -148,6 +160,8 @@ extern "C" {
     EXPORT BoxCollider* World_getBoxColliderPtr(World* instance, int inx); 
     EXPORT void World_destroyBoxCollider(World* instance, int inx);
     EXPORT void World_clearBoxColliders(World* instance);
+    EXPORT void World_setBoxColliderLayerEnabled(World* instance, int inx, int layer, bool enabled); 
+    EXPORT void World_zeroBoxColliderLayerMask(World* instance, int inx); 
     EXPORT void World_setBoxColliderPosition(World* instance, int inx, Vec3 position);
     EXPORT void World_setBoxColliderInvRotation(World* instance, int inx, Mat3 invRotation);
     EXPORT void World_setBoxColliderSize(World* instance, int inx, Vec3 size);
@@ -160,6 +174,8 @@ extern "C" {
     EXPORT Damper* World_getDamperPtr(World* instance, int inx); 
     EXPORT void World_destroyDamper(World* instance, int inx); 
     EXPORT void World_clearDampers(World* instance);
+    EXPORT void World_setDamperLayerEnabled(World* instance, int inx, int layer, bool enabled); 
+    EXPORT void World_zeroDamperLayerMask(World* instance, int inx); 
     EXPORT void World_setDamperPosition(World* instance, int inx, Vec3 position); 
     EXPORT void World_setDamperStrength(World* instance, int inx, float strength); 
     EXPORT void World_setDamperBoundSize(World* instance, int inx, Vec3 boundSize); 

@@ -2,6 +2,7 @@
 
 #include "thirdparty/thread-pool-3.3.0/BS_thread_pool.hpp"
 #include "thirdparty/VecMath/VecMath.hpp"
+#include "Util.hpp"
 #include "Primitives.hpp"
 #include "DynamicPool.hpp"
 #include "FalloffFunctions.hpp"
@@ -243,6 +244,14 @@ class StrangeAttractorSystem {
 
         void clearStrangeAttractors(){
             strangeAttractors.clear(); 
+        }
+
+        void setStrangeAttractorLayerEnabled(int inx, int layer, bool enabled){
+            strangeAttractors[inx].layerMask = setBitVal(strangeAttractors[inx].layerMask, layer, enabled); 
+        }
+
+        void zeroStrangeAttractorLayerMask(int inx){
+            strangeAttractors[inx].layerMask = 0; 
         }
 
         void setStrangeAttractorPosition(int inx, Vec3 position){

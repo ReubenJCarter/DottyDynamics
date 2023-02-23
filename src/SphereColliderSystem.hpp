@@ -2,6 +2,7 @@
 
 #include "thirdparty/thread-pool-3.3.0/BS_thread_pool.hpp"
 #include "thirdparty/VecMath/VecMath.hpp"
+#include "Util.hpp"
 #include "Primitives.hpp"
 #include "DynamicPool.hpp"
 
@@ -75,6 +76,14 @@ class SphereColliderSystem {
 
         void clearSphereColliders(){
             sphereColliders.clear(); 
+        }
+
+        void setSphereColliderLayerEnabled(int inx, int layer, bool enabled){
+            sphereColliders[inx].layerMask = setBitVal(sphereColliders[inx].layerMask, layer, enabled); 
+        }
+
+        void zeroSphereColliderLayerMask(int inx){
+            sphereColliders[inx].layerMask = 0; 
         }
 
         void setSphereColliderPosition(int inx, Vec3 position){

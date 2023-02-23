@@ -45,6 +45,7 @@ namespace Dotty{
 
     [StructLayout(LayoutKind.Sequential)]
     public struct GlobalForceNtv{
+        public uint layerMask; 
         public Vec3 position; 
         public Vec3 direction;
         public float strength; 
@@ -57,6 +58,7 @@ namespace Dotty{
 
     [StructLayout(LayoutKind.Sequential)]
     public struct AttractorNtv{
+        public uint layerMask; 
         public Vec3 position; 
         public float strength;
         public float minDist; 
@@ -66,6 +68,7 @@ namespace Dotty{
 
     [StructLayout(LayoutKind.Sequential)]
     public struct VortexNtv{
+        public uint layerMask; 
         public Vec3 position; 
         public Vec3 normal; 
         public float strength;
@@ -76,6 +79,7 @@ namespace Dotty{
 
     [StructLayout(LayoutKind.Sequential)]
     public struct SphereColliderNtv {
+        public uint layerMask; 
         public Vec3 position; 
         public float radius;
         public float staticFriction; 
@@ -85,6 +89,7 @@ namespace Dotty{
 
     [StructLayout(LayoutKind.Sequential)]
     public struct BoxColliderNtv {
+        public uint layerMask; 
         public Vec3 position; 
         public Mat3 invRotation; 
         public Vec3 size;
@@ -95,6 +100,7 @@ namespace Dotty{
 
     [StructLayout(LayoutKind.Sequential)]
     public struct NoiseFieldNtv{
+        public uint layerMask; 
         public Vec3 position; 
         public float noiseScale; 
         public float strength;
@@ -112,6 +118,7 @@ namespace Dotty{
 
     [StructLayout(LayoutKind.Sequential)]
     public struct StrangeAttractorNtv {
+        public uint layerMask; 
         public Vec3 position; 
         public float scale; 
         public StrangeAttractorType type; 
@@ -131,6 +138,7 @@ namespace Dotty{
 
     [StructLayout(LayoutKind.Sequential)]
     public struct DamperNtv {
+        public uint layerMask; 
         public Vec3 position; 
         public float strength; 
         public Vec3 boundSize; 

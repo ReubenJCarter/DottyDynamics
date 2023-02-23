@@ -2,6 +2,7 @@
 
 #include "thirdparty/thread-pool-3.3.0/BS_thread_pool.hpp"
 #include "thirdparty/VecMath/VecMath.hpp"
+#include "Util.hpp"
 #include "Primitives.hpp"
 #include "DynamicPool.hpp"
 
@@ -82,6 +83,14 @@ class VortexSystem {
 
         void clearVortices(){
             vortices.clear(); 
+        }
+
+        void setVortexLayerEnabled(int inx, int layer, bool enabled){
+            vortices[inx].layerMask = setBitVal(vortices[inx].layerMask, layer, enabled); 
+        }
+
+        void zeroVortexLayerMask(int inx){
+            vortices[inx].layerMask = 0; 
         }
 
         void setVortexPosition(int inx, Vec3 position){

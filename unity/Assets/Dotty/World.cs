@@ -1089,7 +1089,7 @@ namespace Dotty{
         private static extern void World_setAngleConstraintAngle(IntPtr instance, int inx, float angle);
 
         public int AddAngleConstraint(int a, int b, int c, float angle, float stiffness){
-            return World_addAngleConstraint(ntv, a, b, length, stiffness); 
+            return World_addAngleConstraint(ntv, a, b, c, angle, stiffness); 
         }
 
         public void DestroyAngleConstraint(int inx){
@@ -1097,7 +1097,7 @@ namespace Dotty{
         }
 
         public void SetAngleConstraintAngle(int inx, float angle){
-            World_setAngleConstraintAngle(ntv, inx, length); 
+            World_setAngleConstraintAngle(ntv, inx, angle); 
         }
 
         public void SetAngleConstraintStiffness(int inx, float stiffness){

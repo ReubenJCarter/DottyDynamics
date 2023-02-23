@@ -2,6 +2,7 @@
 
 #include "thirdparty/thread-pool-3.3.0/BS_thread_pool.hpp"
 #include "thirdparty/VecMath/VecMath.hpp"
+#include "Util.hpp"
 #include "Primitives.hpp"
 #include "DynamicPool.hpp"
 #include "NoiseGenerator.hpp"
@@ -219,6 +220,14 @@ class NoiseFieldSystem {
         void clearNoiseFields(){
             noiseFields.clear(); 
             noiseGenerators.clear(); 
+        }
+
+        void setNoiseFieldLayerEnabled(int inx, int layer, bool enabled){
+            noiseFields[inx].layerMask = setBitVal(noiseFields[inx].layerMask, layer, enabled); 
+        }
+
+        void zeroNoiseFieldLayerMask(int inx){
+            noiseFields[inx].layerMask = 0; 
         }
 
         void setNoiseFieldPosition(int inx, Vec3 position){

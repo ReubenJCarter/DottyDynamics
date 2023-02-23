@@ -1,5 +1,7 @@
 #pragma once 
 
+#include <stdint.h>
+
 #include "thirdparty/VecMath/VecMath.hpp"
 
 enum Falloff{Constant, InvDist, InvDist2, InvDistWell, InvDist2Well, LinearRange, SquaredRange, CubedRange }; 
@@ -50,6 +52,7 @@ struct AngleConstraint {
 }; 
 
 struct Attractor {
+    uint32_t layerMask; 
     Vec3 position; 
     float strength;
     float minDist; 
@@ -58,6 +61,7 @@ struct Attractor {
 }; 
 
 struct StrangeAttractor {
+    uint32_t layerMask; 
     Vec3 position; 
     float scale; 
     StrangeAttractorType type; 
@@ -76,6 +80,7 @@ struct StrangeAttractor {
 }; 
 
 struct Vortex {
+    uint32_t layerMask; 
     Vec3 position; 
     Vec3 normal; 
     float strength;
@@ -85,6 +90,7 @@ struct Vortex {
 }; 
 
 struct NoiseField {
+    uint32_t layerMask; 
     Vec3 position; 
     float noiseScale; 
     float strength;
@@ -101,6 +107,7 @@ struct NoiseField {
 }; 
 
 struct GlobalForce {
+    uint32_t layerMask; 
     Vec3 position; 
     Vec3 direction;
     float strength; 
@@ -112,6 +119,7 @@ struct GlobalForce {
 };
 
 struct BoxCollider {
+    uint32_t layerMask; 
     Vec3 position; 
     Mat3 invRotation; 
     Vec3 size;
@@ -121,6 +129,7 @@ struct BoxCollider {
 }; 
 
 struct SphereCollider {
+    uint32_t layerMask; 
     Vec3 position; 
     float radius;
     float staticFriction; 
@@ -129,6 +138,7 @@ struct SphereCollider {
 }; 
 
 struct Damper {
+    uint32_t layerMask; 
     Vec3 position; 
     float strength; 
     Vec3 boundSize; 

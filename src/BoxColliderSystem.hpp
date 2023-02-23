@@ -2,6 +2,7 @@
 
 #include "thirdparty/thread-pool-3.3.0/BS_thread_pool.hpp"
 #include "thirdparty/VecMath/VecMath.hpp"
+#include "Util.hpp"
 #include "Primitives.hpp"
 #include "DynamicPool.hpp"
 
@@ -118,6 +119,14 @@ class BoxColliderSystem {
 
         void clearBoxColliders(){
             boxColliders.clear(); 
+        }
+
+        void setBoxColliderLayerEnabled(int inx, int layer, bool enabled){
+            boxColliders[inx].layerMask = setBitVal(boxColliders[inx].layerMask, layer, enabled); 
+        }
+
+        void zeroBoxColliderLayerMask(int inx){
+            boxColliders[inx].layerMask = 0; 
         }
 
         void setBoxColliderPosition(int inx, Vec3 position){

@@ -113,6 +113,14 @@ EXPORT void World_clearGlobalForces(World* instance){
     instance->globalForceSystem.clearGlobalForces(); 
 }
 
+EXPORT void World_setGlobalForceLayerEnabled(World* instance, int inx, int layer, bool enabled){
+    instance->globalForceSystem.setGlobalForceLayerEnabled(inx, layer, enabled); 
+} 
+
+EXPORT void World_zeroGlobalForceLayerMask(World* instance, int inx){
+    instance->globalForceSystem.zeroGlobalForceLayerMask(inx); 
+}   
+
 EXPORT void World_setGlobalForcePosition(World* instance, int inx, Vec3 position){
     instance->globalForceSystem.setGlobalForcePosition(inx, position); 
 }
@@ -163,6 +171,14 @@ EXPORT void World_clearAttractors(World* instance){
     instance->attractorSystem.clearAttractors(); 
 }
 
+EXPORT void World_setAttractorLayerEnabled(World* instance, int inx, int layer, bool enabled){
+    instance->attractorSystem.setAttractorLayerEnabled(inx, layer, enabled); 
+} 
+
+EXPORT void World_zeroAttractorLayerMask(World* instance, int inx){
+    instance->attractorSystem.zeroAttractorLayerMask(inx); 
+} 
+
 EXPORT void World_setAttractorPosition(World* instance, int inx, Vec3 position){
     instance->attractorSystem.setAttractorPosition(inx, position);
 }
@@ -201,6 +217,14 @@ EXPORT void World_destroyStrangeAttractor(World* instance, int inx){
 EXPORT void World_clearStrangeAttractors(World* instance){
     instance->strangeAttractorSystem.clearStrangeAttractors(); 
 }
+
+EXPORT void World_setStrangeAttractorLayerEnabled(World* instance, int inx, int layer, bool enabled){
+    instance->strangeAttractorSystem.setStrangeAttractorLayerEnabled(inx, layer, enabled); 
+} 
+
+EXPORT void World_zeroStrangeAttractorLayerMask(World* instance, int inx){
+    instance->strangeAttractorSystem.zeroStrangeAttractorLayerMask(inx); 
+} 
 
 EXPORT void World_setStrangeAttractorPosition(World* instance, int inx, Vec3 position){
     instance->strangeAttractorSystem.setStrangeAttractorPosition(inx, position);
@@ -259,6 +283,14 @@ EXPORT void World_destroyVortex(World* instance, int inx){
 EXPORT void World_clearVortices(World* instance){
     instance->vortexSystem.clearVortices(); 
 }
+
+EXPORT void World_setVortexLayerEnabled(World* instance, int inx, int layer, bool enabled){
+    instance->vortexSystem.setVortexLayerEnabled(inx, layer, enabled); 
+} 
+
+EXPORT void World_zeroVortexLayerMask(World* instance, int inx){
+    instance->vortexSystem.zeroVortexLayerMask(inx); 
+} 
 
 EXPORT void World_setVortexPosition(World* instance, int inx, Vec3 position){
     instance->vortexSystem.setVortexPosition(inx, position); 
@@ -363,6 +395,14 @@ EXPORT void World_clearNoiseFields(World* instance){
     instance->noiseFieldSystem.clearNoiseFields(); 
 }
 
+EXPORT void World_setNoiseFieldLayerEnabled(World* instance, int inx, int layer, bool enabled){
+    instance->noiseFieldSystem.setNoiseFieldLayerEnabled(inx, layer, enabled); 
+} 
+
+EXPORT void World_zeroNoiseFieldLayerMask(World* instance, int inx){
+    instance->noiseFieldSystem.zeroNoiseFieldLayerMask(inx); 
+} 
+
 EXPORT void World_setNoiseFieldPosition(World* instance, int inx, Vec3 position){
     instance->noiseFieldSystem.setNoiseFieldPosition(inx, position); 
 }
@@ -433,6 +473,14 @@ EXPORT void World_clearSphereColliders(World* instance){
     instance->sphereColliderSystem.clearSphereColliders();
 }
 
+EXPORT void World_setSphereColliderLayerEnabled(World* instance, int inx, int layer, bool enabled){
+    instance->sphereColliderSystem.setSphereColliderLayerEnabled(inx, layer, enabled); 
+} 
+
+EXPORT void World_zeroSphereColliderLayerMask(World* instance, int inx){
+    instance->sphereColliderSystem.zeroSphereColliderLayerMask(inx); 
+} 
+
 EXPORT void World_setSphereColliderPosition(World* instance, int inx, Vec3 position){
     instance->sphereColliderSystem.setSphereColliderPosition(inx, position); 
 }
@@ -470,6 +518,14 @@ EXPORT void World_destroyBoxCollider(World* instance, int inx){
 EXPORT void World_clearBoxColliders(World* instance){
     instance->boxColliderSystem.clearBoxColliders(); 
 }
+
+EXPORT void World_setBoxColliderLayerEnabled(World* instance, int inx, int layer, bool enabled){
+    instance->boxColliderSystem.setBoxColliderLayerEnabled(inx, layer, enabled); 
+} 
+
+EXPORT void World_zeroBoxColliderLayerMask(World* instance, int inx){
+    instance->boxColliderSystem.zeroBoxColliderLayerMask(inx); 
+} 
 
 EXPORT void World_setBoxColliderPosition(World* instance, int inx, Vec3 position){
     instance->boxColliderSystem.setBoxColliderPosition(inx, position); 
@@ -513,6 +569,14 @@ EXPORT void World_destroyDamper(World* instance, int inx){
 EXPORT void World_clearDampers(World* instance){
     instance->damperSystem.clearDampers(); 
 }
+
+EXPORT void World_setDamperLayerEnabled(World* instance, int inx, int layer, bool enabled){
+    instance->damperSystem.setDamperLayerEnabled(inx, layer, enabled); 
+} 
+
+EXPORT void World_zeroDamperLayerMask(World* instance, int inx){
+    instance->damperSystem.zeroDamperLayerMask(inx); 
+} 
 
 EXPORT void World_setDamperPosition(World* instance, int inx, Vec3 position){
     instance->damperSystem.setDamperPosition(inx, position); 

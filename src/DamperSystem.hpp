@@ -2,6 +2,7 @@
 
 #include "thirdparty/thread-pool-3.3.0/BS_thread_pool.hpp"
 #include "thirdparty/VecMath/VecMath.hpp"
+#include "Util.hpp"
 #include "Primitives.hpp"
 #include "DynamicPool.hpp"
 #include "IntersectionTesting.hpp"
@@ -99,6 +100,14 @@ class DamperSystem {
 
         void clearDampers(){
             dampers.clear(); 
+        }
+
+        void setDamperLayerEnabled(int inx, int layer, bool enabled){
+            dampers[inx].layerMask = setBitVal(dampers[inx].layerMask, layer, enabled); 
+        }
+
+        void zeroDamperLayerMask(int inx){
+            dampers[inx].layerMask = 0; 
         }
 
         void setDamperPosition(int inx, Vec3 position){
