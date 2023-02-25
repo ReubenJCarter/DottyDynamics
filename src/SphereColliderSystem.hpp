@@ -15,19 +15,24 @@ class SphereColliderSystem {
             sphereColliders.setPoolSize(1000);
         }
 
-        void updateSphereColliders(BS::thread_pool& threadPool, WorldParams& params, DynamicPool<Particle>& particles){
+        void updateSphereColliders(BS::thread_pool& threadPool, WorldParams& params, DynamicPool<Particle>& particles, DynamicPool<uint32_t>& particleLayerMask){
             
             unsigned int maxColliderCount = sphereColliders.getBound(); 
             unsigned int pcount = particles.getBound();
 
-            threadPool.parallelize_loop(pcount, [this, maxColliderCount, &particles, &params](const int a, const int b){
+            threadPool.parallelize_loop(pcount, [this, maxColliderCount, &particles, &params, &particleLayerMask](const int a, const int b){
                 
                 for(int i = 0; i < maxColliderCount; i++){
 
                     if(!sphereColliders.isInUse(i))
                             continue; 
 
+                    uint32_t M = sphereColliders[i].layerMask;
+
                     for(int p = a; p < b; p++){
+
+                        if(!(M & particleLayerMask[p]))
+                            continue;
                     
                         float xDiff = sphereColliders[i].position.x - particles[p].positionNext.x; 
                         float yDiff = sphereColliders[i].position.y - particles[p].positionNext.y;

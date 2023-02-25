@@ -7,6 +7,11 @@ using System;
 
 namespace Dotty{
 
+    [System.Flags]
+    public enum Mask : uint {
+        None=0x00, Layer0 =0x01, Layer1=0x02, Layer2=0x04, Layer3=0x08, Layer4=0x10, Layer5=0x20, Layer6=0x40, Layer7=0x80
+    };
+
     public enum Falloff{Constant, InvDist, InvDist2, InvDistWell, InvDist2Well, LinearRange, SquaredRange, CubedRange};
     public enum NoiseType{Simplex, SimplexCurl, Perlin, PerlinCurl, Value, ValueCurl};
     public enum FieldMode{Force, CorrectionForce};

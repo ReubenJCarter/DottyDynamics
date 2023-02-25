@@ -14,6 +14,8 @@ namespace Dotty{
         
         public World world; 
 
+        public Mask layerMask = (Mask)0xFF; 
+
         public float noiseScale = 10; 
         public NoiseType noiseType = NoiseType.SimplexCurl; 
         public float strength = 1; 
@@ -81,6 +83,7 @@ namespace Dotty{
             sz.z = boundSize.z;  
 
             unsafe{
+                (*ptr).layerMask = (uint)layerMask; 
                 (*ptr).position.x = position.x;
                 (*ptr).position.y = position.y;
                 (*ptr).position.z = position.z; 

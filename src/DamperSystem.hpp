@@ -16,21 +16,25 @@ class DamperSystem {
             dampers.setPoolSize(1000); 
         }
 
-        void updateDampers(BS::thread_pool& threadPool, float timestep, WorldParams& params, DynamicPool<Particle>& particles){
+        void updateDampers(BS::thread_pool& threadPool, float timestep, WorldParams& params, DynamicPool<Particle>& particles, DynamicPool<uint32_t>& particleLayerMask){
 
             unsigned int maxDampersCount = dampers.getBound(); 
             unsigned int pcount = particles.getBound();
 
-            threadPool.parallelize_loop(pcount, [this, maxDampersCount, timestep, &particles](const int a, const int b){
+            threadPool.parallelize_loop(pcount, [this, maxDampersCount, timestep, &particles, &particleLayerMask](const int a, const int b){
                 
                 for(int i = 0; i < maxDampersCount; i++){
 
                     if(!dampers.isInUse(i))
                         continue; 
 
+                    uint32_t M = dampers[i].layerMask;
+
                     if(dampers[i].boundShape == BoundShapeType::Infinite){
                     
                         for(int p = a; p < b; p++){
+
+                            float strength = M & particleLayerMask[p] ? dampers[i].strength : 0; 
 
                             particles[p].velocity.x -= particles[p].velocity.x * timestep * particles[p].invMass * dampers[i].strength;
                             particles[p].velocity.y -= particles[p].velocity.y * timestep * particles[p].invMass * dampers[i].strength;
@@ -49,6 +53,8 @@ class DamperSystem {
                                 dampers[i].boundThickness, 
                                 dampers[i].boundFalloff);
 
+                            boundStrength = M & particleLayerMask[p] ? boundStrength : 0; 
+
                             particles[p].velocity.x -= particles[p].velocity.x * timestep * particles[p].invMass * dampers[i].strength * boundStrength;
                             particles[p].velocity.y -= particles[p].velocity.y * timestep * particles[p].invMass * dampers[i].strength * boundStrength;
                             particles[p].velocity.z -= particles[p].velocity.z * timestep * particles[p].invMass * dampers[i].strength * boundStrength;
@@ -66,6 +72,8 @@ class DamperSystem {
                                 dampers[i].boundThickness, 
                                 dampers[i].boundFalloff, 
                                 dampers[i].boundInvRotation); 
+
+                            boundStrength = M & particleLayerMask[p] ? boundStrength : 0;
 
                             particles[p].velocity.x -= particles[p].velocity.x * timestep * particles[p].invMass * dampers[i].strength * boundStrength;
                             particles[p].velocity.y -= particles[p].velocity.y * timestep * particles[p].invMass * dampers[i].strength * boundStrength;

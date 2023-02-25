@@ -16,16 +16,18 @@ class BoxColliderSystem {
             boxColliders.setPoolSize(1000); 
         }
 
-        void updateBoxColliders(BS::thread_pool& threadPool, WorldParams& params, DynamicPool<Particle>& particles){
+        void updateBoxColliders(BS::thread_pool& threadPool, WorldParams& params, DynamicPool<Particle>& particles, DynamicPool<uint32_t>& particleLayerMask){
             unsigned int maxColliderCount = boxColliders.getBound(); 
             unsigned int pcount = particles.getBound();
 
-            threadPool.parallelize_loop(pcount, [this, maxColliderCount, &particles](const int a, const int b){
+            threadPool.parallelize_loop(pcount, [this, maxColliderCount, &particles, &particleLayerMask](const int a, const int b){
                 
                 for(int i = 0; i < maxColliderCount; i++){
 
                     if(!boxColliders.isInUse(i))
                             continue; 
+                
+                    uint32_t M = boxColliders[i].layerMask;
 
                     //get normal matrix from invRotation
                     Mat3 normalMatrix = boxColliders[i].invRotation; 
@@ -41,6 +43,9 @@ class BoxColliderSystem {
                     sideNormals[zn] = Vec3(0, 0, -1).multm(normalMatrix); 
 
                     for(int p = a; p < b; p++){
+
+                        if(!(M & particleLayerMask[p]))
+                            continue;
 
                         //Transform point into correct space for test 
                         Vec3 ppos = particles[p].positionNext;

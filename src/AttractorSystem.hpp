@@ -16,19 +16,20 @@ class AttractorSystem {
             attractors.setPoolSize(1000);  
         }
 
-        void updateAttractors(BS::thread_pool& threadPool, float timestep, WorldParams& params, DynamicPool<Particle>& particles){
+        void updateAttractors(BS::thread_pool& threadPool, float timestep, WorldParams& params, DynamicPool<Particle>& particles, DynamicPool<uint32_t>& particleLayerMask){
 
             unsigned int maxAttractorCount = attractors.getBound(); 
             unsigned int pcount = particles.getBound();
 
-            threadPool.parallelize_loop(pcount, [this, maxAttractorCount, timestep, &particles](const int a, const int b){
+            threadPool.parallelize_loop(pcount, [this, maxAttractorCount, timestep, &particles, &particleLayerMask](const int a, const int b){
                 
 
                 for(int i = 0; i < maxAttractorCount; i++){
 
                     if(!attractors.isInUse(i))
                         continue;          
-               
+
+                    uint32_t M = attractors[i].layerMask;
 
                     if(attractors[i].falloff == Falloff::Constant){
                         for(int p = a; p < b; p++){
@@ -37,6 +38,8 @@ class AttractorSystem {
                             float zDiff = attractors[i].position.z - particles[p].position.z;
 
                             float distFactor = falloffConstant(xDiff, yDiff, zDiff, attractors[i].maxDist); 
+
+                            distFactor = M & particleLayerMask[p] ? distFactor : 0;
 
                             particles[p].velocity.x += timestep * particles[p].invMass * xDiff * distFactor * attractors[i].strength;
                             particles[p].velocity.y += timestep * particles[p].invMass * yDiff * distFactor * attractors[i].strength;
@@ -51,6 +54,8 @@ class AttractorSystem {
 
                             float distFactor = falloffInvDist2(xDiff, yDiff, zDiff, attractors[i].minDist, attractors[i].maxDist); 
 
+                            distFactor = M & particleLayerMask[p] ? distFactor : 0;
+
                             particles[p].velocity.x += timestep * particles[p].invMass * xDiff * distFactor * attractors[i].strength;
                             particles[p].velocity.y += timestep * particles[p].invMass * yDiff * distFactor * attractors[i].strength;
                             particles[p].velocity.z += timestep * particles[p].invMass * zDiff * distFactor * attractors[i].strength;
@@ -63,6 +68,8 @@ class AttractorSystem {
                             float zDiff = attractors[i].position.z - particles[p].position.z;
 
                             float distFactor = falloffInvDist(xDiff, yDiff, zDiff, attractors[i].minDist, attractors[i].maxDist); 
+
+                            distFactor = M & particleLayerMask[p] ? distFactor : 0;
 
                             particles[p].velocity.x += timestep * particles[p].invMass * xDiff * distFactor * attractors[i].strength;
                             particles[p].velocity.y += timestep * particles[p].invMass * yDiff * distFactor * attractors[i].strength;
@@ -77,6 +84,8 @@ class AttractorSystem {
 
                             float distFactor = falloffInvDistWell(xDiff, yDiff, zDiff, attractors[i].minDist, attractors[i].maxDist); 
 
+                            distFactor = M & particleLayerMask[p] ? distFactor : 0;
+
                             particles[p].velocity.x += timestep * particles[p].invMass * xDiff * distFactor * attractors[i].strength;
                             particles[p].velocity.y += timestep * particles[p].invMass * yDiff * distFactor * attractors[i].strength;
                             particles[p].velocity.z += timestep * particles[p].invMass * zDiff * distFactor * attractors[i].strength;
@@ -89,6 +98,8 @@ class AttractorSystem {
                             float zDiff = attractors[i].position.z - particles[p].position.z;
 
                             float distFactor = falloffInvDist2Well(xDiff, yDiff, zDiff, attractors[i].minDist, attractors[i].maxDist); 
+
+                            distFactor = M & particleLayerMask[p] ? distFactor : 0;
 
                             particles[p].velocity.x += timestep * particles[p].invMass * xDiff * distFactor * attractors[i].strength;
                             particles[p].velocity.y += timestep * particles[p].invMass * yDiff * distFactor * attractors[i].strength;
@@ -103,6 +114,8 @@ class AttractorSystem {
 
                             float distFactor = falloffLinearRange(xDiff, yDiff, zDiff, attractors[i].minDist, attractors[i].maxDist); 
 
+                            distFactor = M & particleLayerMask[p] ? distFactor : 0;
+
                             particles[p].velocity.x += timestep * particles[p].invMass * xDiff * distFactor * attractors[i].strength;
                             particles[p].velocity.y += timestep * particles[p].invMass * yDiff * distFactor * attractors[i].strength;
                             particles[p].velocity.z += timestep * particles[p].invMass * zDiff * distFactor * attractors[i].strength;
@@ -116,6 +129,8 @@ class AttractorSystem {
 
                             float distFactor = falloffSquaredRange(xDiff, yDiff, zDiff, attractors[i].minDist, attractors[i].maxDist); 
 
+                            distFactor = M & particleLayerMask[p] ? distFactor : 0;
+
                             particles[p].velocity.x += timestep * particles[p].invMass * xDiff * distFactor * attractors[i].strength;
                             particles[p].velocity.y += timestep * particles[p].invMass * yDiff * distFactor * attractors[i].strength;
                             particles[p].velocity.z += timestep * particles[p].invMass * zDiff * distFactor * attractors[i].strength;
@@ -128,6 +143,8 @@ class AttractorSystem {
                             float zDiff = attractors[i].position.z - particles[p].position.z;
 
                             float distFactor = falloffCubedRange(xDiff, yDiff, zDiff, attractors[i].minDist, attractors[i].maxDist); 
+
+                            distFactor = M & particleLayerMask[p] ? distFactor : 0;
 
                             particles[p].velocity.x += timestep * particles[p].invMass * xDiff * distFactor * attractors[i].strength;
                             particles[p].velocity.y += timestep * particles[p].invMass * yDiff * distFactor * attractors[i].strength;

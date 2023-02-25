@@ -15,17 +15,19 @@ class VortexSystem {
             vortices.setPoolSize(1000); 
         }
 
-        void updateVortices(BS::thread_pool& threadPool, float timestep, WorldParams& params, DynamicPool<Particle>& particles){
+        void updateVortices(BS::thread_pool& threadPool, float timestep, WorldParams& params, DynamicPool<Particle>& particles, DynamicPool<uint32_t>& particleLayerMask){
 
             unsigned int maxVorticesCount = vortices.getBound(); 
             unsigned int pcount = particles.getBound();
 
-            threadPool.parallelize_loop(pcount, [this, maxVorticesCount, timestep, &particles](const int a, const int b){
+            threadPool.parallelize_loop(pcount, [this, maxVorticesCount, timestep, &particles, &particleLayerMask](const int a, const int b){
                                 
                 for(int i = 0; i < maxVorticesCount; i++){
 
                     if(!vortices.isInUse(i))
                         continue; 
+
+                    uint32_t M = vortices[i].layerMask;
 
                     for(int p = a; p < b; p++){
                         float xDiff = vortices[i].position.x - particles[p].position.x; 
@@ -43,6 +45,8 @@ class VortexSystem {
                             distFactor = falloffInvDist2Well(xDiff, yDiff, zDiff, vortices[i].minDist, vortices[i].maxDist); 
                         else if(vortices[i].falloff == Falloff::InvDistWell) 
                             distFactor = falloffInvDistWell(xDiff, yDiff, zDiff, vortices[i].minDist, vortices[i].maxDist); 
+
+                        distFactor = M & particleLayerMask[p] ? distFactor : 0;
 
                         float vx = vortices[i].normal.x * vortices[i].strength;  
                         float vy = vortices[i].normal.y * vortices[i].strength;

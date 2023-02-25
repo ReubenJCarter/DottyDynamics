@@ -14,6 +14,7 @@ namespace Dotty{
         
         public World world; 
 
+        public Mask layerMask = (Mask)0xFF; 
 
         public Vector3 size = new Vector3(0.5f, 0.5f, 0.5f); 
         public float staticFriction = 0; 
@@ -75,6 +76,7 @@ namespace Dotty{
             sz.z = size.z;
 
             unsafe{
+                (*ptr).layerMask = (uint)layerMask; 
                 (*ptr).position.x = position.x;
                 (*ptr).position.y = position.y;
                 (*ptr).position.z = position.z; 

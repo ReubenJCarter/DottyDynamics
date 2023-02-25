@@ -15,6 +15,8 @@ namespace Dotty {
         
         public World world; 
 
+        public Mask layerMask = (Mask)0xFF; 
+
         public float strength = 1; 
         public Vector3 boundSize = new Vector3(1, 1, 1); 
         public BoundShapeType boundShape = BoundShapeType.Box;
@@ -75,6 +77,7 @@ namespace Dotty {
             sz.z = boundSize.z;  
 
             unsafe{
+                (*ptr).layerMask = (uint)layerMask; 
                 (*ptr).position.x = position.x;
                 (*ptr).position.y = position.y;
                 (*ptr).position.z = position.z; 

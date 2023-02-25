@@ -15,6 +15,8 @@ namespace Dotty {
         
         public World world; 
 
+        public Mask layerMask = (Mask)0xFF; 
+
         public float scale = 1; 
         public StrangeAttractorType type = StrangeAttractorType.Aizawa; 
         public float strength = 1; 
@@ -67,6 +69,7 @@ namespace Dotty {
         void Update() {
             Vector3 position = transform.position; 
             unsafe{
+                (*ptr).layerMask = (uint)layerMask; 
                 (*ptr).position.x = position.x;
                 (*ptr).position.y = position.y;
                 (*ptr).position.z = position.z;

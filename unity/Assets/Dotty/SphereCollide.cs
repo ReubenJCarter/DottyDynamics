@@ -13,6 +13,8 @@ namespace Dotty{
         unsafe private SphereColliderNtv* ptr; 
         public World world;
 
+        public Mask layerMask = (Mask)0xFF; 
+
         public float radius = 0.5f;
         public float staticFriction = 0; 
         public float kineticFriction = 0; 
@@ -54,6 +56,7 @@ namespace Dotty{
         void Update() {
             Vector3 position = transform.position; 
             unsafe{
+                (*ptr).layerMask = (uint)layerMask; 
                 (*ptr).position.x = position.x;
                 (*ptr).position.y = position.y;
                 (*ptr).position.z = position.z;

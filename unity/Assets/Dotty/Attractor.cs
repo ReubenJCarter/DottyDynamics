@@ -14,6 +14,8 @@ namespace Dotty {
         
         public World world; 
 
+        public Mask layerMask = (Mask)0xFF; 
+
         public float strength = 10; 
         public float minDistance = 0.1f; 
         public float maxDistance = 1000; 
@@ -54,6 +56,7 @@ namespace Dotty {
         void Update() {
             Vector3 position = transform.position; 
             unsafe{
+                (*ptr).layerMask = (uint)layerMask; 
                 (*ptr).position.x = position.x;
                 (*ptr).position.y = position.y;
                 (*ptr).position.z = position.z;

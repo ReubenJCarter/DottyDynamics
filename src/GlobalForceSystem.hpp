@@ -16,17 +16,19 @@ class GlobalForceSystem {
             globalForces.setPoolSize(1000); 
         }
 
-        void updateGlobalForces(BS::thread_pool& threadPool, float timestep, WorldParams& params, DynamicPool<Particle>& particles){
+        void updateGlobalForces(BS::thread_pool& threadPool, float timestep, WorldParams& params, DynamicPool<Particle>& particles, DynamicPool<uint32_t>& particleLayerMask){
 
             unsigned int maxGlobalForceCount = globalForces.getBound(); 
             unsigned int pcount = particles.getBound();
 
-            threadPool.parallelize_loop(pcount, [this, maxGlobalForceCount, timestep, &particles](const int a, const int b){
+            threadPool.parallelize_loop(pcount, [this, maxGlobalForceCount, timestep, &particles, &particleLayerMask](const int a, const int b){
                 
                 for(int i = 0; i < maxGlobalForceCount; i++){
 
                     if(!globalForces.isInUse(i))
                         continue; 
+
+                    uint32_t M = globalForces[i].layerMask;
 
                     if(globalForces[i].boundShape == BoundShapeType::Infinite){
                     
@@ -36,9 +38,11 @@ class GlobalForceSystem {
                             float yDir = globalForces[i].direction.y;
                             float zDir = globalForces[i].direction.z; 
 
-                            particles[p].velocity.x += timestep * particles[p].invMass * xDir * globalForces[i].strength;
-                            particles[p].velocity.y += timestep * particles[p].invMass * yDir * globalForces[i].strength;
-                            particles[p].velocity.z += timestep * particles[p].invMass * zDir * globalForces[i].strength;
+                            float s = M & particleLayerMask[p] ? 1 : 0; 
+
+                            particles[p].velocity.x += timestep * particles[p].invMass * xDir * globalForces[i].strength * s;
+                            particles[p].velocity.y += timestep * particles[p].invMass * yDir * globalForces[i].strength * s;
+                            particles[p].velocity.z += timestep * particles[p].invMass * zDir * globalForces[i].strength * s;
                         
                         }
 
@@ -53,6 +57,8 @@ class GlobalForceSystem {
                                 globalForces[i].boundShape, 
                                 globalForces[i].boundThickness, 
                                 globalForces[i].boundFalloff);
+
+                            boundStrength = M & particleLayerMask[p] ? boundStrength : 0;
                             
                             float xDir = globalForces[i].direction.x; 
                             float yDir = globalForces[i].direction.y;
@@ -76,6 +82,8 @@ class GlobalForceSystem {
                                 globalForces[i].boundThickness, 
                                 globalForces[i].boundFalloff, 
                                 globalForces[i].boundInvRotation); 
+
+                            boundStrength = M & particleLayerMask[p] ? boundStrength : 0;
 
                             float xDir = globalForces[i].direction.x; 
                             float yDir = globalForces[i].direction.y;

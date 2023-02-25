@@ -132,17 +132,19 @@ class StrangeAttractorSystem {
             strangeAttractors.setPoolSize(1000); 
         }
 
-        void updateStrangeAttractors(BS::thread_pool& threadPool, float timestep, WorldParams& params, DynamicPool<Particle>& particles){
+        void updateStrangeAttractors(BS::thread_pool& threadPool, float timestep, WorldParams& params, DynamicPool<Particle>& particles, DynamicPool<uint32_t>& particleLayerMask){
 
             unsigned int maxAttractorCount = strangeAttractors.getBound(); 
             unsigned int pcount = particles.getBound();
 
-            threadPool.parallelize_loop(pcount, [this, maxAttractorCount, timestep, &particles](const int a, const int b){
+            threadPool.parallelize_loop(pcount, [this, maxAttractorCount, timestep, &particles, &particleLayerMask](const int a, const int b){
                 
                 for(int i = 0; i < maxAttractorCount; i++){
 
                     if(!strangeAttractors.isInUse(i))
                         continue;          
+
+                    uint32_t M = strangeAttractors[i].layerMask;
 
                     float ka = strangeAttractors[i].a; 
                     float kb = strangeAttractors[i].b; 
@@ -184,6 +186,8 @@ class StrangeAttractorSystem {
                             distFactor = falloffCubedRange(xDiff, yDiff, zDiff, strangeAttractors[i].minDist, strangeAttractors[i].maxDist); 
                         else
                             distFactor = 1;
+
+                        distFactor = M & particleLayerMask[p] ? distFactor : 0;
                         
                         Vec3 att = computeStrangeAttractor(xDiff*ascale, yDiff*ascale, zDiff*ascale, strangeAttractors[i].type, ka, kb, kc, kd, ke, kf); 
 

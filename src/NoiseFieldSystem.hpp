@@ -51,7 +51,7 @@ class NoiseFieldSystem {
         
         }
 
-        void updateNoiseFieldsForces(BS::thread_pool& threadPool, float timestep, WorldParams& params, DynamicPool<Particle>& particles){
+        void updateNoiseFieldsForces(BS::thread_pool& threadPool, float timestep, WorldParams& params, DynamicPool<Particle>& particles, DynamicPool<uint32_t>& particleLayerMask){
             unsigned int noiseFieldsCount = noiseFields.getBound(); 
             unsigned int pcount = particles.getBound();
 
@@ -62,14 +62,14 @@ class NoiseFieldSystem {
                 }
             }
 
-            threadPool.parallelize_loop(pcount, [this, noiseFieldsCount, timestep, &particles](const int a, const int b){
+            threadPool.parallelize_loop(pcount, [this, noiseFieldsCount, timestep, &particles, &particleLayerMask](const int a, const int b){
                 
                 for(int i = 0; i < noiseFieldsCount; i++){
 
                     if(!noiseFields.isInUse(i))
                         continue; 
 
-                    
+                    uint32_t M = noiseFields[i].layerMask;
                     
                     bool isCurlType = noiseFields[i].noiseType == NoiseType::SimplexCurl || noiseFields[i].noiseType == NoiseType::PerlinCurl || noiseFields[i].noiseType == NoiseType::ValueCurl; 
 
@@ -98,6 +98,8 @@ class NoiseFieldSystem {
                         else{
                             boundStrength = 1;
                         }
+
+                        boundStrength = M & particleLayerMask[p] ? boundStrength : 0;
 
                         Vec3 coord = particles[p].position; 
                         Vec3 n; 

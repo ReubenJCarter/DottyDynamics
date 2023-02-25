@@ -101,16 +101,16 @@ class World {
                     particles[i].velocity.y -= deltaT * gravity; 
 
                 //Update forces 
-                globalForceSystem.updateGlobalForces(threadPool, deltaT, params, particles); 
-                attractorSystem.updateAttractors(threadPool, deltaT, params, particles); 
-                vortexSystem.updateVortices(threadPool, deltaT, params, particles); 
+                globalForceSystem.updateGlobalForces(threadPool, deltaT, params, particles, particleLayerMask); 
+                attractorSystem.updateAttractors(threadPool, deltaT, params, particles, particleLayerMask); 
+                vortexSystem.updateVortices(threadPool, deltaT, params, particles, particleLayerMask); 
 
                 //Update fields
-                strangeAttractorSystem.updateStrangeAttractors(threadPool, deltaT, params, particles); 
-                noiseFieldSystem.updateNoiseFieldsForces(threadPool, deltaT, params, particles); 
+                strangeAttractorSystem.updateStrangeAttractors(threadPool, deltaT, params, particles, particleLayerMask); 
+                noiseFieldSystem.updateNoiseFieldsForces(threadPool, deltaT, params, particles, particleLayerMask); 
 
                 //update dampers
-                damperSystem.updateDampers(threadPool, deltaT, params, particles); 
+                damperSystem.updateDampers(threadPool, deltaT, params, particles, particleLayerMask); 
 
                 //Apply velocities  
                 for(int i = 0; i < maxParticleCount; i++){
@@ -128,8 +128,8 @@ class World {
  
                 //update colliders
                 updateCollisionBounds(); 
-                boxColliderSystem.updateBoxColliders(threadPool, params, particles); 
-                sphereColliderSystem.updateSphereColliders(threadPool, params, particles); 
+                boxColliderSystem.updateBoxColliders(threadPool, params, particles, particleLayerMask); 
+                sphereColliderSystem.updateSphereColliders(threadPool, params, particles, particleLayerMask); 
 
                 //update rods 
                 rodSystem.updateRods(threadPool, params, particles, particleDeltas, particleDeltaCount); 
