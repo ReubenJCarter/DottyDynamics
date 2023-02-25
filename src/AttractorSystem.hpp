@@ -142,6 +142,7 @@ class AttractorSystem {
 
         int addAttrator(Vec3 position, float strength, float minDist, float maxDist, Falloff falloff){
             Attractor a; 
+            a.layerMask = 0xFFFFFFFF; 
             a.position = position; 
             a.strength = strength;
             a.minDist = minDist;

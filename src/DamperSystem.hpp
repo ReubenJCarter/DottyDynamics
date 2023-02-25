@@ -80,6 +80,7 @@ class DamperSystem {
 
         int addDamper(Vec3 position, float strength, Vec3 boundSize, BoundShapeType boundShape, float boundThickness, BoundFalloff boundFalloff, Mat3 boundInvRotation){
             Damper d; 
+            d.layerMask = 0xFFFFFFFF; 
             d.position = position; 
             d.strength = strength;
             d.boundSize = boundSize; 

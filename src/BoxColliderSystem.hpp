@@ -100,6 +100,7 @@ class BoxColliderSystem {
 
         int addBoxCollider(Vec3 position, Mat3 invRotation, Vec3 size, float kineticFriction, float staticFriction, bool inverse){
             BoxCollider c; 
+            c.layerMask = 0xFFFFFFFF; 
             c.position = position; 
             c.invRotation = invRotation; 
             c.size = size;

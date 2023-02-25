@@ -95,6 +95,7 @@ class GlobalForceSystem {
         int addGlobalForce(Vec3 position, Vec3 direction, float strength, Vec3 boundSize, 
                            BoundShapeType boundShape, float boundThickness, BoundFalloff boundFalloff, Mat3 boundInvRotation){
             GlobalForce g; 
+            g.layerMask = 0xFFFFFFFF; 
             g.position = position; 
             g.direction = direction; 
             g.strength = strength;

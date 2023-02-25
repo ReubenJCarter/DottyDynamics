@@ -58,6 +58,7 @@ class SphereColliderSystem {
 
         int addSphereCollider(Vec3 position, float radius, float kineticFriction, float staticFriction, bool inverse){
             SphereCollider c; 
+            c.layerMask = 0xFFFFFFFF; 
             c.position = position; 
             c.radius = radius;
             c.kineticFriction = kineticFriction;

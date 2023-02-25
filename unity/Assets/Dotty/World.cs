@@ -349,6 +349,20 @@ namespace Dotty{
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_clearGlobalForces(IntPtr instance);
+
+        #if UNITY_IOS && !UNITY_EDITOR
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setGlobalForceLayerEnabled(IntPtr instance, int inx, int layer, bool enabled); 
+
+        #if UNITY_IOS && !UNITY_EDITOR
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_zeroGlobalForceLayerMask(IntPtr instance, int inx);
         
         #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
@@ -449,6 +463,14 @@ namespace Dotty{
             World_clearGlobalForces(ntv); 
         }
 
+        public void SetGlobalForceLayerEnabled(int inx, int layer, bool enabled){
+            World_setGlobalForceLayerEnabled(ntv, inx, layer, enabled); 
+        }
+
+        public void ZeroGlobalForceLayerMask(int inx){
+            World_zeroGlobalForceLayerMask(ntv, inx); 
+        }
+
         void SetGlobalForcePosition(int inx, Vector3 position){
             Vec3 pos = new Vec3();
             pos.x = position.x; 
@@ -546,6 +568,20 @@ namespace Dotty{
         #else
         [DllImport ("Dotty")]   
         #endif
+        private static extern void World_setAttractorLayerEnabled(IntPtr instance, int inx, int layer, bool enabled); 
+        
+        #if UNITY_IOS && !UNITY_EDITOR
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_zeroAttractorLayerMask(IntPtr instance, int inx);
+
+        #if UNITY_IOS && !UNITY_EDITOR
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
         private static extern void World_setAttractorPosition(IntPtr instance, int inx, Vec3 position);
 
         #if UNITY_IOS && !UNITY_EDITOR
@@ -596,6 +632,14 @@ namespace Dotty{
 
         public void ClearAttractors(){
             World_clearAttractors(ntv); 
+        }
+
+        public void SetAttractorLayerEnabled(int inx, int layer, bool enabled){
+            World_setAttractorLayerEnabled(ntv, inx, layer, enabled); 
+        }
+
+        public void ZeroAttractorLayerMask(int inx){
+            World_zeroAttractorLayerMask(ntv, inx); 
         }
 
         public void SetAttractorPosition(int inx, Vector3 position){
@@ -660,6 +704,20 @@ namespace Dotty{
         #endif
         private static extern void World_clearStrangeAttractors(IntPtr instance);
         
+        #if UNITY_IOS && !UNITY_EDITOR
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]
+        #endif
+        private static extern void World_setStrangeAttractorLayerEnabled(IntPtr instance, int inx, int layer, bool enabled); 
+
+        #if UNITY_IOS && !UNITY_EDITOR
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]
+        #endif
+        private static extern void World_zeroStrangeAttractorLayerMask(IntPtr instance, int inx); 
+
         #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
         #else
@@ -753,6 +811,14 @@ namespace Dotty{
             World_clearStrangeAttractors(ntv); 
         }
 
+        public void SetStrangeAttractorLayerEnabled(int inx, int layer, bool enabled){
+            World_setStrangeAttractorLayerEnabled(ntv, inx, layer, enabled); 
+        }
+
+        public void ZeroStrangeAttractorLayerMask(int inx){
+            World_zeroStrangeAttractorLayerMask(ntv, inx); 
+        }
+
         public void SetStrangeAttractorPosition(int inx, Vector3 position){
             Vec3 pos = new Vec3();
             pos.x = position.x; 
@@ -839,6 +905,20 @@ namespace Dotty{
         #else
         [DllImport ("Dotty")]   
         #endif
+        private static extern void World_setVortexLayerEnabled(IntPtr instance, int inx, int layer, bool enabled); 
+
+        #if UNITY_IOS && !UNITY_EDITOR
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_zeroVortexLayerMask(IntPtr instance, int inx); 
+
+        #if UNITY_IOS && !UNITY_EDITOR
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
         private static extern void World_setVortexPosition(IntPtr instance, int inx, Vec3 position);
 
         #if UNITY_IOS && !UNITY_EDITOR
@@ -900,6 +980,14 @@ namespace Dotty{
 
         public void ClearVortices(){
             World_clearVortices(ntv); 
+        }
+
+        public void SetVortexLayerEnabled(int inx, int layer, bool enabled){
+            World_setVortexLayerEnabled(ntv, inx, layer, enabled); 
+        }
+
+        public void ZeroVortexLayerMask(int inx){
+            World_zeroVortexLayerMask(ntv, inx); 
         }
 
         public void SetVortexPosition(int inx, Vector3 position){
@@ -1138,6 +1226,20 @@ namespace Dotty{
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_clearNoiseFields(IntPtr instance);
+
+        #if UNITY_IOS && !UNITY_EDITOR
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setNoiseFieldLayerEnabled(IntPtr instance, int inx, int layer, bool enabled); 
+
+        #if UNITY_IOS && !UNITY_EDITOR
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_zeroNoiseFieldLayerMask(IntPtr instance, int inx); 
         
         #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
@@ -1270,6 +1372,14 @@ namespace Dotty{
             World_clearNoiseFields(ntv); 
         }
 
+        public void SetNoiseFieldLayerEnabled(int inx, int layer, bool enabled){
+            World_setNoiseFieldLayerEnabled(ntv, inx, layer, enabled); 
+        }
+
+        public void ZeroNoiseFieldLayerMask(int inx){
+            World_zeroNoiseFieldLayerMask(ntv, inx); 
+        }
+
         public void SetNoiseFieldPosition(int inx, Vector3 position){
             Vec3 pos = new Vec3();
             pos.x = position.x; 
@@ -1383,6 +1493,20 @@ namespace Dotty{
         #else
         [DllImport ("Dotty")]   
         #endif
+        private static extern void World_setSphereColliderLayerEnabled(IntPtr instance, int inx, int layer, bool enabled); 
+
+        #if UNITY_IOS && !UNITY_EDITOR
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_zeroSphereColliderLayerMask(IntPtr instance, int inx); 
+
+        #if UNITY_IOS && !UNITY_EDITOR
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
         private static extern void World_setSphereColliderPosition(IntPtr instance, int inx, Vec3 position);
 
         #if UNITY_IOS && !UNITY_EDITOR
@@ -1433,6 +1557,14 @@ namespace Dotty{
 
         public void ClearSphereColliders(){
             World_clearSphereColliders(ntv); 
+        }
+
+        public void SetSphereColliderLayerEnabled(int inx, int layer, bool enabled){
+            World_setSphereColliderLayerEnabled(ntv, inx, layer, enabled); 
+        }
+
+        public void ZeroSphereColliderLayerMask(int inx){
+            World_zeroSphereColliderLayerMask(ntv, inx); 
         }
 
         public void SetSphereColliderPosition(int inx, Vector3 position){
@@ -1495,6 +1627,20 @@ namespace Dotty{
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_clearBoxColliders(IntPtr instance);
+
+        #if UNITY_IOS && !UNITY_EDITOR
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setBoxColliderLayerEnabled(IntPtr instance, int inx, int layer, bool enabled); 
+
+        #if UNITY_IOS && !UNITY_EDITOR
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_zeroBoxColliderLayerMask(IntPtr instance, int inx); 
 
         #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
@@ -1574,6 +1720,14 @@ namespace Dotty{
 
         public void ClearBoxColliders(){
             World_clearBoxColliders(ntv); 
+        }
+
+        public void SetBoxColliderLayerEnabled(int inx, int layer, bool enabled){
+            World_setBoxColliderLayerEnabled(ntv, inx, layer, enabled); 
+        }
+
+        public void ZeroBoxColliderLayerMask(int inx){
+            World_zeroBoxColliderLayerMask(ntv, inx); 
         }
 
         public void SetBoxColliderPosition(int inx, Vector3 position){
@@ -1658,6 +1812,20 @@ namespace Dotty{
         [DllImport ("Dotty")]   
         #endif
         private static extern void World_clearDampers(IntPtr instance);
+
+        #if UNITY_IOS && !UNITY_EDITOR
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_setDamperLayerEnabled(IntPtr instance, int inx, int layer, bool enabled); 
+
+        #if UNITY_IOS && !UNITY_EDITOR
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
+        private static extern void World_zeroDamperLayerMask(IntPtr instance, int inx);
         
         #if UNITY_IOS && !UNITY_EDITOR
         [DllImport ("__Internal")]
@@ -1744,6 +1912,14 @@ namespace Dotty{
 
         public void ClearDampers(){
             World_clearDampers(ntv); 
+        }
+
+        public void SetDamperLayerEnabled(int inx, int layer, bool enabled){
+            World_setDamperLayerEnabled(ntv, inx, layer, enabled); 
+        }
+
+        public void ZeroDamperLayerMask(int inx){
+            World_zeroDamperLayerMask(ntv, inx); 
         }
 
         void SetDamperPosition(int inx, Vector3 position){

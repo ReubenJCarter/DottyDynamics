@@ -221,6 +221,7 @@ class StrangeAttractorSystem {
         int addStrangeAttractor(Vec3 position, float scale, StrangeAttractorType type, float strength, float targetSpeed, FieldMode fieldMode, float minDist, float maxDist, Falloff falloff, 
                                float a, float b, float c, float d, float e, float f){
             StrangeAttractor sa; 
+            sa.layerMask = 0xFFFFFFFF; 
             sa.position = position;
             sa.scale = scale;  
             sa.type = type; 

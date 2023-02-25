@@ -177,6 +177,7 @@ class NoiseFieldSystem {
                           Vec3 boundSize, BoundShapeType boundShape, float boundThickness, BoundFalloff boundFalloff, Mat3 boundInvRotation, int bakeResolution, bool useBake){
             NoiseField n; 
 
+            n.layerMask = 0xFFFFFFFF; 
             n.position = position; 
             n.boundShape = boundShape; 
             n.boundSize = boundSize; 

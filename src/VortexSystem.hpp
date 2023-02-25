@@ -64,6 +64,7 @@ class VortexSystem {
 
         int addVortex(Vec3 position, Vec3 normal, float strength, float minDist, float maxDist, Falloff falloff){
             Vortex v; 
+            v.layerMask = 0xFFFFFFFF; 
             v.position = position; 
             v.normal = normal;
             v.strength = strength;
