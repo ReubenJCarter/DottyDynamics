@@ -47,8 +47,8 @@ namespace Dotty{
 
         public static World instance; 
 
-        public UnityEvent worldCreated;
-        public UnityEvent worldDestroyed;
+        public UnityEvent worldCreated = new UnityEvent();
+        public UnityEvent worldDestroyed = new UnityEvent();
 
         public void Awake(){
             ntv = createWorld();
