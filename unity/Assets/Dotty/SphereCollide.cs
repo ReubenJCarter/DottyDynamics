@@ -7,11 +7,8 @@ using UnityEditor;
 #endif
 
 namespace Dotty{
-    public class SphereCollide : MonoBehaviour {
-        private int internalId; 
-        private bool started; 
+    public class SphereCollide : BaseComponent { 
         unsafe private SphereColliderNtv* ptr; 
-        public World world;
 
         public Mask layerMask = (Mask)0xFF; 
 
@@ -20,7 +17,7 @@ namespace Dotty{
         public float kineticFriction = 0; 
         public bool inverse = false;
         
-         void AddInternal() {
+        override protected void AddInternal() {
             Vector3 position = transform.position; 
             internalId = world.AddSphereCollider(position, radius, kineticFriction, staticFriction, inverse); 
             unsafe {
@@ -28,32 +25,15 @@ namespace Dotty{
             }
         }
         
-        void RemoveInternal() {
+        override protected void RemoveInternal() {
             world.DestroySphereCollider(internalId); 
-        }
-
-        // Start is called before the first frame update
-        void Start() {
-            if(world == null){
-                world = World.instance; 
-            }
-            
-            started = true; 
-            AddInternal(); 
-        }
-
-        void OnEnable() {
-            if(started) {
-                AddInternal(); 
-            }
-        }
-
-        void OnDisable() {
-            RemoveInternal();
         }
 
         // Update is called once per frame
         void Update() {
+            if(!created)
+                return; 
+                
             Vector3 position = transform.position; 
             unsafe{
                 (*ptr).layerMask = (uint)layerMask; 

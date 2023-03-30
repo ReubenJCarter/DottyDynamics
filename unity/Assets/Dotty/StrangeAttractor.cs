@@ -7,13 +7,8 @@ using UnityEditor;
 #endif
 
 namespace Dotty {
-    public class StrangeAttractor : MonoBehaviour
-    {
-        private int internalId; 
-        private bool started; 
+    public class StrangeAttractor : BaseComponent{
         unsafe private StrangeAttractorNtv* ptr; 
-        
-        public World world; 
 
         public Mask layerMask = (Mask)0xFF; 
 
@@ -34,7 +29,7 @@ namespace Dotty {
         float e; 
         float f; 
 
-        void AddInternal() {
+        override protected void AddInternal() {
             Vector3 position = transform.position; 
             internalId = world.AddStrangeAttractor(position, scale, type, strength, targetSpeed, fieldMode, minDistance, maxDistance, falloff, a, b, c, d, e, f); 
             unsafe {
@@ -42,31 +37,15 @@ namespace Dotty {
             }
         }
         
-        void RemoveInternal() {
+        override protected void RemoveInternal() {
             world.DestroyStrangeAttractor(internalId); 
-        }
-
-        void Start() {
-            if(world == null){
-                world = World.instance; 
-            }
-            
-            started = true; 
-            AddInternal(); 
-        }
-
-        void OnEnable() {
-            if(started) {
-                AddInternal(); 
-            }
-        }
-
-        void OnDisable() {
-            RemoveInternal(); 
         }
 
         // Update is called once per frame
         void Update() {
+            if(!created)
+                return; 
+                
             Vector3 position = transform.position; 
             unsafe{
                 (*ptr).layerMask = (uint)layerMask; 

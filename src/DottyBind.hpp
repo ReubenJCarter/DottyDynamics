@@ -25,6 +25,7 @@ extern "C" {
     EXPORT World* createWorld();
     EXPORT void freeWorld(World* instance);
     
+    EXPORT void World_clear(World* instance);
     EXPORT void World_update(World* instance);
 
     EXPORT WorldParams* World_getWorldParamsPtr(World* instance);
@@ -109,17 +110,20 @@ extern "C" {
 
     EXPORT int World_addRod(World* instance, int a, int b, float length, float stiffness);
     EXPORT void World_destroyRod(World* instance, int inx);
+    EXPORT void World_clearRods(World* instance); 
     EXPORT void World_setRodStiffness(World* instance, int inx, float stiffness);
     EXPORT void World_setRodLength(World* instance, int inx, float length);
 
     EXPORT int World_addAnchorRod(World* instance, int a, Vec3 position, float length, float stiffness);
     EXPORT void World_destroyAnchorRod(World* instance, int inx);
+    EXPORT void World_clearAnchorRods(World* instance); 
     EXPORT void World_setAnchorRodStiffness(World* instance, int inx, float stiffness);
     EXPORT void World_setAnchorRodLength(World* instance, int inx, float length);
     EXPORT void World_setAnchorRodPosition(World* instance, int inx, Vec3 position);
 
     EXPORT int World_addAngleConstraint(World* instance, int a, int b, int c, float angle, float stiffness);
     EXPORT void World_destroyAngleConstraint(World* instance, int inx);
+    EXPORT void World_clearAngleConstraints(World* instance); 
     EXPORT void World_setAngleConstraintStiffness(World* instance, int inx, float stiffness);
     EXPORT void World_setAngleConstraintAngle(World* instance, int inx, float angle);
 

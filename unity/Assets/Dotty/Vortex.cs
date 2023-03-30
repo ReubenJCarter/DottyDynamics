@@ -7,12 +7,8 @@ using UnityEditor;
 #endif
 
 namespace Dotty{
-    public class Vortex : MonoBehaviour {
-        private int internalId; 
-        private bool started;
+    public class Vortex : BaseComponent {
         unsafe private VortexNtv* ptr; 
-        
-        public World world; 
 
         public Mask layerMask = (Mask)0xFF; 
 
@@ -22,7 +18,7 @@ namespace Dotty{
         public Falloff falloff = Falloff.InvDist2; 
 
 
-        void AddInternal() {
+        override protected void AddInternal() {
             Vector3 position = transform.position; 
             Vector3 normal = transform.rotation * Vector3.up;
             internalId = world.AddVortex(position, normal, strength, minDistance, maxDistance, falloff); 
@@ -31,32 +27,15 @@ namespace Dotty{
             }
         }
         
-        void RemoveInternal() {
+        override protected void RemoveInternal() {
             world.DestroyVortex(internalId); 
-        }
-
-        // Start is called before the first frame update
-        void Start() {
-            if(world == null){
-                world = World.instance; 
-            }
-            
-            started = true; 
-            AddInternal(); 
-        }
-
-        void OnEnable() {
-            if(started) {
-                AddInternal(); 
-            }
-        }
-
-        void OnDisable() {
-            RemoveInternal();
         }
 
         // Update is called once per frame
         void Update() {
+            if(!created)
+                return; 
+                
             Vector3 position = transform.position; 
             Vector3 normal = transform.rotation * Vector3.up;
             unsafe{

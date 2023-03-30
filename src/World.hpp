@@ -83,6 +83,38 @@ class World {
             particleLayerMask.setPoolSize(100000); 
         }
 
+        void clear(){
+            params.timestep = 0.016666; 
+            params.substeps = 1; 
+            params.globalDamping = 0.01f;
+            params.gravity = 9.81; 
+
+            params.collisionFloorStaticFriction = 0; 
+            params.collisionFloorKineticFriction = 0; 
+            params.collisionFloorHeight = 0;  
+            params.hasCollisionFloor = false;
+
+            deltaT = params.timestep / params.substeps; 
+            invDeltaT = 1.0f / deltaT; 
+
+            globalForceSystem.clearGlobalForces(); 
+            attractorSystem.clearAttractors(); 
+            strangeAttractorSystem.clearStrangeAttractors(); 
+            vortexSystem.clearVortices(); 
+            noiseFieldSystem.clearNoiseFields(); 
+            boxColliderSystem.clearBoxColliders(); 
+            sphereColliderSystem.clearSphereColliders(); 
+            damperSystem.clearDampers(); 
+            rodSystem.clearRods();
+            rodSystem.clearAnchorRods(); 
+            angleConstraintSystem.clearAngleConstraints(); 
+
+            particles.clear(); 
+            particleDeltas.clear(); 
+            particleDeltaCount.clear(); 
+            particleLayerMask.clear(); 
+        }
+
         void update(){
             float timestep = params.timestep; 
             float substeps = params.substeps; 

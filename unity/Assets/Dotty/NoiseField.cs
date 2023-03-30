@@ -7,12 +7,8 @@ using UnityEditor;
 #endif
 
 namespace Dotty{
-    public class NoiseField : MonoBehaviour {
-        private int internalId; 
-        private bool started; 
+    public class NoiseField : BaseComponent {
         unsafe private NoiseFieldNtv* ptr; 
-        
-        public World world; 
 
         public Mask layerMask = (Mask)0xFF; 
 
@@ -30,7 +26,7 @@ namespace Dotty{
         public int bakeResolution = 128; 
         public bool useBake = false; 
 
-        void AddInternal() {
+        override protected void AddInternal() {
             Vector3 position = transform.position; 
             Matrix4x4 invRot = Matrix4x4.Rotate(transform.rotation).inverse;
             internalId = world.AddNoiseField(position, noiseType, strength, targetSpeed, noiseScale, mode, boundSize, boundShape, boundThickness, boundFalloff, invRot, bakeResolution, useBake); 
@@ -39,31 +35,16 @@ namespace Dotty{
             }
         }
         
-        void RemoveInternal() {
+        override protected void RemoveInternal() {
             world.DestroyNoiseField(internalId); 
         }
 
-        void Start() {
-            if(world == null){
-                world = World.instance; 
-            }
-            
-            started = true; 
-            AddInternal(); 
-        }
-
-        void OnEnable() {
-            if(started) {
-                AddInternal(); 
-            }
-        }
-
-        void OnDisable() {
-            RemoveInternal(); 
-        }
 
         // Update is called once per frame
         void Update() {
+            if(!created)
+                return; 
+                
             Vector3 position = transform.position; 
             Matrix4x4 invRot = Matrix4x4.Rotate(transform.rotation).inverse;
             Mat3 ir = new Mat3(); 

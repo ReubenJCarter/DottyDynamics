@@ -7,12 +7,8 @@ using UnityEditor;
 #endif
 
 namespace Dotty{
-    public class BoxCollide : MonoBehaviour {
-        private int internalId; 
-        private bool started; 
+    public class BoxCollide : BaseComponent {
         unsafe private BoxColliderNtv* ptr; 
-        
-        public World world; 
 
         public Mask layerMask = (Mask)0xFF; 
 
@@ -21,7 +17,7 @@ namespace Dotty{
         public float kineticFriction = 0; 
         public bool inverse = false; 
 
-        void AddInternal() {
+        override protected void AddInternal() {
             Vector3 position = transform.position; 
             Matrix4x4 invRot = Matrix4x4.Rotate(transform.rotation).inverse;
             internalId = world.AddBoxCollider(position, invRot, size, kineticFriction, staticFriction, inverse); 
@@ -30,33 +26,15 @@ namespace Dotty{
             }
         }
         
-        void RemoveInternal() {
+        override protected void RemoveInternal() {
             world.DestroyBoxCollider(internalId); 
         }
 
-        // Start is called before the first frame update
-        void Start() {
-            if(world == null){
-                world = World.instance; 
-            }
-            
-            started = true; 
-            AddInternal(); 
-        }
-
-        void OnEnable() {
-            if(started) {
-                AddInternal(); 
-            }
-        }
-
-        void OnDisable() {
-            RemoveInternal();
-        }
-
         // Update is called once per frame
-        void Update()
-        {
+        void Update(){
+            if(!created)
+                return; 
+
             Vector3 position = transform.position; 
             Matrix4x4 invRot = Matrix4x4.Rotate(transform.rotation).inverse;
             Mat3 ir = new Mat3(); 

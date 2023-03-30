@@ -104,6 +104,10 @@ class RodSystem {
             rods.remove(inx); 
         }
 
+        void clearRods(){
+            rods.clear(); 
+        }
+
         void setRodStiffness(int inx, float stiffness){
             rods[inx].stiffness = stiffness;
         }
@@ -111,8 +115,6 @@ class RodSystem {
         void setRodLength(int inx, float length){
             rods[inx].length = length;
         }
-
-
 
         int addAnchorRod(int a, Vec3 position, float length, float stiffness){
             AnchorRod r;
@@ -125,6 +127,10 @@ class RodSystem {
 
         void destroyAnchorRod(int inx){
             anchorRods.remove(inx); 
+        }
+
+        void clearAnchorRods(){
+            anchorRods.clear(); 
         }
 
         void setAnchorRodStiffness(int inx, float stiffness){

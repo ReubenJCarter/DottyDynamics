@@ -7,13 +7,9 @@ using UnityEditor;
 #endif
 
 namespace Dotty {
-    public class Attractor : MonoBehaviour {
-        private int internalId; 
-        private bool started; 
-        unsafe private AttractorNtv* ptr; 
+    public class Attractor : BaseComponent {
+        unsafe protected AttractorNtv* ptr; 
         
-        public World world; 
-
         public Mask layerMask = (Mask)0xFF; 
 
         public float strength = 10; 
@@ -21,7 +17,7 @@ namespace Dotty {
         public float maxDistance = 1000; 
         public Falloff falloff = Falloff.InvDist2; 
 
-        void AddInternal() {
+        override protected void AddInternal() {
             Vector3 position = transform.position; 
             internalId = world.AddAttractor(position, strength, minDistance, maxDistance, falloff); 
             unsafe {
@@ -29,31 +25,15 @@ namespace Dotty {
             }
         }
         
-        void RemoveInternal() {
+        override protected void RemoveInternal() {
             world.DestroyAttractor(internalId); 
-        }
-
-        void Start() {
-            if(world == null){
-                world = World.instance; 
-            }
-            
-            started = true; 
-            AddInternal(); 
-        }
-
-        void OnEnable() {
-            if(started) {
-                AddInternal(); 
-            }
-        }
-
-        void OnDisable() {
-            RemoveInternal(); 
         }
 
         // Update is called once per frame
         void Update() {
+            if(!created)
+                return; 
+                
             Vector3 position = transform.position; 
             unsafe{
                 (*ptr).layerMask = (uint)layerMask; 

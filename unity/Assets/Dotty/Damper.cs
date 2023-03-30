@@ -7,13 +7,8 @@ using UnityEditor;
 #endif
 
 namespace Dotty {
-    public class Damper : MonoBehaviour
-    {
-        private int internalId; 
-        private bool started; 
+    public class Damper : BaseComponent{
         unsafe private DamperNtv* ptr; 
-        
-        public World world; 
 
         public Mask layerMask = (Mask)0xFF; 
 
@@ -23,7 +18,7 @@ namespace Dotty {
         public float boundThickness = 0; 
         public BoundFalloff boundFalloff = BoundFalloff.Linear;
 
-        void AddInternal() {
+        override protected void AddInternal() {
             Vector3 position = transform.position; 
             Matrix4x4 invRot = Matrix4x4.Rotate(transform.rotation).inverse;
             internalId = world.AddDamper(position, strength, boundSize, boundShape, boundThickness, boundFalloff, invRot); 
@@ -32,32 +27,15 @@ namespace Dotty {
             }
         }
         
-        void RemoveInternal() {
+        override protected void RemoveInternal() {
             world.DestroyDamper(internalId); 
         }
 
-        void Start() {
-            if(world == null){
-                world = World.instance; 
-            }
-            
-            started = true; 
-            AddInternal(); 
-        }
-
-        void OnEnable() {
-            if(started) {
-                AddInternal(); 
-            }
-        }
-
-        void OnDisable() {
-            RemoveInternal(); 
-        }
-
         // Update is called once per frame
-        void Update()
-        {
+        void Update(){
+            if(!created)
+                return; 
+
             Vector3 position = transform.position; 
             Matrix4x4 invRot = Matrix4x4.Rotate(transform.rotation).inverse;
             Mat3 ir = new Mat3(); 

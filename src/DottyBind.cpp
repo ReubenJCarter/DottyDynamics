@@ -14,6 +14,10 @@ EXPORT void freeWorld(World* instance){
 }
 
 
+EXPORT void World_clear(World* instance){
+    instance->clear(); 
+}
+
 EXPORT void World_update(World* instance){
     instance->update(); 
 }
@@ -326,6 +330,10 @@ EXPORT int World_addRod(World* instance, int a, int b, float length, float stiff
 EXPORT void World_destroyRod(World* instance, int inx){
     instance->rodSystem.destroyRod(inx);
 }
+  
+EXPORT void World_clearRods(World* instance){
+    instance->rodSystem.clearRods(); 
+}
 
 EXPORT void World_setRodStiffness(World* instance, int inx, float stiffness){
     instance->rodSystem.setRodStiffness(inx, stiffness); 
@@ -343,6 +351,10 @@ EXPORT int World_addAnchorRod(World* instance, int a, Vec3 position, float lengt
 
 EXPORT void World_destroyAnchorRod(World* instance, int inx){
     instance->rodSystem.destroyAnchorRod(inx);
+}
+
+EXPORT void World_clearAnchorRods(World* instance){
+    instance->rodSystem.clearAnchorRods(); 
 }
 
 EXPORT void World_setAnchorRodStiffness(World* instance, int inx, float stiffness){
@@ -365,6 +377,10 @@ EXPORT int World_addAngleConstraint(World* instance, int a, int b, int c, float 
 
 EXPORT void World_destroyAngleConstraint(World* instance, int inx){
     instance->angleConstraintSystem.destroyAngleConstraint(inx);
+}
+
+EXPORT void World_clearAngleConstraints(World* instance){
+    instance->angleConstraintSystem.clearAngleConstraints(); 
 }
 
 EXPORT void World_setAngleConstraintStiffness(World* instance, int inx, float stiffness){

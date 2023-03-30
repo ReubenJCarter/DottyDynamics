@@ -9,7 +9,7 @@ using UnityEditor;
 namespace Dotty{
     public class WorldParams : MonoBehaviour
     {
-        private bool started;
+        private bool created;
         unsafe private WorldParamsNtv* ptr; 
 
         public World world; 
@@ -49,13 +49,35 @@ namespace Dotty{
             if(world == null){
                 world = World.instance; 
             }
+
+            if(world == null){
+                return; 
+            }
+
+            world.worldDestroyed.AddListener(OnWorldDestroyed);
+
+            created = true; 
+
             UpdateInternal(); 
         }
 
         // Update is called once per frame
-        void Update()
-        {
+        void Update(){
+            if(!created){
+                return; 
+            }
+
             UpdateInternal(); 
+        }
+
+        void OnWorldDestroyed(){
+            created = false; 
+        }
+
+        void OnDestroy(){
+            if(created){
+                world.worldDestroyed.RemoveListener(OnWorldDestroyed); 
+            }
         }
     }
 

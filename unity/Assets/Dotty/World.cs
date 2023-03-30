@@ -3,6 +3,7 @@ using Unity.Collections;
 using Unity.Collections.LowLevel.Unsafe;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using System.Runtime.InteropServices;
 using System;
 
@@ -30,25 +31,46 @@ namespace Dotty{
         #else
         [DllImport ("Dotty")]   
         #endif
+        private static extern void World_clear(IntPtr world);
+
+        #if UNITY_IOS && !UNITY_EDITOR
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty")]   
+        #endif
         private static extern void World_update(IntPtr world);
 
 
         private IntPtr ntv; 
 
+        private bool loaded; 
+
         public static World instance; 
+
+        public UnityEvent worldCreated;
+        public UnityEvent worldDestroyed;
 
         public void Awake(){
             ntv = createWorld();
             instance = this;
+            loaded = true; 
+            worldCreated.Invoke(); 
         }
 
         void OnDestroy(){
+            loaded = false;
+            worldDestroyed.Invoke();  
             freeWorld(ntv);
+        }
+
+        public bool isLoaded(){
+            return loaded; 
         }
 
         public void FixedUpdate(){
             World_update(ntv); 
         }
+
 
 
 

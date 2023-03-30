@@ -26,7 +26,14 @@ class AngleConstraintSystem {
                 float invMassB = particles[b].invMass;
                 float invMassC = particles[c].invMass;
                 
-                
+                Particle pa = particles[a]; 
+                Particle pb = particles[b]; 
+                Particle pc = particles[c]; 
+
+                //Vec3 papb = pb - pa 
+                //Vec3 papc = pc - pa
+                //
+                //acos()
             }
             
         }
@@ -45,6 +52,10 @@ class AngleConstraintSystem {
 
         void destroyAngleConstraint(int inx){
             angleConstraints.remove(inx); 
+        }
+
+        void clearAngleConstraints(){
+            angleConstraints.clear(); 
         }
 
         void setAngleConstraintStiffness(int inx, float stiffness){
