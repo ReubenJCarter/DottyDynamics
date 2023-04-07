@@ -21,6 +21,9 @@ class RodSystem {
             unsigned int maxRodCount = rods.getBound(); 
 
             for(int i = 0; i < maxRodCount; i++){
+                if(!rods.isInUse(i)){
+                    continue; 
+                }
                 
                 float invMassA = particles[rods[i].a].invMass;
                 float invMassB = particles[rods[i].b].invMass;
@@ -41,25 +44,33 @@ class RodSystem {
                 dx *= factor;
                 dy *= factor;
                 dz *= factor;
+                /*
+                particleDeltas[rods[i].a].x -= invMassA * dx;
+                particleDeltas[rods[i].a].y -= invMassA * dy;
+                particleDeltas[rods[i].a].z -= invMassA * dz;
                 
-                if(rods.isInUse(i)){
-                    particleDeltas[rods[i].a].x -= invMassA * dx;
-                    particleDeltas[rods[i].a].y -= invMassA * dy;
-                    particleDeltas[rods[i].a].z -= invMassA * dz;
-                    
-                    particleDeltas[rods[i].b].x += invMassB * dx;
-                    particleDeltas[rods[i].b].y += invMassB * dy;
-                    particleDeltas[rods[i].b].z += invMassB * dz;
+                particleDeltas[rods[i].b].x += invMassB * dx;
+                particleDeltas[rods[i].b].y += invMassB * dy;
+                particleDeltas[rods[i].b].z += invMassB * dz;
 
-                    particleDeltaCount[rods[i].a]++;
-                    particleDeltaCount[rods[i].b]++;
-                }
+                particleDeltaCount[rods[i].a]++;
+                particleDeltaCount[rods[i].b]++;*/
+
+                particles[rods[i].a].positionNext.x -= invMassA * dx;
+                particles[rods[i].a].positionNext.y -= invMassA * dy;
+                particles[rods[i].a].positionNext.z -= invMassA * dz;
+                particles[rods[i].b].positionNext.x += invMassB * dx;
+                particles[rods[i].b].positionNext.y += invMassB * dy;
+                particles[rods[i].b].positionNext.z += invMassB * dz;
             }
 
 
             unsigned int maxAnchorRodCount = anchorRods.getBound(); 
 
             for(int i = 0; i < maxAnchorRodCount; i++){
+                if(!anchorRods.isInUse(i)){
+                    continue; 
+                }
                 
                 float invMassA = particles[anchorRods[i].a].invMass;
                 float dx = (particles[anchorRods[i].a].positionNext.x - anchorRods[i].position.x);
@@ -75,14 +86,17 @@ class RodSystem {
                 dx *= factor;
                 dy *= factor;
                 dz *= factor;
-                
-                if(anchorRods.isInUse(i)){
-                    particleDeltas[anchorRods[i].a].x -= invMassA * dx;
-                    particleDeltas[anchorRods[i].a].y -= invMassA * dy;
-                    particleDeltas[anchorRods[i].a].z -= invMassA * dz;
+            
+                /*
+                particleDeltas[anchorRods[i].a].x -= invMassA * dx;
+                particleDeltas[anchorRods[i].a].y -= invMassA * dy;
+                particleDeltas[anchorRods[i].a].z -= invMassA * dz;
 
-                    particleDeltaCount[anchorRods[i].a]++;
-                }
+                particleDeltaCount[anchorRods[i].a]++;
+                */
+                particles[anchorRods[i].a].positionNext.x -= invMassA * dx;
+                particles[anchorRods[i].a].positionNext.y -= invMassA * dy;
+                particles[anchorRods[i].a].positionNext.z -= invMassA * dz;
             }
 
 

@@ -167,9 +167,10 @@ class World {
                 rodSystem.updateRods(threadPool, params, particles, particleDeltas, particleDeltaCount); 
 
                 //update angle constraints
-                angleConstraintSystem.updateAngleConstraints(threadPool, params, particles, particleDeltas, particleDeltaCount); 
+                //angleConstraintSystem.updateAngleConstraints(threadPool, params, particles, particleDeltas, particleDeltaCount); 
 
-                //apply deltas                 
+                //apply deltas   
+                /*              
                 for (int i = 0; i < maxParticleCount; i++){
 
                     int deltaCount = particleDeltaCount[i];
@@ -193,6 +194,7 @@ class World {
                     particleDeltas[i].y = 0;
                     particleDeltas[i].z = 0;
                 }
+                */
 
                 //Apply New Position
                 for(int i = 0; i < maxParticleCount; i++){
