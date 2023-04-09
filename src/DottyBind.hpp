@@ -24,6 +24,8 @@ extern "C" {
     
     EXPORT World* createWorld();
     EXPORT void freeWorld(World* instance);
+
+    EXPORT void World_registerDebugCallback(World* instance, FuncCallBack cb);
     
     EXPORT void World_clear(World* instance);
     EXPORT void World_update(World* instance);

@@ -21,11 +21,11 @@ public class RodTest : MonoBehaviour
 
     void CreateString(){
         world.SetGravity(9.81f); 
-        world.SetGlobalDamping(0.01f); 
+        world.SetGlobalDamping(0.1f); 
         world.SetSubsteps(4); 
 
         float height = 10;
-        int H = 30; 
+        int H = 3; 
         sphereTransforms = new Transform[H]; 
         for(int j = 0; j < H; j++){
                 
@@ -41,11 +41,15 @@ public class RodTest : MonoBehaviour
             else{
                 world.AddAnchorRod(j, initialPosition, 0, 1);
             }
+
+            if(j < H-2){
+                world.AddAngleConstraint(j+1, j, j+2, Mathf.PI * 0.5f, 0.5f); 
+            }
         
         }
         attractorId = world.AddAttractor(new Vector3(0, 0, 0), 0, 0.1f, 100000, Dotty.Falloff.InvDist2);
-        world.SetHasCollisionFloor(false); 
-        world.SetCollisionFloor(0, 0, 0);
+        world.SetHasCollisionFloor(true); 
+        world.SetCollisionFloor(2, 0, 0);
     }
 
     // Update is called once per frame

@@ -5,6 +5,8 @@
 #include "Primitives.hpp"
 #include "DynamicPool.hpp"
 
+#include <sstream>
+
 class AngleConstraintSystem {
     private:
         DynamicPool<AngleConstraint> angleConstraints;
@@ -33,14 +35,27 @@ class AngleConstraintSystem {
             cm.add(pbm); 
             cm.add(pcm); 
 
+            cm.divs(massSum); 
+
             return cm; 
         }
 
-        void updateAngleConstraints(BS::thread_pool& threadPool, WorldParams& params, DynamicPool<Particle>& particles, DynamicPool<Vec3>& particleDeltas, DynamicPool<int>& particleDeltaCount){
+        void updateAngleConstraints(
+            BS::thread_pool& threadPool, 
+            WorldParams& params, 
+            DynamicPool<Particle>& particles, 
+            DynamicPool<Vec3>& particleDeltas, 
+            DynamicPool<int>& particleDeltaCount, 
+            FuncCallBack debugCallback
+        ){
             
             unsigned int maxCount = angleConstraints.getBound(); 
 
             for(int i = 0; i < maxCount; i++){
+
+                if(!angleConstraints.isInUse(i))
+                        continue;  
+
                 int a = angleConstraints[i].a; 
                 int b = angleConstraints[i].b; 
                 int c = angleConstraints[i].c; 
@@ -76,20 +91,21 @@ class AngleConstraintSystem {
 
                     //find the best axis (the least utalized by the vector )
                     Vec3 bestAxis; 
-                    if(pab.x < pab.y && pab.x < pab.z){
+                    if(abs(pab.x) < abs(pab.y) && abs(pab.x) < abs(pab.z)){
                         bestAxis.x = 1; 
                         bestAxis.y = 0; 
                         bestAxis.z = 0; 
                     }
                     else{
                         bestAxis.x = 0; 
-                        bestAxis.y = 1; 
-                        bestAxis.z = 0;
+                        bestAxis.y = 0; 
+                        bestAxis.z = 1;
                     }
 
                     //compute a vector perpendicular to the diff vecs 
                     norm = pab; 
                     norm.cross(bestAxis); 
+                    norm.norm(); 
                 }
                 else{
                     //normalize the normal (not really needed ) get rdi?
@@ -109,11 +125,11 @@ class AngleConstraintSystem {
 
                 //compute rotation matrix 
                 Quat quat0; 
-                quat0.axisAngle(norm, halfAngleDiff); 
+                quat0.setAxisAngle(norm, halfAngleDiff); 
                 Mat4 rotMat0 = quat0.getRotationMatrix(); 
 
                 Quat quat1; 
-                quat1.axisAngle(norm, -halfAngleDiff); 
+                quat1.setAxisAngle(norm, -halfAngleDiff); 
                 Mat4 rotMat1 = quat1.getRotationMatrix(); 
 
                 //apply rotation matrix to points b and c 
@@ -123,24 +139,51 @@ class AngleConstraintSystem {
                 pacRot.multm4(rotMat1); 
 
                 //compute origional cm 
-                Vec3 cmOrig = calcCM(pa, pb, pc); 
+                Vec3 cmOrig = calcCM(particles[a], particles[b], particles[c]); 
 
                 //set new positions of b and c
                 pb.positionNext = pabRot; 
                 pb.positionNext.add(pa.positionNext); 
                 pc.positionNext = pacRot; 
                 pc.positionNext.add(pa.positionNext); 
-
+                
                 //compute new cm
-                Vec3 cmNew = calcCM(pa, pb, pc); 
+                Vec3 cmNew =calcCM(pa, pb, pc); 
                 
                 //move all points so the new cm is the same as the orig. (vector from new cm to orig)
                 Vec3 cmDiff = cmOrig; 
                 cmDiff.sub(cmNew); 
-
+                
                 pa.positionNext.add(cmDiff); 
                 pb.positionNext.add(cmDiff); 
                 pc.positionNext.add(cmDiff); 
+                
+                Vec3 diffA = pa.positionNext; 
+                diffA.sub(particles[a].positionNext); 
+                Vec3 diffB = pb.positionNext; 
+                diffB.sub(particles[b].positionNext); 
+                Vec3 diffC = pc.positionNext; 
+                diffC.sub(particles[c].positionNext); 
+
+                diffA.mults(0.1f);
+                diffB.mults(0.1f);
+                diffC.mults(0.1f);  
+
+                particles[a].positionNext.add(diffA); 
+                particles[b].positionNext.add(diffB); 
+                particles[c].positionNext.add(diffC); 
+                
+
+                std::stringstream ss;
+                ss << "angleDiff" << angleDiff 
+                << " norm " << norm.x << " " << norm.y << " " << norm.z << " "
+                << " quat0 " << quat0.x << " " << quat0.y << " " << quat0.z << " " << quat0.w
+                << "  a " << pa.positionNext.x << " "  << pa.positionNext.y << " "  << pa.positionNext.z  
+                << "  b " << pb.positionNext.x << " "  << pb.positionNext.y << " "  << pb.positionNext.z
+                << "  c " << pc.positionNext.x << " "  << pc.positionNext.y << " "  << pc.positionNext.z
+                << "\n"; 
+                log(debugCallback, ss.str()); 
+               
             }
             
         }

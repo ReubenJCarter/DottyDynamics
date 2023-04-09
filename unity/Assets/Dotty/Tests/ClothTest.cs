@@ -51,7 +51,7 @@ public class ClothTest : MonoBehaviour
         }
         attractorId = world.AddAttractor(new Vector3(0, 0, 0), 0, 0.1f, 100000, Dotty.Falloff.InvDist2);
         world.SetHasCollisionFloor(true); 
-        world.SetCollisionFloor(0, 0, 0);
+        world.SetCollisionFloor(2, 0, 0);
     }
 
     // Update is called once per frame

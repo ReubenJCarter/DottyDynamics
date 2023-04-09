@@ -55,6 +55,8 @@ namespace Dotty{
             instance = this;
             loaded = true; 
             worldCreated.Invoke(); 
+
+            World_registerDebugCallback(ntv, OnDebugCallback);
         }
 
         void OnDestroy(){
@@ -69,6 +71,21 @@ namespace Dotty{
 
         public void FixedUpdate(){
             World_update(ntv); 
+        }
+
+        #if UNITY_IOS && !UNITY_EDITOR
+        [DllImport ("__Internal")]
+        #else
+        [DllImport ("Dotty", CallingConvention = CallingConvention.Cdecl)]  
+        #endif
+        static extern void World_registerDebugCallback(IntPtr world, debugCallback cb);
+        
+        delegate void debugCallback(IntPtr request, int size);
+
+        [AOT.MonoPInvokeCallback(typeof(debugCallback))]
+        static void OnDebugCallback(IntPtr request, int size){
+            string debug_string = Marshal.PtrToStringAnsi(request, size);
+            UnityEngine.Debug.Log(debug_string);
         }
 
 

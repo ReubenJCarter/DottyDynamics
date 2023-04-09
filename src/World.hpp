@@ -19,6 +19,8 @@
 #include "RodSystem.hpp"
 #include "AngleConstraintSystem.hpp"
 
+
+
 class World {
     private:
         WorldParams params; 
@@ -51,6 +53,7 @@ class World {
         }
 
     public:  
+        FuncCallBack debugCallback;
 
         GlobalForceSystem globalForceSystem;
         AttractorSystem attractorSystem; 
@@ -64,6 +67,8 @@ class World {
         AngleConstraintSystem angleConstraintSystem;
 
         World(){
+            debugCallback = nullptr; 
+
             params.timestep = 0.016666; 
             params.substeps = 1; 
             params.globalDamping = 0.01f;
@@ -167,7 +172,7 @@ class World {
                 rodSystem.updateRods(threadPool, params, particles, particleDeltas, particleDeltaCount); 
 
                 //update angle constraints
-                //angleConstraintSystem.updateAngleConstraints(threadPool, params, particles, particleDeltas, particleDeltaCount); 
+                angleConstraintSystem.updateAngleConstraints(threadPool, params, particles, particleDeltas, particleDeltaCount, debugCallback); 
 
                 //apply deltas   
                 /*              
@@ -254,10 +259,10 @@ class World {
             p.invMass = invMass; 
 
             Vec3 zero = Vec3(0, 0, 0); 
-            particleDeltas.add(zero);
+            //particleDeltas.add(zero);
 
             int zeroInt = 0; 
-            particleDeltaCount.add(zeroInt);
+            //particleDeltaCount.add(zeroInt);
 
             uint32_t allOnes = 0xFFFFFFFF; 
             particleLayerMask.add(allOnes); 
@@ -267,8 +272,8 @@ class World {
 
         void destroyParticle(int inx){
             particles.remove(inx); 
-            particleDeltas.remove(inx);
-            particleDeltaCount.remove(inx);
+            //particleDeltas.remove(inx);
+            //particleDeltaCount.remove(inx);
             particleLayerMask.remove(inx); 
         }
 
@@ -303,9 +308,9 @@ class World {
         }
 
         void addParticlePositionDelta(int inx, Vec3 delta){
-            particleDeltas[inx].x += delta.x; 
-            particleDeltas[inx].y += delta.y; 
-            particleDeltas[inx].z += delta.z; 
+            //particleDeltas[inx].x += delta.x; 
+            //particleDeltas[inx].y += delta.y; 
+            //particleDeltas[inx].z += delta.z; 
         }
 
         void setParticleLayerEnabled(int inx, int layer, bool enabled){

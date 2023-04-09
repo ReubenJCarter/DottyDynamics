@@ -5,12 +5,19 @@ EXPORT char* nativeTest(){
 }
 
 
+
+
 EXPORT World* createWorld(){
     return new World();
 }
 
 EXPORT void freeWorld(World* instance){
     delete instance;
+}
+
+
+EXPORT void World_registerDebugCallback(World* instance, FuncCallBack cb) {
+    instance->debugCallback = cb;
 }
 
 
