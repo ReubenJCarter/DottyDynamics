@@ -121,7 +121,7 @@ class AngleConstraintSystem {
 
                 //compute the ammount needed to rotate each vec
                 float angleDiff = angleConstraints[i].angle - angle; //which way round is this angle??
-                float halfAngleDiff = angleDiff / 2; 
+                float halfAngleDiff = -angleDiff / 2; 
 
                 //compute rotation matrix 
                 Quat quat0; 
@@ -165,9 +165,9 @@ class AngleConstraintSystem {
                 Vec3 diffC = pc.positionNext; 
                 diffC.sub(particles[c].positionNext); 
 
-                diffA.mults(0.1f);
-                diffB.mults(0.1f);
-                diffC.mults(0.1f);  
+                //diffA.mults(0.01f);
+                //diffB.mults(0.01f);
+                //diffC.mults(0.01f);  
 
                 particles[a].positionNext.add(diffA); 
                 particles[b].positionNext.add(diffB); 
@@ -176,11 +176,11 @@ class AngleConstraintSystem {
 
                 std::stringstream ss;
                 ss << "angleDiff" << angleDiff 
-                << " norm " << norm.x << " " << norm.y << " " << norm.z << " "
-                << " quat0 " << quat0.x << " " << quat0.y << " " << quat0.z << " " << quat0.w
-                << "  a " << pa.positionNext.x << " "  << pa.positionNext.y << " "  << pa.positionNext.z  
-                << "  b " << pb.positionNext.x << " "  << pb.positionNext.y << " "  << pb.positionNext.z
-                << "  c " << pc.positionNext.x << " "  << pc.positionNext.y << " "  << pc.positionNext.z
+                << " norm " << norm.x << ", " << norm.y << ", " << norm.z << ", "
+                << " quat0 " << quat0.x << ", " << quat0.y << ", " << quat0.z << ", " << quat0.w
+                << "  a " << pa.positionNext.x << ", "  << pa.positionNext.y << ", "  << pa.positionNext.z  
+                << "  b " << pb.positionNext.x << ", "  << pb.positionNext.y << ", "  << pb.positionNext.z
+                << "  c " << pc.positionNext.x << ", "  << pc.positionNext.y << ", "  << pc.positionNext.z
                 << "\n"; 
                 log(debugCallback, ss.str()); 
                
