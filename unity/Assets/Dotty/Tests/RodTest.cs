@@ -43,7 +43,7 @@ public class RodTest : MonoBehaviour
             }
 
             if(j < H-2){
-                world.AddAngleConstraint(j+1, j, j+2, Mathf.PI * 0.5f, 1.0f); 
+                world.AddAngleConstraint(j+1, j, j+2, Mathf.PI * 0.5f, 0.0001f); 
             }
         
         }

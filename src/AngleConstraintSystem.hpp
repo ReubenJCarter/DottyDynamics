@@ -16,6 +16,11 @@ class AngleConstraintSystem {
             angleConstraints.setPoolSize(200000);
         }
 
+        float clampneg1pos1(float d){
+            const float t = d < -1.0f ? -1.0f : d;
+            return t > 1.0f ? 1.0f : t; 
+        }
+
         Vec3 calcCM(Particle& pa, Particle& pb, Particle& pc){
             float ma = 1.0f / pa.invMass; 
             float mb = 1.0f / pb.invMass; 
@@ -118,7 +123,7 @@ class AngleConstraintSystem {
                 pabNorm.divs(pabLen); 
                 Vec3 pacNorm = pac; 
                 pacNorm.divs(pacLen); 
-                float angle = acos( pabNorm.dot(pacNorm) );
+                float angle = acos( clampneg1pos1( pabNorm.dot(pacNorm) ) );
 
                 //compute the ammount needed to rotate each vec
                 float angleDiff = angle - angleConstraints[i].angle; 
