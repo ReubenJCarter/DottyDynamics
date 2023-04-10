@@ -62,6 +62,7 @@ class AngleConstraintSystem {
                 float invMassA = particles[a].invMass;
                 float invMassB = particles[b].invMass;
                 float invMassC = particles[c].invMass;
+                float k = angleConstraints[i].stiffness; 
                 
                 Particle pa = particles[a]; 
                 Particle pb = particles[b]; 
@@ -120,8 +121,8 @@ class AngleConstraintSystem {
                 float angle = acos( pabNorm.dot(pacNorm) );
 
                 //compute the ammount needed to rotate each vec
-                float angleDiff = angleConstraints[i].angle - angle; //which way round is this angle??
-                float halfAngleDiff = -angleDiff / 2; 
+                float angleDiff = angle - angleConstraints[i].angle; 
+                float halfAngleDiff = angleDiff / 2; 
 
                 //compute rotation matrix 
                 Quat quat0; 
@@ -157,23 +158,41 @@ class AngleConstraintSystem {
                 pa.positionNext.add(cmDiff); 
                 pb.positionNext.add(cmDiff); 
                 pc.positionNext.add(cmDiff); 
+
+                if (k == 1){
+                    particles[a].positionNext = pa.positionNext; 
+                    particles[b].positionNext = pb.positionNext;
+                    particles[c].positionNext = pc.positionNext;
+                }
+                else{
                 
-                Vec3 diffA = pa.positionNext; 
-                diffA.sub(particles[a].positionNext); 
-                Vec3 diffB = pb.positionNext; 
-                diffB.sub(particles[b].positionNext); 
-                Vec3 diffC = pc.positionNext; 
-                diffC.sub(particles[c].positionNext); 
+                    Vec3 diffA = pa.positionNext; 
+                    diffA.sub(particles[a].positionNext); 
+                    Vec3 diffB = pb.positionNext; 
+                    diffB.sub(particles[b].positionNext); 
+                    Vec3 diffC = pc.positionNext; 
+                    diffC.sub(particles[c].positionNext); 
 
-                //diffA.mults(0.01f);
-                //diffB.mults(0.01f);
-                //diffC.mults(0.01f);  
+                    //multiply diffs by the stiffness 
+                    diffA.mults(k);
+                    diffB.mults(k);
+                    diffC.mults(k);  
 
-                particles[a].positionNext.add(diffA); 
-                particles[b].positionNext.add(diffB); 
-                particles[c].positionNext.add(diffC); 
-                
+                    //add diffs to next position 
+                    particles[a].positionNext.add(diffA); 
+                    particles[b].positionNext.add(diffB); 
+                    particles[c].positionNext.add(diffC); 
+                    
+                    //recompute cm and adjust to make same a orig cm
+                    Vec3 cmNew2 = calcCM(particles[a], particles[b], particles[c]); 
+                    Vec3 cmDiff2 = cmOrig;
+                    cmDiff2.sub(cmNew2); 
+                    particles[a].positionNext.add(cmDiff2); 
+                    particles[b].positionNext.add(cmDiff2); 
+                    particles[c].positionNext.add(cmDiff2); 
+                }
 
+                /*
                 std::stringstream ss;
                 ss << "angleDiff" << angleDiff 
                 << " norm " << norm.x << ", " << norm.y << ", " << norm.z << ", "
@@ -183,7 +202,7 @@ class AngleConstraintSystem {
                 << "  c " << pc.positionNext.x << ", "  << pc.positionNext.y << ", "  << pc.positionNext.z
                 << "\n"; 
                 log(debugCallback, ss.str()); 
-               
+                */
             }
             
         }
