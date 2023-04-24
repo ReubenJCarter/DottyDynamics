@@ -25,7 +25,7 @@ public class RodTest : MonoBehaviour
         world.SetSubsteps(4); 
 
         float height = 10;
-        int H = 4; 
+        int H = 8; 
         sphereTransforms = new Transform[H]; 
         for(int j = 0; j < H; j++){
                 
@@ -43,12 +43,12 @@ public class RodTest : MonoBehaviour
             }
 
             if(j < H-2){
-                world.AddAngleConstraint(j+1, j, j+2, Mathf.PI * 0.5f, 0.0001f); 
+                world.AddAngleConstraint(j+1, j, j+2, /*Mathf.PI * 0.5f*/Mathf.PI, 1f); 
             }
         
         }
         attractorId = world.AddAttractor(new Vector3(0, 0, 0), 0, 0.1f, 100000, Dotty.Falloff.InvDist2);
-        world.SetHasCollisionFloor(true); 
+        world.SetHasCollisionFloor(false); 
         world.SetCollisionFloor(2, 0, 0);
     }
 
